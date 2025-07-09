@@ -561,6 +561,7 @@
                 flex-direction: column;
                 gap: 30px;
             }
+            
         }
     </style>
 </head>
@@ -822,7 +823,23 @@
                 }
             });
         }, {threshold: 0.5});
-        
+        <div id="cookie-consent" style="position: fixed; bottom: 0; left: 0; right: 0; background: #2a2a3a; padding: 15px; text-align: center; z-index: 1000; display: none;">
+    <p>We use cookies to enhance your experience. By continuing to visit this site, you agree to our use of cookies. <a href="cookies.html" style="color: #5865F2;">Learn more</a></p>
+    <button id="accept-cookies" style="background: #5865F2; color: white; border: none; padding: 5px 15px; border-radius: 3px; margin-left: 10px; cursor: pointer;">Accept</button>
+</div>
+
+<script>
+    // Check if cookie consent has been given
+    if (!localStorage.getItem('cookieConsent')) {
+        document.getElementById('cookie-consent').style.display = 'block';
+    }
+    
+    // Handle accept button click
+    document.getElementById('accept-cookies').addEventListener('click', function() {
+        localStorage.setItem('cookieConsent', 'true');
+        document.getElementById('cookie-consent').style.display = 'none';
+    });
+</script>
         observer.observe(communitySection);
     </script>
 </body>
