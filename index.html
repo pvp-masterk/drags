@@ -635,7 +635,7 @@
             
             <div class="stats">
                 <div class="stat-item fade-in">
-                    <div class="stat-number" id="member-count">32</div>
+                    <div class="stat-number" id="member-count">32+</div>
                     <div class="stat-label">Members</div>
                 </div>
                 <div class="stat-item fade-in">
@@ -817,7 +817,7 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    animateValue("member-count", 0, 32, 32);
+                    animateValue("member-count", 0, 15, 32);
                     observer.unobserve(entry.target);
                 }
             });
