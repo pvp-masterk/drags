@@ -963,32 +963,31 @@
     </footer>
 
     <script>
-// Profile dropdown functionality
-
-// Fix the dropdown toggle functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Dropdown toggle
     const profileButton = document.getElementById('profile-button');
     const dropdownMenu = document.getElementById('dropdown-menu');
     
-    // Toggle dropdown visibility
     profileButton.addEventListener('click', function(e) {
-        e.preventDefault();
         e.stopPropagation();
         dropdownMenu.classList.toggle('show');
     });
     
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!dropdownMenu.contains(e.target) && e.target !== profileButton) {
-            dropdownMenu.classList.remove('show');
-        }
+    document.addEventListener('click', function() {
+        dropdownMenu.classList.remove('show');
     });
+    
+    // Check login state
+    checkLoginState();
+    
+    // Check every 5 minutes
+    setInterval(checkLoginState, 300000);
 });
 
-// Check login state and update UI
 async function checkLoginState() {
     try {
         const response = await fetch('/api/user');
+        
         if (response.ok) {
             const user = await response.json();
             updateUserUI(user);
@@ -1006,26 +1005,15 @@ async function checkLoginState() {
 }
 
 function updateUserUI(user) {
-    // Update avatar
     const avatarUrl = user.avatar 
         ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
         : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator) % 5}.png`;
     
     document.getElementById('user-avatar').src = avatarUrl;
     document.getElementById('dropdown-avatar').src = avatarUrl;
-    
-    // Update username and discriminator
     document.getElementById('dropdown-username').textContent = user.username;
     document.getElementById('dropdown-discriminator').textContent = `#${user.discriminator}`;
 }
-
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    checkLoginState();
-    
-    // Check login state every minute
-    setInterval(checkLoginState, 60000);
-});
         
         // Header scroll effect
         window.addEventListener('scroll', function() {
