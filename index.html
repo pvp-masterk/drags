@@ -814,26 +814,45 @@
         
        <script>
 
-const SERVER_ID = '1390462191630815434';
-
-async function updateMemberCount() {
-    try {
-        const response = await fetch(`https://discord.com/api/guilds/${SERVER_ID}/widget.json`);
-        const data = await response.json();
-        document.getElementById('member-count').textContent = data.presence_count + "+";
-    } catch (error) {
-        console.error("Error fetching member count:", error);
-        document.getElementById('member-count').textContent = "1000+"; // Fallback number
-    }
-}
-
-// Update immediately
-updateMemberCount();
-
-// Update every 5 minutes (300000 ms)
-setInterval(updateMemberCount, 300000);
-</script>
+// Animated counter for member count
+        function animateValue(id, start, end, duration) {
+            let obj = document.getElementById(id);
+            let range = end - start;
+            let minTimer = 50;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            
+            stepTime = Math.max(stepTime, minTimer);
+            
+            let startTime = new Date().getTime();
+            let endTime = startTime + duration;
+            let timer;
+            
+            function run() {
+                let now = new Date().getTime();
+                let remaining = Math.max((endTime - now) / duration, 0);
+                let value = Math.round(end - (remaining * range));
+                obj.innerHTML = value + "+";
+                if (value == end) {
+                    clearInterval(timer);
+                }
+            }
+            
+            timer = setInterval(run, stepTime);
+            run();
+        }
         
-       
+        // Start counter when community section is visible
+        const communitySection = document.querySelector('.community');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateValue("member-count", 0, 32, 32);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {threshold: 0.5});
+        
+        observer.observe(communitySection);
+    </script>
 </body>
 </html>
