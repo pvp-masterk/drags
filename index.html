@@ -591,7 +591,7 @@
             /* Cookie Banner Styles */
 .cookie-banner {
   position: fixed;
-  bottom: 0;
+  bottom: -100%;
   left: 0;
   right: 0;
   background: var(--card-bg);
@@ -600,9 +600,12 @@
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   z-index: 999;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  animation: slideUp 0.5s ease;
+  transition: bottom 0.5s ease;
 }
 
+.cookie-banner.show {
+  bottom: 0;
+}
 .cookie-content {
   max-width: 1200px;
   margin: 0 auto;
@@ -848,25 +851,11 @@
     </div>
 </section>
 
- <!-- Update the banner HTML -->
-<div id="cookie-consent-banner" class="cookie-banner" style="display: none;">
+<div id="cookie-consent-banner" class="cookie-banner">
   <div class="cookie-content">
-    <p>We use cookies to enhance your experience. Choose which cookies you allow:</p>
-    <div class="cookie-categories">
-      <label>
-        <input type="checkbox" name="necessary" checked disabled> Necessary
-        <span>(Always active)</span>
-      </label>
-      <label>
-        <input type="checkbox" name="analytics"> Analytics
-      </label>
-      <label>
-        <input type="checkbox" name="marketing"> Marketing
-      </label>
-    </div>
+    <p>We use cookies to enhance your experience. By continuing to visit this site, you agree to our use of cookies.</p>
     <div class="cookie-buttons">
       <button id="deny-cookies" class="cookie-btn deny-btn">Deny All</button>
-      <button id="save-preferences" class="cookie-btn preferences-btn">Save Preferences</button>
       <button id="accept-cookies" class="cookie-btn accept-btn">Accept All</button>
     </div>
   </div>
@@ -998,45 +987,67 @@
         }, {threshold: 0.5});
 
         
-<!-- Add to your JavaScript -->
+
 
 document.addEventListener('DOMContentLoaded', function() {
-  // ... existing code ...
+  const cookieBanner = document.getElementById('cookie-consent-banner');
+  const acceptBtn = document.getElementById('accept-cookies');
+  const denyBtn = document.getElementById('deny-cookies');
   
-  const savePrefBtn = document.getElementById('save-preferences');
-  const analyticsCheckbox = document.querySelector('input[name="analytics"]');
-  const marketingCheckbox = document.querySelector('input[name="marketing"]');
+  // Debugging point
+  console.log('Cookie consent script loaded');
+  console.log('Banner element:', cookieBanner);
   
-  savePrefBtn.addEventListener('click', function() {
-    const preferences = {
-      analytics: analyticsCheckbox.checked,
-      marketing: marketingCheckbox.checked
-    };
-    
-    localStorage.setItem('cookiePreferences', JSON.stringify(preferences));
+  // Check if cookie preference exists
+  function hasCookieConsent() {
+    return localStorage.getItem('cookiesAccepted') !== null;
+  }
+  
+  // Show banner with animation
+  function showBanner() {
+    console.log('Showing cookie banner');
+    cookieBanner.classList.add('show');
+  }
+  
+  // Hide banner with animation
+  function hideBanner() {
+    cookieBanner.classList.remove('show');
+    // Remove after animation completes
+    setTimeout(() => {
+      cookieBanner.style.display = 'none';
+    }, 500);
+  }
+  
+  // Initialize
+  if (!hasCookieConsent()) {
+    console.log('No consent found - showing banner');
+    showBanner();
+  } else {
+    console.log('Consent already given/denied - hiding banner');
     cookieBanner.style.display = 'none';
-    
-    // Load selected cookies
-    if (preferences.analytics) loadAnalyticsCookies();
-    if (preferences.marketing) loadMarketingCookies();
+  }
+  
+  // Button event handlers
+  acceptBtn.addEventListener('click', function() {
+    console.log('Accepted cookies');
+    localStorage.setItem('cookiesAccepted', 'true');
+    hideBanner();
+    // Load your cookies/tracking scripts here
   });
   
-  // Load saved preferences if they exist
-  const savedPrefs = localStorage.getItem('cookiePreferences');
-  if (savedPrefs) {
-    const prefs = JSON.parse(savedPrefs);
-    analyticsCheckbox.checked = prefs.analytics;
-    marketingCheckbox.checked = prefs.marketing;
-  }
+  denyBtn.addEventListener('click', function() {
+    console.log('Denied cookies');
+    localStorage.setItem('cookiesAccepted', 'false');
+    hideBanner();
+    // Remove any existing cookies
+    document.cookie.split(";").forEach(function(c) {
+      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+  });
+  
+  // Debug localStorage
+  console.log('Current cookiesAccepted value:', localStorage.getItem('cookiesAccepted'));
 });
-
-function loadAnalyticsCookies() {
-  // Load analytics scripts
-}
-
-function loadMarketingCookies() {
-  // Load marketing scripts
-}
 
         
         observer.observe(communitySection);
