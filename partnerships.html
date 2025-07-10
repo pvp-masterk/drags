@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partnerships - Drags</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1e1e2e;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .partnerships-container {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            color: #5865F2;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .partnership-card {
+            background: #2a2a3a;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .requirements {
+            background: rgba(87, 242, 135, 0.1);
+            border-left: 3px solid #57F287;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .benefits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .benefit-item {
+            background: rgba(88, 101, 242, 0.2);
+            padding: 10px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .application-form {
+            margin-top: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #5865F2;
+            border-radius: 5px;
+            color: #f5f5f5;
+        }
+        
+        button[type="submit"] {
+            background: #5865F2;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        button[type="submit"]:hover {
+            background: #4752C4;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo"><i class="fab fa-discord"></i> Drags</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="rules.html">Rules</a>
+            <a href="FAQ.html">FAQ</a>
+            <a href="partnerships.html" style="color: #5865F2;">Partnerships</a>
+        </nav>
+    </header>
+
+    <div class="partnerships-container">
+        <h1><i class="fas fa-handshake"></i> Server Partnerships</h1>
+        
+        <div class="partnership-card">
+            <h2>Why Partner With Us?</h2>
+            <p>Drags value there partners, we give a major amount of perks to our partners!</p>
+            
+            <div class="benefits">
+                <div class="benefit-item">
+                    <i class="fas fa-users"></i> Featured in #partnerships
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-bullhorn"></i> Monthly shoutouts
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-link"></i> Partner Role
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-star"></i> Exclusive partner events
+                </div>
+            </div>
+        </div>
+        
+        <div class="partnership-card">
+            <h2>Partnership Requirements</h2>
+            
+            <div class="requirements">
+                <strong>To qualify, your server must:</strong>
+                <ul>
+                    <li>Have 100+ active members</li>
+                    <li>Be at least a month old</li>
+                    <li>Have clear rules and active moderation</li>
+                    <li>Maintain a active community</li>
+                    <li>Not compete directly with our server's focus</li>
+                </ul>
+            </div>
+            
+            <p>We review each application manually and may make exceptions for exceptional communities.</p>
+        </div>
+        
+        <div class="partnership-card">
+            <h2>Current Partners</h2>
+            <p>Check out these awesome servers we're partnered with:</p>
+            
+            <!-- Example partner - replace with actual partners -->
+            <div style="display: flex; align-items: center; gap: 15px; margin: 15px 0; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                <img src="https://via.placeholder.com/50" alt="Partner Logo" style="width: 50px; height: 50px; border-radius: 50%;">
+                <div>
+                    <h3 style="margin: 0;">#GYMB</h3>
+                    <p style="margin: 5px 0 0; opacity: 0.8;">GYMB - Get ya money back</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="application-form">
+            <h2>Apply for Partnership</h2>
+            <form id="partnership-form">
+                <div class="form-group">
+                    <label for="server-name">Server Name</label>
+                    <input type="text" id="server-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="invite-link">Permanent Invite Link</label>
+                    <input type="url" id="invite-link" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="member-count">Approximate Member Count</label>
+                    <input type="number" id="member-count" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="server-focus">Server Focus/Theme</label>
+                    <textarea id="server-focus" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact">Your Discord Tag</label>
+                    <input type="text" id="contact" placeholder="username#0000" required>
+                </div>
+                
+                <button type="submit">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('partnership-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Application submitted! We\'ll review it and contact you soon.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
