@@ -1,0 +1,117 @@
+<section class="application-form" id="apply" style="padding: 100px 10%; background: var(--bg);">
+    <h2 class="section-title">Join Our Team</h2>
+    
+    <form id="discord-application" style="max-width: 600px; margin: 0 auto;">
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="discord-username" style="display: block; margin-bottom: 8px; font-weight: 500;">Discord Username (including #tag)</label>
+            <input type="text" id="discord-username" name="discord-username" required 
+                   style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="age" style="display: block; margin-bottom: 8px; font-weight: 500;">Age</label>
+            <input type="number" id="age" name="age" required 
+                   style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="position" style="display: block; margin-bottom: 8px; font-weight: 500;">Position Applying For</label>
+            <select id="position" name="position" required 
+                    style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);">
+                <option value="">Select a position</option>
+                <option value="Moderator">Moderator</option>
+                <option value="Event Host">Event Host</option>
+                <option value="Support Team">Support Team</option>
+                <option value="Content Creator">Content Creator</option>
+            </select>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="experience" style="display: block; margin-bottom: 8px; font-weight: 500;">Previous Experience</label>
+            <textarea id="experience" name="experience" rows="4" required 
+                      style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);"></textarea>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="why-join" style="display: block; margin-bottom: 8px; font-weight: 500;">Why do you want to join our team?</label>
+            <textarea id="why-join" name="why-join" rows="4" required 
+                      style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);"></textarea>
+        </div>
+        
+        <button type="submit" class="cta-button" style="width: 100%; padding: 15px; font-size: 18px;">
+            Submit Application
+        </button>
+        
+        <div id="form-status" style="margin-top: 20px; text-align: center;"></div>
+    </form>
+</section>
+<script>
+document.getElementById('discord-application').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const form = e.target;
+    const submitButton = form.querySelector('button[type="submit"]');
+    const statusElement = document.getElementById('form-status');
+    
+    // Disable button to prevent multiple submissions
+    submitButton.disabled = true;
+    submitButton.textContent = 'Submitting...';
+    statusElement.textContent = '';
+    statusElement.style.color = '';
+    
+    try {
+        // Get form data
+        const formData = {
+            username: form['discord-username'].value,
+            age: form['age'].value,
+            position: form['position'].value,
+            experience: form['experience'].value,
+            whyJoin: form['why-join'].value,
+            timestamp: new Date().toISOString()
+        };
+        
+        // Replace with your actual webhook URL
+        const webhookURL = 'https://discord.com/api/webhooks/1392885637119611010/p0iQabCSfD6vgn0ubTJAXNPuBOttY5ZGG3ojL1ks9PKacW2eMY54qysS72lf9HVTpLHs';
+        
+        // Create Discord embed
+        const embed = {
+            title: 'New Application Submission',
+            color: 0x5865F2, // Discord purple
+            fields: [
+                { name: 'Discord Username', value: formData.username, inline: true },
+                { name: 'Age', value: formData.age, inline: true },
+                { name: 'Position', value: formData.position, inline: true },
+                { name: 'Experience', value: formData.experience },
+                { name: 'Why Join', value: formData.whyJoin },
+                { name: 'Submitted At', value: new Date(formData.timestamp).toLocaleString() }
+            ],
+            footer: { text: 'Drags Application System' }
+        };
+        
+        // Send to Discord
+        const response = await fetch(webhookURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                embeds: [embed],
+                content: `New application from ${formData.username} for ${formData.position}`
+            })
+        });
+        
+        if (!response.ok) throw new Error('Failed to submit application');
+        
+        // Success message
+        statusElement.textContent = 'Application submitted successfully! You will receive a response soon.';
+        statusElement.style.color = '#57F287'; // Discord green
+        form.reset();
+        
+    } catch (error) {
+        console.error('Error submitting application:', error);
+        statusElement.textContent = 'Error submitting application. Please try again or contact staff.';
+        statusElement.style.color = '#ED4245'; // Discord red
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit Application';
+    }
+});
+</script>
