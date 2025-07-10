@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Drags</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/main.css"> <!-- Your main styles -->
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .profile-sidebar {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+        
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: block;
+            object-fit: cover;
+            border: 5px solid var(--primary);
+        }
+        
+        .profile-name {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .profile-discriminator {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .profile-bio {
+            background: rgba(88, 101, 242, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        .profile-content {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+        }
+        
+        .profile-section {
+            margin-bottom: 30px;
+        }
+        
+        .profile-section h2 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .edit-profile-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-profile-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Include your header here -->
+    
+    <div class="profile-container">
+        <div class="profile-sidebar">
+            <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Profile Avatar" class="profile-avatar" id="profile-avatar">
+            <h1 class="profile-name" id="profile-username">Username</h1>
+            <div class="profile-discriminator" id="profile-discriminator">#0000</div>
+            
+            <div class="profile-bio" id="profile-bio">
+                No bio set yet. Click edit profile to add one!
+            </div>
+            
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="server-rank">Member</div>
+                    <div class="stat-label">Server Rank</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="join-date">Today</div>
+                    <div class="stat-label">Joined</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="message-count">0</div>
+                    <div class="stat-label">Messages</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="reputation">0</div>
+                    <div class="stat-label">Reputation</div>
+                </div>
+            </div>
+            
+            <button class="edit-profile-btn" id="edit-profile-btn">
+                <i class="fas fa-edit"></i> Edit Profile
+            </button>
+        </div>
+        
+        <div class="profile-content">
+            <div class="profile-section">
+                <h2><i class="fas fa-shield-alt"></i> Roles & Badges</h2>
+                <div class="badges-container" id="badges-container">
+                    <div class="badge">
+                        <i class="fas fa-user"></i> Member
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h2><i class="fas fa-history"></i> Recent Activity</h2>
+                <div id="recent-activity">
+                    <p>No recent activity to show.</p>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h2><i class="fas fa-trophy"></i> Achievements</h2>
+                <div id="achievements">
+                    <p>No achievements yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include your footer here -->
+    
+    <script>
+        // Load profile data
+        async function loadProfileData() {
+            try {
+                const response = await fetch('/api/user');
+                if (!response.ok) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                const user = await response.json();
+                updateProfilePage(user);
+                
+                // Load additional data from bot
+                const botResponse = await fetch(`/api/user/${user.id}/extended`);
+                if (botResponse.ok) {
+                    const extendedData = await botResponse.json();
+                    updateExtendedProfileData(extendedData);
+                }
+            } catch (error) {
+                console.error('Error loading profile data:', error);
+            }
+        }
+        
+        function updateProfilePage(user) {
+            // Update basic info
+            document.getElementById('profile-username').textContent = user.username;
+            document.getElementById('profile-discriminator').textContent = `#${user.discriminator}`;
+            
+            const avatarUrl = user.avatar 
+                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`
+                : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator) % 5}.png`;
+            
+            document.getElementById('profile-avatar').src = avatarUrl;
+            
+            // Update bio if available
+            if (user.website_data?.bio) {
+                document.getElementById('profile-bio').textContent = user.website_data.bio;
+            }
+        }
+        
+        function updateExtendedProfileData(data) {
+            // Update server-specific data
+            if (data.roles) {
+                const badgesContainer = document.getElementById('badges-container');
+                badgesContainer.innerHTML = '';
+                
+                data.roles.forEach(role => {
+                    const badge = document.createElement('div');
+                    badge.className = 'badge';
+                    badge.style.backgroundColor = role.color || '#5865F2';
+                    badge.innerHTML = `<i class="fas fa-shield-alt"></i> ${role.name}`;
+                    badgesContainer.appendChild(badge);
+                });
+            }
+            
+            if (data.server_rank) {
+                document.getElementById('server-rank').textContent = data.server_rank;
+            }
+            
+            if (data.join_date) {
+                document.getElementById('join-date').textContent = new Date(data.join_date).toLocaleDateString();
+            }
+            
+            if (data.message_count) {
+                document.getElementById('message-count').textContent = data.message_count;
+            }
+            
+            if (data.reputation) {
+                document.getElementById('reputation').textContent = data.reputation;
+            }
+        }
+        
+        // Edit profile button
+        document.getElementById('edit-profile-btn').addEventListener('click', () => {
+            window.location.href = '/profile/edit';
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+    </script>
+</body>
+</html>
