@@ -393,6 +393,12 @@
             padding-top: 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        // Add this to your CSS
+.form-disabled {
+    pointer-events: none;
+    opacity: 0.7;
+}
         
         /* Responsive */
         @media (max-width: 768px) {
@@ -560,10 +566,35 @@
                 formContainer.classList.add('active');
             }, 300);
         });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const hasApplied = localStorage.getItem('dragApplicationSubmitted');
+    if (hasApplied) {
+        disableForm();
+        showStatusMessage('You have already submitted an application. Please wait for staff review.', 'info');
+    }
+});
+
+function disableForm() {
+    const form = document.getElementById('discord-application');
+    const inputs = form.querySelectorAll('input, textarea, select, button');
+    
+    inputs.forEach(input => {
+        input.disabled = true;
+        input.style.opacity = '0.7';
+        input.style.cursor = 'not-allowed';
+    });
+    
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.textContent = 'Application Submitted';
+        submitBtn.style.backgroundColor = '#57F287';
+    }
+}
         
         // Form submission
-        document.getElementById('discord-application').addEventListener('submit', async function(e) {
-            e.preventDefault();
+       document.getElementById('discord-application').addEventListener('submit', async function(e) {
+    e.preventDefault();
             
             const form = e.target;
             const submitText = document.getElementById('submit-text');
@@ -627,7 +658,8 @@
                 setTimeout(() => {
                     formContainer.classList.remove('celebrate');
                 }, 2000);
-                
+
+               
          
             } finally {
                 // Reset loading state
@@ -644,6 +676,12 @@
                 }
             });
         }, { threshold: 0.1 });
+
+         if (success) { // After successful submission
+        localStorage.setItem('dragApplicationSubmitted', 'true');
+        disableForm();
+    }
+});
         
         document.querySelectorAll('.form-group').forEach(group => {
             observer.observe(group);
