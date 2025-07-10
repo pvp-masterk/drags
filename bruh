@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drags WebApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #57F287;
+            --text: #f5f5f5;
+            --bg: #1e1e2e;
+            --card-bg: #2a2a3a;
+            --accent: #ED4245;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+        
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(30, 30, 46, 0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            padding: 15px 10%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .cta-button {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(88, 101, 242, 0.1) 0%, rgba(30, 30, 46, 0) 70%);
+            z-index: -1;
+            animation: pulse 15s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.2);
+            }
+        }
+        
+        .hero-content {
+            max-width: 600px;
+        }
+        
+        .hero-content h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-content h1 span {
+            color: var(--primary);
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .hero-image {
+            position: absolute;
+            right: 10%;
+            width: 500px;
+            height: 500px;
+            background: url('https://sdmntprnorthcentralus.oaiusercontent.com/files/00000000-cea0-622f-9ca0-296c472ea7ca/raw?se=2025-07-09T23%3A23%3A40Z&sp=r&sv=2024-08-04&sr=b&scid=01aa7a67-43d1-5ebc-b089-f987056162be&skoid=04233560-0ad7-493e-8bf0-1347c317d021&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-07-09T20%3A28%3A30Z&ske=2025-07-10T20%3A28%3A30Z&sks=b&skv=2024-08-04&sig=S607yUyqSG8pDjyj8CaD3kCXadWtDcFVVGZlLk4nMMc%3D') no-repeat center center;
+            background-size: contain;
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 20px 30px rgba(88, 101, 242, 0.3));
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 100px 10%;
+            background: var(--bg);
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1) 0%, rgba(87, 242, 135, 0.05) 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        /* Community Section */
+        .community {
+            padding: 100px 10%;
+            background: var(--card-bg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .community::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://sdmntprnorthcentralus.oaiusercontent.com/files/00000000-cea0-622f-9ca0-296c472ea7ca/raw?se=2025-07-09T23%3A23%3A40Z&sp=r&sv=2024-08-04&sr=b&scid=01aa7a67-43d1-5ebc-b089-f987056162be&skoid=04233560-0ad7-493e-8bf0-1347c317d021&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-07-09T20%3A28%3A30Z&ske=2025-07-10T20%3A28%3A30Z&sks=b&skv=2024-08-04&sig=S607yUyqSG8pDjyj8CaD3kCXadWtDcFVVGZlLk4nMMc%3D') no-repeat;
+            background-size: cover;
+            opacity: 0.03;
+            z-index: 0;
+        }
+        
+        .community-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .community-content p {
+            max-width: 700px;
+            margin-bottom: 40px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+        
+        /* Team Section */
+        .team {
+            padding: 100px 10%;
+            background: var(--bg);
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .team-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .team-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .team-info {
+            padding: 20px;
+        }
+        
+        .team-info h3 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .team-info p {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            color: var(--text);
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            padding: 70px 10% 30px;
+            position: relative;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: var(--text);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-column ul li a:hover {
+            opacity: 1;
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero-image {
+                width: 400px;
+                height: 400px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                justify-content: center;
+                padding-top: 100px;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+                margin-bottom: 50px;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-image {
+                position: relative;
+                right: auto;
+                margin-top: 50px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 5%;
+            }
+            
+            .hero, .features, .community, .team, footer {
+                padding: 80px 5%;
+            }
+            
+            .hero-content h1 {
+                font-size: 36px;
+            }
+            
+            .hero-image {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .cta-button {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <a href="#" class="logo"><i class="fab fa-discord"></i> Drags</a>
+       <nav class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#features">Features</a>
+    <a href="#community">Community</a>
+    <a href="#command">Command</a> <!-- Changed from #team to #command -->
+</nav>
+        <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Welcome to <span>Drags</span> Official WebApp</h1>
+            <p>Drag welcomes everyone who wanna take part in our great journey, So join drag now!</p>
+            <div class="hero-buttons">
+                <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Now</a>
+                <a href="#features" class="cta-button" style="background: transparent; border: 2px solid var(--primary);">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-image"></div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Why Join Drags?</h2>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-users"></i></div>
+                <h3>Active Community</h3>
+                <p>Engage with our community and work together as a nation!</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-gamepad"></i></div>
+                <h3>Events</h3>
+                <p>Regular events such as giveaways and game shows.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-paint-brush"></i></div>
+                <h3>Creative Corner</h3>
+                <p>Showcase your art, music, or writing in our creative channels. Get feedback and collaborate with other talented members.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                <h3>Custom Bots</h3>
+                <p>Enjoy our custom bots for music, games, moderation, and utilities that make your Discord experience seamless and fun.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-gem"></i></div>
+                <h3>Booster Perks</h3>
+                <p>We value our boosters, boost our server to earn exclusive shiny perks!</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>Moderation</h3>
+                <p>Our dedicated moderation team ensures a respectful, inclusive environment for everyone. Zero tolerance for toxicity.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section class="community" id="community">
+        <h2 class="section-title">Our Growing Family</h2>
+        <div class="community-content">
+            <p>Drag started as a small hangout discord server, we value our every single member!</p>
+            
+          <div class="stats">
+                <div class="stat-item fade-in">
+                    <div class="stat-number" id="member-count">32+</div>
+                    <div class="stat-label">Members</div>
+                    
+                <div class="stat-item fade-in">
+                    <div class="stat-number">0 [Soon]</div>
+                    <div class="stat-label">Events Monthly</div>
+                </div>
+                <div class="stat-item fade-in">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Active Support</div>
+                </div>
+            </div>
+            
+            <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Become Part of Drags</a>
+        </div>
+    </section>
+
+   <!-- Chain of Command Section -->
+<section class="command" id="command" style="padding: 100px 10%; background: var(--bg);">
+    <h2 class="section-title">Chain of Command</h2>
+    
+    <div class="command-structure" style="max-width: 800px; margin: 0 auto;">
+        <!-- Tier 1 - Owners -->
+        <div class="command-tier fade-in" style="margin-bottom: 40px;">
+            <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                <i class="fas fa-crown" style="margin-right: 10px;"></i>Server Leadership
+            </h3>
+            <ul style="list-style: none;">
+                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">shortuserrr</span>
+                    <span style="color: var(--primary);">Founder & Admin</span>
+                </li>
+                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">urpsx</span>
+                    <span style="color: var(--primary);">Co-Owner</span>
+ <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">re_corezz</span>
+                    <span style="color: var(--primary);">Co-Founder</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Tier 2 - Admins -->
+        <div class="command-tier fade-in" style="margin-bottom: 40px;">
+            <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                <i class="fas fa-shield-alt" style="margin-right: 10px;"></i>Administration
+            </h3>
+            <ul style="list-style: none;">
+                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">bludaze</span>
+                    <span style="color: var(--primary);">Overseer</span>
+                </li>
+                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">qa3v</span>
+                    <span style="color: var(--primary);">Senior Executive</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Tier 3 - Moderators -->
+        <div class="command-tier fade-in" style="margin-bottom: 40px;">
+            <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                <i class="fas fa-gavel" style="margin-right: 10px;"></i>Moderation Team
+            </h3>
+            <ul style="list-style: none;">
+                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">sawyerlovesdonuts</span>
+                    <span style="color: var(--primary);">Supervisor</span>
+                </li>
+                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">rip_naruto0196</span>
+                    <span style="color: var(--primary);">Server Moderator</span>
+                </li>
+                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">ekittenattractorkay</span>
+                    <span style="color: var(--primary);">Moderator</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Tier 4 - Support -->
+        <div class="command-tier fade-in">
+            <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                <i class="fas fa-hands-helping" style="margin-right: 10px;"></i>Support Staff
+            </h3>
+            <ul style="list-style: none;">
+                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">To be hired</span>
+                    <span style="color: var(--primary);">Support Team</span>
+                </li>
+                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600;">To be hired</span>
+                    <span style="color: var(--primary);">Support Team</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Drags</h3>
+                <p>A discord hangour server made for everyone who want to join us!</p>
+                <div class="social-links" style="justify-content: flex-start; margin-top: 20px;">
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-twitch"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#community">Community</a></li>
+                    <li><a href="#team">Team</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Rules</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Partnerships</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="cookies.html">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Drags Community. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Scroll animations
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const appearOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+        
+        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.classList.add('active');
+                    appearOnScroll.unobserve(entry.target);
+                }
+            });
+        }, appearOptions);
+        
+        fadeElements.forEach(fadeElement => {
+            appearOnScroll.observe(fadeElement);
+        });
+        
+       <script>
+
+// Animated counter for member count
+        function animateValue(id, start, end, duration) {
+            let obj = document.getElementById(id);
+            let range = end - start;
+            let minTimer = 50;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            
+            stepTime = Math.max(stepTime, minTimer);
+            
+            let startTime = new Date().getTime();
+            let endTime = startTime + duration;
+            let timer;
+            
+            function run() {
+                let now = new Date().getTime();
+                let remaining = Math.max((endTime - now) / duration, 0);
+                let value = Math.round(end - (remaining * range));
+                obj.innerHTML = value + "+";
+                if (value == end) {
+                    clearInterval(timer);
+                }
+            }
+            
+            timer = setInterval(run, stepTime);
+            run();
+        }
+        
+        // Start counter when community section is visible
+        const communitySection = document.querySelector('.community');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateValue("member-count", 0, 32, 32);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {threshold: 0.5});
+        
+        observer.observe(communitySection);
+    </script>
+</body>
+</html>
