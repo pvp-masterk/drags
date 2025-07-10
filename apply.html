@@ -659,6 +659,12 @@ function disableForm() {
                     formContainer.classList.remove('celebrate');
                 }, 2000);
 
+                if (success) { // After successful submission
+        localStorage.setItem('dragApplicationSubmitted', 'true');
+        disableForm();
+    }
+});
+
                
          
             } finally {
@@ -677,11 +683,7 @@ function disableForm() {
             });
         }, { threshold: 0.1 });
 
-         if (success) { // After successful submission
-        localStorage.setItem('dragApplicationSubmitted', 'true');
-        disableForm();
-    }
-});
+         
         
         document.querySelectorAll('.form-group').forEach(group => {
             observer.observe(group);
