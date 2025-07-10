@@ -587,6 +587,76 @@
                 text-align: center;
             }
         }
+
+            /* Cookie Banner Styles */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 15px 5%;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideUp 0.5s ease;
+}
+
+.cookie-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.cookie-content p {
+  margin: 0;
+  flex: 1;
+  min-width: 250px;
+}
+
+.cookie-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.cookie-btn {
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.deny-btn {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--text);
+}
+
+.deny-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.accept-btn {
+  background: var(--primary);
+  color: white;
+}
+
+.accept-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
       
     </style>
 </head>
@@ -778,6 +848,30 @@
     </div>
 </section>
 
+ <!-- Update the banner HTML -->
+<div id="cookie-consent-banner" class="cookie-banner" style="display: none;">
+  <div class="cookie-content">
+    <p>We use cookies to enhance your experience. Choose which cookies you allow:</p>
+    <div class="cookie-categories">
+      <label>
+        <input type="checkbox" name="necessary" checked disabled> Necessary
+        <span>(Always active)</span>
+      </label>
+      <label>
+        <input type="checkbox" name="analytics"> Analytics
+      </label>
+      <label>
+        <input type="checkbox" name="marketing"> Marketing
+      </label>
+    </div>
+    <div class="cookie-buttons">
+      <button id="deny-cookies" class="cookie-btn deny-btn">Deny All</button>
+      <button id="save-preferences" class="cookie-btn preferences-btn">Save Preferences</button>
+      <button id="accept-cookies" class="cookie-btn accept-btn">Accept All</button>
+    </div>
+  </div>
+</div>
+
 
     <!-- Footer -->
     <footer>
@@ -890,6 +984,7 @@
             timer = setInterval(run, stepTime);
             run();
         }
+
         
         // Start counter when community section is visible
         const communitySection = document.querySelector('.community');
@@ -901,6 +996,48 @@
                 }
             });
         }, {threshold: 0.5});
+
+        <script>
+<!-- Add to your JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // ... existing code ...
+  
+  const savePrefBtn = document.getElementById('save-preferences');
+  const analyticsCheckbox = document.querySelector('input[name="analytics"]');
+  const marketingCheckbox = document.querySelector('input[name="marketing"]');
+  
+  savePrefBtn.addEventListener('click', function() {
+    const preferences = {
+      analytics: analyticsCheckbox.checked,
+      marketing: marketingCheckbox.checked
+    };
+    
+    localStorage.setItem('cookiePreferences', JSON.stringify(preferences));
+    cookieBanner.style.display = 'none';
+    
+    // Load selected cookies
+    if (preferences.analytics) loadAnalyticsCookies();
+    if (preferences.marketing) loadMarketingCookies();
+  });
+  
+  // Load saved preferences if they exist
+  const savedPrefs = localStorage.getItem('cookiePreferences');
+  if (savedPrefs) {
+    const prefs = JSON.parse(savedPrefs);
+    analyticsCheckbox.checked = prefs.analytics;
+    marketingCheckbox.checked = prefs.marketing;
+  }
+});
+
+function loadAnalyticsCookies() {
+  // Load analytics scripts
+}
+
+function loadMarketingCookies() {
+  // Load marketing scripts
+}
+</script>
         
         observer.observe(communitySection);
     </script>
