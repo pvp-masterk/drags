@@ -1,117 +1,656 @@
-<section class="application-form" id="apply" style="padding: 100px 10%; background: var(--bg);">
-    <h2 class="section-title">Join Our Team</h2>
-    
-    <form id="discord-application" style="max-width: 600px; margin: 0 auto;">
-        <div class="form-group" style="margin-bottom: 20px;">
-            <label for="discord-username" style="display: block; margin-bottom: 8px; font-weight: 500;">Discord Username (including #tag)</label>
-            <input type="text" id="discord-username" name="discord-username" required 
-                   style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Our Team | Drags Discord</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #57F287;
+            --text: #f5f5f5;
+            --bg: #1e1e2e;
+            --card-bg: #2a2a3a;
+            --accent: #ED4245;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(30, 30, 46, 0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            padding: 15px 10%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .cta-button {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+        }
+        
+        /* Hero Section for Application Page */
+        .application-hero {
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+        
+        .application-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(88, 101, 242, 0.1) 0%, rgba(30, 30, 46, 0) 70%);
+            z-index: -1;
+            animation: pulse 15s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2); }
+        }
+        
+        .application-hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .application-hero-content h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(90deg, var(--primary), #9fa8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 8s ease infinite;
+            background-size: 200% 200%;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .application-hero-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        /* Application Form Section */
+        .application-form {
+            padding: 80px 10%;
+            background: var(--bg);
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .form-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+        
+        .form-container.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.3);
+            background: rgba(88, 101, 242, 0.05);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235865F2'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .form-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .form-status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .form-status.success {
+            background: rgba(87, 242, 135, 0.1);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+        
+        .form-status.error {
+            background: rgba(237, 66, 69, 0.1);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+        
+        /* Floating Animation for Form Elements */
+        @keyframes floatIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-group {
+            animation: floatIn 0.6s ease forwards;
+            opacity: 0;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            padding: 70px 10% 30px;
+            position: relative;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: var(--text);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-column ul li a:hover {
+            opacity: 1;
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 5%;
+            }
+            
+            .application-hero, .application-form, footer {
+                padding: 60px 5%;
+            }
+            
+            .application-hero-content h1 {
+                font-size: 36px;
+            }
+            
+            .form-container {
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .application-hero {
+                height: auto;
+                padding: 100px 5% 60px;
+            }
+            
+            .section-title {
+                font-size: 30px;
+                margin-bottom: 40px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <a href="index.html" class="logo"><i class="fab fa-discord"></i> Drags</a>
+        <nav class="nav-links">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#features">Features</a>
+            <a href="index.html#community">Community</a>
+            <a href="index.html#command">Command</a>
+        </nav>
+        <a href="https://discord.gg/your-invite-link" class="cta-button">Join Server</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="application-hero">
+        <div class="application-hero-content">
+            <h1>Join Our Team</h1>
+            <p>Become part of the Drags community team and help us create an amazing experience for all members. We're looking for passionate individuals to join our staff.</p>
         </div>
+    </section>
+
+    <!-- Application Form Section -->
+    <section class="application-form">
+        <h2 class="section-title">Application Form</h2>
         
-        <div class="form-group" style="margin-bottom: 20px;">
-            <label for="age" style="display: block; margin-bottom: 8px; font-weight: 500;">Age</label>
-            <input type="number" id="age" name="age" required 
-                   style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);">
+        <div class="form-container" id="form-container">
+            <form id="discord-application">
+                <div class="form-group">
+                    <label for="discord-username">Discord Username</label>
+                    <input type="text" id="discord-username" name="discord-username" class="form-control" required placeholder="username#0000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" class="form-control" required placeholder="18">
+                </div>
+                
+                <div class="form-group">
+                    <label for="position">Position Applying For</label>
+                    <select id="position" name="position" class="form-control" required>
+                        <option value="">Select a position</option>
+                        <option value="Moderator">Moderator</option>
+                        <option value="Event Host">Event Host</option>
+                        <option value="Support Team">Support Team</option>
+                        <option value="Content Creator">Content Creator</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="experience">Previous Experience</label>
+                    <textarea id="experience" name="experience" class="form-control" required placeholder="Describe any relevant experience you have..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="why-join">Why do you want to join our team?</label>
+                    <textarea id="why-join" name="why-join" class="form-control" required placeholder="Tell us why you'd be a great fit..."></textarea>
+                </div>
+                
+                <button type="submit" class="cta-button submit-btn">
+                    <span id="submit-text">Submit Application</span>
+                    <span id="loading-spinner" style="display: none;"><i class="fas fa-spinner fa-spin"></i></span>
+                </button>
+                
+                <div id="form-status" class="form-status"></div>
+            </form>
         </div>
-        
-        <div class="form-group" style="margin-bottom: 20px;">
-            <label for="position" style="display: block; margin-bottom: 8px; font-weight: 500;">Position Applying For</label>
-            <select id="position" name="position" required 
-                    style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);">
-                <option value="">Select a position</option>
-                <option value="Moderator">Moderator</option>
-                <option value="Event Host">Event Host</option>
-                <option value="Support Team">Support Team</option>
-                <option value="Content Creator">Content Creator</option>
-            </select>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Drags</h3>
+                <p>A hangout server for everyone!</p>
+                <div class="social-links" style="display: flex; gap: 15px; margin-top: 20px;">
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#features">Features</a></li>
+                    <li><a href="index.html#community">Community</a></li>
+                    <li><a href="index.html#command">Command</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="under-construction.html">Rules</a></li>
+                    <li><a href="under-construction.html">FAQ</a></li>
+                    <li><a href="under-construction.html">Partnerships</a></li>
+                    <li><a href="under-construction.html">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="cookies.html">Cookie Policy</a></li>
+                </ul>
+            </div>
         </div>
-        
-        <div class="form-group" style="margin-bottom: 20px;">
-            <label for="experience" style="display: block; margin-bottom: 8px; font-weight: 500;">Previous Experience</label>
-            <textarea id="experience" name="experience" rows="4" required 
-                      style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);"></textarea>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Drags Community. All rights reserved. Not affiliated with Discord Inc.</p>
         </div>
-        
-        <div class="form-group" style="margin-bottom: 20px;">
-            <label for="why-join" style="display: block; margin-bottom: 8px; font-weight: 500;">Why do you want to join our team?</label>
-            <textarea id="why-join" name="why-join" rows="4" required 
-                      style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--card-bg); color: var(--text);"></textarea>
-        </div>
-        
-        <button type="submit" class="cta-button" style="width: 100%; padding: 15px; font-size: 18px;">
-            Submit Application
-        </button>
-        
-        <div id="form-status" style="margin-top: 20px; text-align: center;"></div>
-    </form>
-</section>
-<script>
-document.getElementById('discord-application').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const form = e.target;
-    const submitButton = form.querySelector('button[type="submit"]');
-    const statusElement = document.getElementById('form-status');
-    
-    // Disable button to prevent multiple submissions
-    submitButton.disabled = true;
-    submitButton.textContent = 'Submitting...';
-    statusElement.textContent = '';
-    statusElement.style.color = '';
-    
-    try {
-        // Get form data
-        const formData = {
-            username: form['discord-username'].value,
-            age: form['age'].value,
-            position: form['position'].value,
-            experience: form['experience'].value,
-            whyJoin: form['why-join'].value,
-            timestamp: new Date().toISOString()
-        };
-        
-        // Replace with your actual webhook URL
-        const webhookURL = 'https://discord.com/api/webhooks/1392885637119611010/p0iQabCSfD6vgn0ubTJAXNPuBOttY5ZGG3ojL1ks9PKacW2eMY54qysS72lf9HVTpLHs';
-        
-        // Create Discord embed
-        const embed = {
-            title: 'New Application Submission',
-            color: 0x5865F2, // Discord purple
-            fields: [
-                { name: 'Discord Username', value: formData.username, inline: true },
-                { name: 'Age', value: formData.age, inline: true },
-                { name: 'Position', value: formData.position, inline: true },
-                { name: 'Experience', value: formData.experience },
-                { name: 'Why Join', value: formData.whyJoin },
-                { name: 'Submitted At', value: new Date(formData.timestamp).toLocaleString() }
-            ],
-            footer: { text: 'Drags Application System' }
-        };
-        
-        // Send to Discord
-        const response = await fetch(webhookURL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                embeds: [embed],
-                content: `New application from ${formData.username} for ${formData.position}`
-            })
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         });
         
-        if (!response.ok) throw new Error('Failed to submit application');
+        // Form container animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const formContainer = document.getElementById('form-container');
+            setTimeout(() => {
+                formContainer.classList.add('active');
+            }, 300);
+        });
         
-        // Success message
-        statusElement.textContent = 'Application submitted successfully! You will receive a response soon.';
-        statusElement.style.color = '#57F287'; // Discord green
-        form.reset();
+        // Form submission
+        document.getElementById('discord-application').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitText = document.getElementById('submit-text');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const statusElement = document.getElementById('form-status');
+            
+            // Show loading state
+            submitText.style.display = 'none';
+            loadingSpinner.style.display = 'inline-block';
+            statusElement.className = 'form-status';
+            statusElement.textContent = '';
+            
+            try {
+                // Get form data
+                const formData = {
+                    username: form['discord-username'].value,
+                    age: form['age'].value,
+                    position: form['position'].value,
+                    experience: form['experience'].value,
+                    whyJoin: form['why-join'].value,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Replace with your actual webhook URL
+                const webhookURL = 'https://discord.com/api/webhooks/1392885637119611010/p0iQabCSfD6vgn0ubTJAXNPuBOttY5ZGG3ojL1ks9PKacW2eMY54qysS72lf9HVTpLHs';
+                
+                // Create Discord embed
+                const embed = {
+                    title: 'New Application Submission',
+                    color: 0x5865F2,
+                    fields: [
+                        { name: 'Discord Username', value: formData.username, inline: true },
+                        { name: 'Age', value: formData.age, inline: true },
+                        { name: 'Position', value: formData.position, inline: true },
+                        { name: 'Experience', value: formData.experience || 'Not provided' },
+                        { name: 'Why Join', value: formData.whyJoin || 'Not provided' },
+                        { name: 'Submitted At', value: new Date(formData.timestamp).toLocaleString() }
+                    ],
+                    footer: { text: 'Drags Application System' }
+                };
+                
+                // Send to Discord
+                const response = await fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        embeds: [embed],
+                        content: `New application from ${formData.username} for ${formData.position}`
+                    })
+                });
+                
+                if (!response.ok) throw new Error('Failed to submit application');
+                
+                // Success message
+                statusElement.textContent = 'Application submitted successfully! Staff will review your application soon.';
+                statusElement.classList.add('show', 'success');
+                form.reset();
+                
+                // Add celebration animation
+                formContainer.classList.add('celebrate');
+                setTimeout(() => {
+                    formContainer.classList.remove('celebrate');
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error submitting application:', error);
+                statusElement.textContent = 'Error submitting application. Please try again or contact staff.';
+                statusElement.classList.add('show', 'error');
+            } finally {
+                // Reset loading state
+                submitText.style.display = 'inline';
+                loadingSpinner.style.display = 'none';
+            }
+        });
         
-    } catch (error) {
-        console.error('Error submitting application:', error);
-        statusElement.textContent = 'Error submitting application. Please try again or contact staff.';
-        statusElement.style.color = '#ED4245'; // Discord red
-    } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Submit Application';
-    }
-});
-</script>
+        // Animate form elements on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.form-group').forEach(group => {
+            observer.observe(group);
+        });
+    </script>
+</body>
+</html>
