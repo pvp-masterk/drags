@@ -962,57 +962,52 @@
     </footer>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Dropdown toggle
-    const profileButton = document.getElementById('profile-button');
-    const dropdownMenu = document.getElementById('dropdown-menu');
+// Add this to your main site's JavaScript
+function updateAuthUI() {
+    const userControls = document.querySelector('.user-controls');
+    const loginLink = document.createElement('a');
+    loginLink.href = '/login-page';
+    loginLink.className = 'cta-button';
+    loginLink.textContent = 'Login';
+    loginLink.id = 'login-button';
     
-    profileButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        dropdownMenu.classList.toggle('show');
-    });
+    // Remove existing auth elements
+    document.getElementById('login-button')?.remove();
+    document.getElementById('profile-dropdown')?.remove();
     
-    document.addEventListener('click', function() {
-        dropdownMenu.classList.remove('show');
-    });
-    
-    // Check login state
-    checkLoginState();
-    
-    // Check every 5 minutes
-    setInterval(checkLoginState, 300000);
-});
-
-async function checkLoginState() {
-    try {
-        const response = await fetch('/api/user');
-        
-        if (response.ok) {
-            const user = await response.json();
-            updateUserUI(user);
-            document.body.classList.add('logged-in');
-            document.body.classList.remove('logged-out');
-        } else {
-            document.body.classList.add('logged-out');
-            document.body.classList.remove('logged-in');
-        }
-    } catch (error) {
-        console.error('Error checking login state:', error);
-        document.body.classList.add('logged-out');
-        document.body.classList.remove('logged-in');
+    if (isLoggedIn()) {
+        // Add profile dropdown if logged in
+        userControls.innerHTML = `
+            <div class="profile-dropdown-container" id="profile-dropdown">
+                <button class="profile-button" id="profile-button">
+                    <img id="user-avatar" src="${getAvatarUrl()}" alt="User Avatar">
+                </button>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <!-- Dropdown content here -->
+                </div>
+            </div>
+        `;
+        // Initialize dropdown functionality
+        initProfileDropdown();
+    } else {
+        // Add login button if not logged in
+        userControls.appendChild(loginLink);
     }
 }
 
-function updateUserUI(user) {
-    const avatarUrl = user.avatar 
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
-        : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator) % 5}.png`;
-    
-    document.getElementById('user-avatar').src = avatarUrl;
-    document.getElementById('dropdown-avatar').src = avatarUrl;
-    document.getElementById('dropdown-username').textContent = user.username;
-    document.getElementById('dropdown-discriminator').textContent = `#${user.discriminator}`;
+function isLoggedIn() {
+    // Check if user session exists
+    // You might want to make an API call to verify session
+    return localStorage.getItem('isLoggedIn') === 'true';
 }
+
+function getAvatarUrl() {
+    // Get from session or API
+    return 'https://cdn.discordapp.com/embed/avatars/0.png';
+}
+
+// Call this when page loads and when auth state changes
+updateAuthUI();
         
         // Header scroll effect
         window.addEventListener('scroll', function() {
