@@ -860,7 +860,7 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    animateValue("member-count", 0, 1500, 2000);
+                    animateValue("member-count", 0, 31, 32);
                     observer.unobserve(entry.target);
                 }
             });
