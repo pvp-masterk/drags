@@ -964,19 +964,25 @@
 
     <script>
 // Profile dropdown functionality
-const profileButton = document.getElementById('profile-button');
-const dropdownMenu = document.getElementById('dropdown-menu');
 
-profileButton.addEventListener('click', (e) => {
-    e.stopPropagation();
-    dropdownMenu.classList.toggle('active');
-});
-
-// Close dropdown when clicking outside
-document.addEventListener('click', (e) => {
-    if (!dropdownMenu.contains(e.target) && e.target !== profileButton) {
-        dropdownMenu.classList.remove('active');
-    }
+// Fix the dropdown toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const profileButton = document.getElementById('profile-button');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    
+    // Toggle dropdown visibility
+    profileButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('show');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!dropdownMenu.contains(e.target) && e.target !== profileButton) {
+            dropdownMenu.classList.remove('show');
+        }
+    });
 });
 
 // Check login state and update UI
