@@ -125,45 +125,7 @@ Here's the implementation of a loading screen that matches the style and logo of
         }
 
         :root {
-  /* Default theme (dark) */
-  --primary: #5865F2;
-  --primary-dark: #4752C4;
-  --secondary: #57F287;
-  --text: #f5f5f5;
-  --bg: #1e1e2e;
-  --card-bg: #2a2a3a;
-  --accent: #ED4245;
-}
-
-[data-theme="light"] {
-  --primary: #5865F2;
-  --primary-dark: #4752C4;
-  --secondary: #2D7D46;
-  --text: #2e3338;
-  --bg: #ffffff;
-  --card-bg: #f2f3f5;
-  --accent: #ED4245;
-}
-
-[data-theme="amoled"] {
-  --primary: #5865F2;
-  --primary-dark: #4752C4;
-  --secondary: #57F287;
-  --text: #ffffff;
-  --bg: #000000;
-  --card-bg: #0f0f0f;
-  --accent: #ED4245;
-}
-
-[data-theme="midnight"] {
-  --primary: #5865F2;
-  --primary-dark: #4752C4;
-  --secondary: #57F287;
-  --text: #dbdee1;
-  --bg: #0d0f11;
-  --card-bg: #15181c;
-  --accent: #ED4245;
-}
+  
         
         .cta-button {
             background: var(--primary);
@@ -657,9 +619,7 @@ Here's the implementation of a loading screen that matches the style and logo of
             <a href="#command">Chain of Command</a>
             <li><a href="apply.html">Apply for Staff</a></li>
             <div style="display: flex; align-items: center; gap: 20px;">
-    <div class="theme-selector">
-      <!-- Theme buttons from above -->
-    </div>
+    
         </nav>
         <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
     </header>
@@ -960,56 +920,6 @@ Here's the implementation of a loading screen that matches the style and logo of
         });
 
         <script>
-// Theme management
-document.addEventListener('DOMContentLoaded', function() {
-  const themeButtons = document.querySelectorAll('.theme-btn');
-  const html = document.documentElement;
-  
-  // Load saved theme or use default
-  const savedTheme = localStorage.getItem('dragTheme') || 'dark';
-  html.setAttribute('data-theme', savedTheme);
-  
-  // Set active button
-  document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`).classList.add('active');
-  
-  // Theme switcher
-  themeButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const theme = this.getAttribute('data-theme');
-      
-      // Update theme
-      html.setAttribute('data-theme', theme);
-      localStorage.setItem('dragTheme', theme);
-      
-      // Update active button
-      themeButtons.forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      
-      // Optional: Send to server if user is logged in
-      if (window.DISCORD_USER_ID) {
-        saveThemeToServer(theme);
-      }
-    });
-  });
-  
-  // Optional: Save to server function
-  async function saveThemeToServer(theme) {
-    try {
-      await fetch('/api/save-theme', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: window.DISCORD_USER_ID,
-          theme: theme
-        })
-      });
-    } catch (error) {
-      console.error('Error saving theme:', error);
-    }
-  }
-});
 
         
         // Animated counter for member count
@@ -1044,7 +954,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    animateValue("member-count", 0, 31, 32);
+                    animateValue("member-count", 0, 32, 31);
                     observer.unobserve(entry.target);
                 }
             });
