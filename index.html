@@ -158,6 +158,67 @@
             z-index: -1;
             animation: pulse 15s infinite alternate;
         }
+         .loading-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+        }
+        
+    
+        
+        .loading-text {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        
+        .loading-bar {
+            height: 8px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .dragon {
+            font-size: 60px;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+            color: var(--primary);
+        }
+        
+        .status {
+            font-size: 14px;
+            opacity: 0.6;
+            margin-top: 20px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        .loading-message {
+            animation: pulse 2s infinite;
+        }
         
         @keyframes pulse {
             0% {
@@ -582,6 +643,24 @@
     </style>
 </head>
 <body>
+     <div class="loading-container">
+        <div class="logo">
+            <i class="fab fa-discord"></i>
+            <span>Drags</span>
+        </div>
+        
+        <div class="dragon">
+            <i class="fas fa-dragon"></i>
+        </div>
+        
+        <p class="loading-text loading-message">Initializing the Drags experience...</p>
+        
+        <div class="loading-bar">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+        
+        <p class="status" id="status-text">Connecting to Discord services...</p>
+    </div>
     <!-- Header -->
     <header id="header">
         <a href="#" class="logo"><i class="fab fa-discord"></i> Drags</a>
@@ -795,6 +874,70 @@
     </footer>
 
     <script>
+        // Simulate loading progress
+        const messages = [
+            "Loading community data...",
+            "Preparing voice channels...",
+            "Connecting to Discord services...",
+            "Almost there...",
+            "Ready for takeoff!"
+        ];
+        
+        const progressBar = document.getElementById('progress-bar');
+        const statusText = document.getElementById('status-text');
+        const loadingMessage = document.querySelector('.loading-message');
+        
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress > 100) progress = 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update status messages at different intervals
+            if (progress < 20) {
+                statusText.textContent = messages[0];
+            } else if (progress < 40) {
+                statusText.textContent = messages[1];
+            } else if (progress < 60) {
+                statusText.textContent = messages[2];
+            } else if (progress < 80) {
+                statusText.textContent = messages[3];
+            } else {
+                statusText.textContent = messages[4];
+            }
+            
+            // Change loading message periodically
+            if (progress % 25 < 5) {
+                loadingMessage.textContent = "Initializing the Drags experience...";
+            } else if (progress % 25 < 10) {
+                loadingMessage.textContent = "Preparing your welcome...";
+            } else if (progress % 25 < 15) {
+                loadingMessage.textContent = "Loading server resources...";
+            } else if (progress % 25 < 20) {
+                loadingMessage.textContent = "Almost ready...";
+            }
+            // When loading completes, hide loading screen & show main content
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                }, 800);
+            }
+        }, 500);
+
+        // Fallback: If loading takes too long, force-show content after 10s
+        setTimeout(() => {
+            if (progress < 100) {
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                statusText.textContent = "Loading complete!";
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                }, 500);
+            }
+        }, 10000);
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
