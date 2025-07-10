@@ -122,121 +122,7 @@
             width: 100%;
         }
 
-        /* User Controls */
-.user-controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* Profile Button */
-.profile-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.profile-button:hover {
-    border-color: var(--primary);
-    transform: scale(1.1);
-}
-
-.profile-button img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Dropdown Menu */
-.profile-dropdown-container {
-    position: relative;
-}
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    z-index: 1000;
-    min-width: 200px;
-    padding: 10px 0;
-    background: var(--card-bg);
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    margin-top: 5px;
-}
-
-.dropdown-menu.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.dropdown-header {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    gap: 10px;
-}
-
-.dropdown-header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-.dropdown-user-info {
-    display: flex;
-    flex-direction: column;
-}
-
-#dropdown-username {
-    font-weight: 600;
-}
-
-#dropdown-discriminator {
-    font-size: 12px;
-    opacity: 0.7;
-}
-
-.dropdown-divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 5px 0;
-}
-
-.dropdown-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    color: var(--text);
-    text-decoration: none;
-    transition: all 0.3s ease;
-    gap: 10px;
-}
-
-.dropdown-item i {
-    width: 20px;
-    text-align: center;
-}
-
-.dropdown-item:hover {
-    background: rgba(88, 101, 242, 0.1);
-    color: var(--primary);
-}
-
-/* Login state */
-.logged-in #join-button {
-    display: none;
-}
-
-.logged-out .dropdown-menu {
-    display: none;
-}
+      
 
         :root {
   
@@ -720,29 +606,7 @@
         </nav>
         <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
 
-<!-- Add this right after the nav-links in your header -->
-<div class="user-controls">
-    <a href="https://discord.gg/dUWFNqYfPX" class="cta-button" id="join-button">Join Server</a>
-    <div class="profile-dropdown-container">
-        <button class="profile-button" id="profile-button">
-            <img id="user-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
-        </button>
-        <div class="dropdown-menu" id="dropdown-menu">
-            <div class="dropdown-header">
-                <img id="dropdown-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
-                <div class="dropdown-user-info">
-                    <span id="dropdown-username">Not Logged In</span>
-                    <span id="dropdown-discriminator">#0000</span>
-                </div>
-            </div>
-            <div class="dropdown-divider"></div>
-            <a href="/profile" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
-            <a href="/settings" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
-            <div class="dropdown-divider"></div>
-            <a href="/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
-        </div>
-    </div>
-</div>
+
         
     </header>
 
@@ -962,52 +826,7 @@
     </footer>
 
     <script>
-// Add this to your main site's JavaScript
-function updateAuthUI() {
-    const userControls = document.querySelector('.user-controls');
-    const loginLink = document.createElement('a');
-    loginLink.href = '/login-page';
-    loginLink.className = 'cta-button';
-    loginLink.textContent = 'Login';
-    loginLink.id = 'login-button';
-    
-    // Remove existing auth elements
-    document.getElementById('login-button')?.remove();
-    document.getElementById('profile-dropdown')?.remove();
-    
-    if (isLoggedIn()) {
-        // Add profile dropdown if logged in
-        userControls.innerHTML = `
-            <div class="profile-dropdown-container" id="profile-dropdown">
-                <button class="profile-button" id="profile-button">
-                    <img id="user-avatar" src="${getAvatarUrl()}" alt="User Avatar">
-                </button>
-                <div class="dropdown-menu" id="dropdown-menu">
-                    <!-- Dropdown content here -->
-                </div>
-            </div>
-        `;
-        // Initialize dropdown functionality
-        initProfileDropdown();
-    } else {
-        // Add login button if not logged in
-        userControls.appendChild(loginLink);
-    }
-}
 
-function isLoggedIn() {
-    // Check if user session exists
-    // You might want to make an API call to verify session
-    return localStorage.getItem('isLoggedIn') === 'true';
-}
-
-function getAvatarUrl() {
-    // Get from session or API
-    return 'https://cdn.discordapp.com/embed/avatars/0.png';
-}
-
-// Call this when page loads and when auth state changes
-updateAuthUI();
         
         // Header scroll effect
         window.addEventListener('scroll', function() {
