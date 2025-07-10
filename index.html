@@ -34,7 +34,7 @@
             overflow-x: hidden;
         }
         
-        /* Rest of your existing styles... */
+        
         /* Smooth scroll */
         html {
             scroll-behavior: smooth;
@@ -121,6 +121,123 @@
         .nav-links a:hover::after {
             width: 100%;
         }
+
+        /* User Controls */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Profile Button */
+.profile-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.profile-button:hover {
+    border-color: var(--primary);
+    transform: scale(1.1);
+}
+
+.profile-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Dropdown Menu */
+.profile-dropdown-container {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 250px;
+    background: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.dropdown-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    gap: 10px;
+}
+
+.dropdown-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.dropdown-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+#dropdown-username {
+    font-weight: 600;
+}
+
+#dropdown-discriminator {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 5px 0;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    gap: 10px;
+}
+
+.dropdown-item i {
+    width: 20px;
+    text-align: center;
+}
+
+.dropdown-item:hover {
+    background: rgba(88, 101, 242, 0.1);
+    color: var(--primary);
+}
+
+/* Login state */
+.logged-in #join-button {
+    display: none;
+}
+
+.logged-out .dropdown-menu {
+    display: none;
+}
 
         :root {
   
@@ -601,9 +718,33 @@
             <a href="#command">Chain of Command</a>
             <li><a href="apply.html">Apply for Staff</a></li>
             <div style="display: flex; align-items: center; gap: 20px;">
-    
         </nav>
         <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
+
+<!-- Add this right after the nav-links in your header -->
+<div class="user-controls">
+    <a href="https://discord.gg/dUWFNqYfPX" class="cta-button" id="join-button">Join Server</a>
+    <div class="profile-dropdown-container">
+        <div class="profile-button" id="profile-button">
+            <img id="user-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu">
+            <div class="dropdown-header">
+                <img id="dropdown-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
+                <div class="dropdown-user-info">
+                    <span id="dropdown-username">Not Logged In</span>
+                    <span id="dropdown-discriminator">#0000</span>
+                </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="/profile" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+            <a href="/settings" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+            <div class="dropdown-divider"></div>
+            <a href="/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+</div>
+        
     </header>
 
   
@@ -822,6 +963,64 @@
     </footer>
 
     <script>
+// Profile dropdown functionality
+const profileButton = document.getElementById('profile-button');
+const dropdownMenu = document.getElementById('dropdown-menu');
+
+profileButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle('active');
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (!dropdownMenu.contains(e.target) && e.target !== profileButton) {
+        dropdownMenu.classList.remove('active');
+    }
+});
+
+// Check login state and update UI
+async function checkLoginState() {
+    try {
+        const response = await fetch('/api/user');
+        if (response.ok) {
+            const user = await response.json();
+            updateUserUI(user);
+            document.body.classList.add('logged-in');
+            document.body.classList.remove('logged-out');
+        } else {
+            document.body.classList.add('logged-out');
+            document.body.classList.remove('logged-in');
+        }
+    } catch (error) {
+        console.error('Error checking login state:', error);
+        document.body.classList.add('logged-out');
+        document.body.classList.remove('logged-in');
+    }
+}
+
+function updateUserUI(user) {
+    // Update avatar
+    const avatarUrl = user.avatar 
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
+        : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator) % 5}.png`;
+    
+    document.getElementById('user-avatar').src = avatarUrl;
+    document.getElementById('dropdown-avatar').src = avatarUrl;
+    
+    // Update username and discriminator
+    document.getElementById('dropdown-username').textContent = user.username;
+    document.getElementById('dropdown-discriminator').textContent = `#${user.discriminator}`;
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    checkLoginState();
+    
+    // Check login state every minute
+    setInterval(checkLoginState, 60000);
+});
+        
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
