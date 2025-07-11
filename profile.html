@@ -113,6 +113,38 @@
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
+
+/* Header toggle button */
+#toggleHeaderBtn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 2px solid var(--primary);
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  cursor: pointer;
+  z-index: 99999;
+  transition: 0.2s ease;
+}
+
+#toggleHeaderBtn:hover {
+  background: var(--primary-dark);
+}
+
+/* Smooth header hide */
+.hidden-header {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#header-placeholder {
+  transition: opacity 0.3s ease;
+}
+    
   </style>
 </head>
 <body>
@@ -133,6 +165,9 @@
     <div id="name" class="profile-username">Loading...</div>
     <div id="displayName" class="profile-displayname"></div>
     <div id="did" class="profile-id"></div>
+<!-- 🔗 Reusable Header + Toggle -->
+<div id="header-placeholder"></div>
+<button id="toggleHeaderBtn">🔻 Disable Header</button>
 
   </div>
 
@@ -145,83 +180,9 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'
     );
 
-    <!-- 🔗 Load Header + Toggle Button -->
-<div id="header-placeholder"></div>
-<button id="toggleHeaderBtn">🔻 Disable Header</button>
+  
 
-<style>
-  /* Header toggle button styles */
-  #toggleHeaderBtn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: var(--card-bg);
-    color: var(--text);
-    border: 2px solid var(--primary);
-    padding: 8px 14px;
-    border-radius: 12px;
-    font-size: 13px;
-    cursor: pointer;
-    z-index: 99999;
-    transition: 0.2s ease;
-  }
 
-  #toggleHeaderBtn:hover {
-    background: var(--primary-dark);
-  }
-
-  /* Hides the header with fade out */
-  .hidden-header {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-
-  #header-placeholder {
-    transition: opacity 0.3s ease;
-  }
-</style>
-
-<script>
-  // Load the header.html file
-  fetch("header.html")
-    .then(res => res.text())
-    .then(html => {
-      const headerEl = document.getElementById("header-placeholder");
-      headerEl.innerHTML = html;
-
-      // After loading header, apply saved preference
-      applyHeaderPreference();
-    });
-
-  // Toggle button logic
-  const toggleBtn = document.getElementById("toggleHeaderBtn");
-
-  toggleBtn.addEventListener("click", () => {
-    const header = document.getElementById("header-placeholder");
-    const hidden = header.classList.toggle("hidden-header");
-
-    // Save preference to localStorage
-    localStorage.setItem("hideHeader", hidden ? "1" : "0");
-
-    // Update button text
-    toggleBtn.textContent = hidden ? "🔼 Enable Header" : "🔻 Disable Header";
-  });
-
-  // Apply saved preference on load
-  function applyHeaderPreference() {
-    const shouldHide = localStorage.getItem("hideHeader") === "1";
-    const header = document.getElementById("header-placeholder");
-
-    if (shouldHide) {
-      header.classList.add("hidden-header");
-      toggleBtn.textContent = "🔼 Enable Header";
-    } else {
-      header.classList.remove("hidden-header");
-      toggleBtn.textContent = "🔻 Disable Header";
-    }
-  }
-<script>
 
 
 
@@ -299,6 +260,42 @@
     window.addEventListener("unhandledrejection", e => {
       showError(`⚠️ ${e.reason?.message || e.reason}`);
     });
+// headerLoader.js
+function applyHeaderPreference() {
+  const shouldHide = localStorage.getItem("hideHeader") === "1";
+  const header = document.getElementById("header-placeholder");
+
+  if (shouldHide) {
+    header.classList.add("hidden-header");
+    toggleBtn.textContent = "🔼 Enable Header";
+  } else {
+    header.classList.remove("hidden-header");
+    toggleBtn.textContent = "🔻 Disable Header";
+  }
+}
+
+// Fetch and insert the header
+fetch("header.html")
+  .then(res => res.text())
+  .then(html => {
+    const headerEl = document.getElementById("header-placeholder");
+    headerEl.innerHTML = html;
+    applyHeaderPreference(); // Apply saved toggle state
+  });
+
+const toggleBtn = document.getElementById("toggleHeaderBtn");
+
+toggleBtn.addEventListener("click", () => {
+  const header = document.getElementById("header-placeholder");
+  const hidden = header.classList.toggle("hidden-header");
+
+  // Save the preference
+  localStorage.setItem("hideHeader", hidden ? "1" : "0");
+
+  toggleBtn.textContent = hidden ? "🔼 Enable Header" : "🔻 Disable Header";
+});
+
+    
   </script>
 </body>
 </html>
