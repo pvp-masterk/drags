@@ -114,10 +114,10 @@
   <img id="dropdownAvatar" class="top-right-avatar" src="" width="45" height="45" style="border-radius: 50%;" />
 
   <!-- Dropdown -->
-  <div id="dropdownMenu" class="dropdown">
-    <button onclick=" window.location.href = `settings.html?discord_id=${discordId}`">Edit Profile</button>
-    <button onclick="window.location.href='linkaccount.html'">Logout</button>
-  </div>
+ <div id="dropdownMenu" class="dropdown">
+  <button id="editProfileBtn">Edit Profile</button>
+  <button onclick="window.location.href='linkaccount.html'">Logout</button>
+</div>
 
 
   <!-- Profile Card -->
@@ -177,6 +177,10 @@
         dropdownMenu.classList.remove("active");
       }
     });
+    document.getElementById("editProfileBtn").addEventListener("click", () => {
+  window.location.href = `settings.html?discord_id=${discordId}`;
+});
+
   </script>
 </body>
 </html>
