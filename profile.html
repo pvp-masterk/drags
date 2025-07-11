@@ -181,72 +181,22 @@
     );
 
   
-// 1. Fetch the header and insert it
-fetch("mainheader.html")
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById("header-placeholder").innerHTML = html;
-    applyHeaderPreference();
-    setupHeaderFeatures();
-  });
-
-// 2. Handle hide/show header button
-const toggleBtn = document.getElementById("toggleHeaderBtn");
-toggleBtn.addEventListener("click", () => {
-  const header = document.getElementById("header-placeholder");
-  const hidden = header.classList.toggle("hidden-header");
-  localStorage.setItem("hideHeader", hidden ? "1" : "0");
-  toggleBtn.textContent = hidden ? "🔼 Enable Header" : "🔻 Disable Header";
-});
-
-function applyHeaderPreference() {
-  const shouldHide = localStorage.getItem("hideHeader") === "1";
-  const header = document.getElementById("header-placeholder");
-  if (shouldHide) {
-    header.classList.add("hidden-header");
-    toggleBtn.textContent = "🔼 Enable Header";
-  } else {
-    header.classList.remove("hidden-header");
-    toggleBtn.textContent = "🔻 Disable Header";
-  }
-}
-
-// 3. Setup everything inside the header
-function setupHeaderFeatures() {
-  const userId = localStorage.getItem("discord_id");
-  const avatarUrl = localStorage.getItem("avatar_url");
-
-  const avatar = document.getElementById("miniAvatar");
-  const editProfile = document.getElementById("editProfile");
-  const dropdown = document.getElementById("dropdown");
+// 👋 Logout logic
+function setupLogout() {
   const logoutBtn = document.getElementById("logoutBtn");
+  if (!logoutBtn) return;
 
-  if (avatar && avatarUrl) {
-    avatar.src = avatarUrl;
-    avatar.style.display = "block";
-  }
-
-  if (editProfile && userId) {
-    editProfile.href = `settings.html?discord_id=${userId}`;
-  }
-
-  avatar?.addEventListener("click", () => {
-    dropdown.classList.toggle("show");
-  });
-
-  window.addEventListener("click", (e) => {
-    if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.remove("show");
-    }
-  });
-
-  // ✅ Logout button
-  logoutBtn?.addEventListener("click", (e) => {
+  logoutBtn.addEventListener("click", (e) => {
     e.preventDefault();
+
+    // 🧹 Clear saved session
     localStorage.removeItem("discord_id");
     localStorage.removeItem("avatar_url");
+
+    // 🔁 Redirect to link page
     window.location.href = "linkaccount.html";
   });
+}
 
 
 
