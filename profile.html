@@ -92,35 +92,7 @@ window.addEventListener("beforeunload", () => {
     body: JSON.stringify({ online: false })
   });
 });
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
-  const supabase = createClient(
-    'https://akektlyhqzbatuedgnuq.supabase.co',
-    'eyJhbGciOiJIUzI1NiIs...MbLGCg'
-  );
-
-  supabase
-    .channel('online-status')
-    .on('postgres_changes', {
-      event: '*',
-      schema: 'public',
-      table: 'users',
-      filter: `discord_id=eq.${did}`
-    }, (payload) => {
-      const updated = payload.new;
-      if (updated) {
-        document.getElementById('status').textContent = updated.online
-          ? '🟢 Online'
-          : '🔴 Offline';
-        document.getElementById('status').style.color = updated.online
-          ? 'var(--secondary)'
-          : 'var(--accent)';
-      }
-    })
-    .subscribe();
-
-  </script>
 
 </script>
 </body>
