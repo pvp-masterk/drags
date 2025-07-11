@@ -4,58 +4,136 @@
   <meta charset="UTF-8" />
   <title>Your Profile</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .profile-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin-top: 60px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .profile-avatar {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      margin-bottom: 15px;
+      transition: 0.3s ease;
+    }
+
+    .profile-username {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .profile-displayname {
+      font-size: 18px;
+      color: var(--secondary);
+      margin-top: 5px;
+    }
+
+    .profile-id {
+      font-size: 14px;
+      color: grey;
+      margin-top: 4px;
+    }
+
+    .edit-btn {
+      background: var(--primary);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s ease;
+    }
+
+    .edit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .avatar-dropdown-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .mini-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid var(--primary);
+      transition: 0.2s ease;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background-color: var(--card-bg);
+      border: 1px solid var(--primary);
+      border-radius: 10px;
+      padding: 10px;
+      min-width: 150px;
+      display: none;
+      flex-direction: column;
+      animation: dropdownFade 0.3s ease;
+    }
+
+    .dropdown a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 8px;
+      border-radius: 8px;
+      transition: 0.2s ease;
+    }
+
+    .dropdown a:hover {
+      background: var(--primary-dark);
+    }
+
+    .dropdown.show {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes dropdownFade {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
 </head>
 <body>
-  <!-- 🔗 Reusable Header -->
+  <!-- 🔗 Load Reusable Header -->
   <div id="header-placeholder"></div>
 
-  <!-- 👤 User Card -->
-  <div class="container">
-    <div class="card slide-up" id="profileCard" style="text-align:center;">
-      <img id="avatar" src="" alt="Avatar" style="width:120px; border-radius:50%; margin-bottom:10px; display:none;" />
-      <h2 id="name">Loading...</h2>
-      <p><strong>Display Name:</strong> <span id="displayName">-</span></p>
-      <p><strong>ID:</strong> <span id="did">-</span></p>
-      <p><strong>Status:</strong> <span id="status" style="color:gray">Checking...</span></p>
-      <a id="settingsLink" href="#">⚙️ Edit Settings</a>
+  <!-- 🔝 Top-Right Mini Avatar & Dropdown -->
+  <div class="avatar-dropdown-container">
+    <img id="miniAvatar" class="mini-avatar" src="" alt="User" />
+    <div id="dropdown" class="dropdown">
+      <a id="editProfile" href="#">✏️ Edit Profile</a>
     </div>
   </div>
 
-  <!-- 🔔 Toast Notification Styles (can move to style.css) -->
-  <style>
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(255, 0, 0, 0.1);
-      color: #ff4d4d;
-      border: 2px solid var(--accent);
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-size: 14px;
-      z-index: 9999;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: slideIn 0.4s ease-out forwards;
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
-    }
+  <!-- 👤 Profile Main Content -->
+  <div class="container profile-wrapper">
+    <img id="avatar" class="profile-avatar" src="" alt="Avatar" style="display:none;" />
+    <div id="name" class="profile-username">Loading...</div>
+    <div id="displayName" class="profile-displayname"></div>
+    <div id="did" class="profile-id"></div>
+  </div>
 
-    @keyframes slideIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-    }
-  </style>
-
-  <!-- ✅ Logic -->
+  <!-- 📦 Logic -->
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
@@ -64,7 +142,6 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'
     );
 
-    // Load reusable header
     fetch("header.html")
       .then(res => res.text())
       .then(html => document.getElementById("header-placeholder").innerHTML = html);
@@ -73,10 +150,16 @@
     const did = params.get('discord_id');
 
     if (!did) {
-      showError("❌ Missing Discord ID in URL");
+      showError("❌ Missing Discord ID");
       throw new Error("Missing discord_id");
     }
 
+    const avatar = document.getElementById("avatar");
+    const miniAvatar = document.getElementById("miniAvatar");
+    const dropdown = document.getElementById("dropdown");
+    const editProfile = document.getElementById("editProfile");
+
+    // Load profile
     async function loadProfile() {
       const { data, error } = await supabase
         .from("users")
@@ -86,53 +169,42 @@
 
       if (error || !data) {
         showError("❌ User not found.");
-        document.getElementById('name').textContent = "User not found";
         return;
       }
 
       document.getElementById("name").textContent = data.username;
-      document.getElementById("did").textContent = data.discord_id;
       document.getElementById("displayName").textContent = data.display_name || "-";
-      document.getElementById("status").textContent = data.online ? "🟢 Online" : "🔴 Offline";
-      document.getElementById("status").style.color = data.online ? "var(--secondary)" : "var(--accent)";
-      document.getElementById("settingsLink").href = `settings.html?discord_id=${data.discord_id}`;
+      document.getElementById("did").textContent = `ID: ${data.discord_id}`;
 
       if (data.avatar_url) {
-        const avatar = document.getElementById("avatar");
         avatar.src = data.avatar_url;
         avatar.style.display = "block";
+        miniAvatar.src = data.avatar_url;
       }
+
+      editProfile.href = `settings.html?discord_id=${data.discord_id}`;
     }
 
-    // Live status updates
-    supabase
-      .channel('user-status')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'users',
-        filter: `discord_id=eq.${did}`
-      }, payload => {
-        const updated = payload.new;
-        if (updated) {
-          document.getElementById("status").textContent = updated.online ? "🟢 Online" : "🔴 Offline";
-          document.getElementById("status").style.color = updated.online ? "var(--secondary)" : "var(--accent)";
-        }
-      })
-      .subscribe();
+    // Toggle dropdown
+    miniAvatar.addEventListener("click", () => {
+      dropdown.classList.toggle("show");
+    });
+
+    // Hide dropdown when clicking outside
+    window.addEventListener("click", e => {
+      if (!miniAvatar.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
 
     loadProfile();
 
-    // Set online: false on tab close
+    // Optional: update online status on exit
     window.addEventListener("beforeunload", () => {
-      supabase
-        .from("users")
-        .update({ online: false })
-        .eq("discord_id", did)
-        .then(() => {});
+      supabase.from("users").update({ online: false }).eq("discord_id", did);
     });
 
-    // 🔔 Error notification system
+    // Error notifier
     function showError(message) {
       const toast = document.createElement("div");
       toast.className = "toast";
@@ -144,14 +216,9 @@
       }, 4000);
     }
 
-    // Global JS error handling
-    window.onerror = function(message) {
-      showError(`⚠️ ${message}`);
-    };
-
-    window.addEventListener("unhandledrejection", function(event) {
-      const msg = event.reason?.message || event.reason || "Unknown error";
-      showError(`⚠️ ${msg}`);
+    window.onerror = (msg) => showError(`⚠️ ${msg}`);
+    window.addEventListener("unhandledrejection", e => {
+      showError(`⚠️ ${e.reason?.message || e.reason}`);
     });
   </script>
 </body>
