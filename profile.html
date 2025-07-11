@@ -1,32 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Profile - Drags</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
+<html>
+<head><link rel="stylesheet" href="style.css" /></head>
 <body>
   <div class="container">
     <div class="card slide-up" id="profileCard">
-      <h1>Your Profile</h1>
-      <p><strong>ID:</strong> <span id="userId">...</span></p>
-      <p><strong>Display Name:</strong> <span id="displayName">...</span></p>
-      <p><strong>Status:</strong> <span id="status">...</span></p>
+      <h1 id="name">Loading...</h1>
+      <img id="avatar" src="" alt="Avatar" />
+      <p><strong>ID:</strong> <span id="did"></span></p>
+      <p><strong>Online:</strong> Yes</p>
       <a href="settings.html">⚙️ Settings</a>
     </div>
   </div>
 
-  <script>
-    async function loadProfile() {
-      const res = await fetch("https://your-backend-url.com/profile");
-      const data = await res.json();
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const did = params.get('discord_id');
+  if (!did) window.location.href = '/';
 
-      document.getElementById("userId").textContent = data.id;
-      document.getElementById("displayName").textContent = data.name;
-      document.getElementById("status").textContent = data.online ? "Online" : "Offline";
+  fetch(`https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users?select=*&discord_id=eq.${did}`, {
+    headers: {
+      apikey: 'eyJhbGc…MbLGCg',
+      Authorization: 'Bearer eyJhbGc…MbLGCg'
     }
-
-    loadProfile();
-  </script>
+  })
+  .then(r => r.json())
+  .then(u => {
+    const user = u[0];
+    document.getElementById('name').textContent = user.username;
+    document.getElementById('did').textContent = user.discord_id;
+    if (user.avatar_url) document.getElementById('avatar').src = user.avatar_url;
+  });
+</script>
 </body>
 </html>
