@@ -88,59 +88,85 @@
 
   <div class="user-list" id="userList">Loading...</div>
 
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-    const supabase = createClient("https://akektlyhqzbatuedgnuq.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg");
+ <script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    const userList = document.getElementById("userList");
-    const searchInput = document.getElementById("searchInput");
+const supabase = createClient(
+  "https://akektlyhqzbatuedgnuq.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg" // full anon key
+);
 
-    let allUsers = [];
+const userList = document.getElementById("userList");
+const searchInput = document.getElementById("searchInput");
 
-    async function loadUsers() {
-      const { data, error } = await supabase
-        .from("users")
-        .select("discord_id, username, display_name, avatar_url");
+// ✅ Hardcoded verified users list
+const verifiedIds = [
+  "1303491410472865793", // you
+  "1392907277463457792", // another
+  "1200000000000000000"  // add more
+];
 
-      if (error) {
-        userList.textContent = "Failed to load users.";
-        return;
-      }
+let allUsers = [];
 
-      allUsers = data;
-      renderUsers(data);
-    }
+async function loadUsers() {
+  const { data, error } = await supabase
+    .from("users")
+    .select("discord_id, username, display_name, avatar_url");
 
-    function renderUsers(users) {
-      userList.innerHTML = "";
+  if (error) {
+    userList.textContent = "Failed to load users.";
+    console.error("Supabase error:", error);
+    return;
+  }
 
-      users.forEach(user => {
-        const card = document.createElement("div");
-        card.className = "user-card";
+  allUsers = data;
 
-        const avatar = user.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discord_id >> 22) % 5}.png`;
+  // Sort: verified first
+  allUsers.sort((a, b) => {
+    const aVerified = verifiedIds.includes(a.discord_id);
+    const bVerified = verifiedIds.includes(b.discord_id);
+    return bVerified - aVerified;
+  });
 
-        card.innerHTML = `
-          <img class="user-avatar" src="${avatar}" />
-          <div><strong>${user.display_name || user.username}</strong></div>
-          <div style="font-size: 14px;">@${user.username}</div>
-          <a href="profile.html?discord_id=${user.discord_id}">View Profile</a>
-        `;
+  renderUsers(allUsers);
+}
 
-        userList.appendChild(card);
-      });
-    }
+function renderUsers(users) {
+  userList.innerHTML = "";
 
-    searchInput.addEventListener("input", () => {
-      const query = searchInput.value.toLowerCase();
-      const filtered = allUsers.filter(u =>
-        u.username.toLowerCase().includes(query) ||
-        (u.display_name && u.display_name.toLowerCase().includes(query))
-      );
-      renderUsers(filtered);
-    });
+  users.forEach(user => {
+    const card = document.createElement("div");
+    card.className = "user-card";
 
-    loadUsers();
-  </script>
+    const avatar = user.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discord_id >> 22) % 5}.png`;
+
+    const isVerified = verifiedIds.includes(user.discord_id);
+
+    card.innerHTML = `
+      <img class="user-avatar" src="${avatar}" />
+      <div>
+        <strong>${user.display_name || user.username}
+          ${isVerified ? ' <span title="Verified" style="color:#57F287;">✔️</span>' : ""}
+        </strong>
+      </div>
+      <div style="font-size: 14px;">@${user.username}</div>
+      <a href="profile.html?discord_id=${user.discord_id}">View Profile</a>
+    `;
+
+    userList.appendChild(card);
+  });
+}
+
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.toLowerCase();
+  const filtered = allUsers.filter(u =>
+    u.username.toLowerCase().includes(query) ||
+    (u.display_name && u.display_name.toLowerCase().includes(query))
+  );
+  renderUsers(filtered);
+});
+
+loadUsers();
+</script>
 </body>
 </html>
