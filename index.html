@@ -677,6 +677,9 @@
             <li><a href="apply.html">Apply for Staff</a></li>
             <div style="display: flex; align-items: center; gap: 20px;">
         </nav>
+        <div id="user-box">
+        <a href="http://localhost:3000/auth/discord" class="cta-button" id="login-btn">Login with Discord</a>
+    </div>
         <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
 
 
@@ -1052,5 +1055,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         observer.observe(communitySection);
     </script>
+<script>
+  fetch("http://localhost:3000/user", {
+    credentials: "include"
+  })
+  .then(res => res.json())
+  .then(user => {
+    if (user && user.username) {
+      const userBox = document.getElementById("user-box");
+      userBox.innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png" style="width:35px;height:35px;border-radius:50%;">
+          <span>${user.username}</span>
+          <a href="http://localhost:3000/logout" class="cta-button" style="background:#ED4245;">Logout</a>
+        </div>
+      `;
+    }
+  });
+</script>
+
+    
 </body>
 </html>
