@@ -253,10 +253,7 @@
 
   
 
-    // Optional: update online status on exit
-    window.addEventListener("beforeunload", () => {
-      supabase.from("users").update({ online: false }).eq("discord_id", did);
-    });
+
 
     // Error notifier
     function showError(message) {
