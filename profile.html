@@ -51,6 +51,21 @@
 
       document.getElementById('settingsLink').href = `settings.html?discord_id=${user.discord_id}`;
     });
-  </script>
+
+ 
+  function showError(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+      toast.style.animation = "fadeOut 0.4s ease-out forwards";
+      setTimeout(() => toast.remove(), 400);
+    }, 4000);
+  }
+</script>
 </body>
 </html>
