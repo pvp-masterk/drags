@@ -16,33 +16,31 @@
   <p id="linkedUser"></p>
 
   <script>
-    async function submitCode() {
-      const code = document.getElementById("code").value;
+  async function submitCode() {
+    const code = document.getElementById("code").value.trim();
 
-      const url = "https://dsosdqwmeydiyrbzcojz.supabase.co/rest/v1/links?code=eq." + code;
+    const response = await fetch(`https://dsosdqwmeydiyrbzcojz.supabase.co/rest/v1/links?code=eq.${code}`, {
+      method: "PATCH",
+      headers: {
+        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzb3NkcXdtZXlkaXlyYnpjb2p6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMTY1NDUsImV4cCI6MjA2Nzc5MjU0NX0.9om86eGS68cqtBexnK5f6RKJF1_eeXEnPtSKu1BTOek",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzb3NkcXdtZXlkaXlyYnpjb2p6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMTY1NDUsImV4cCI6MjA2Nzc5MjU0NX0.9om86eGS68cqtBexnK5f6RKJF1_eeXEnPtSKu1BTOek",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+      },
+      body: JSON.stringify({ verified: true })
+    });
 
-      const res = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzb3NkcXdtZXlkaXlyYnpjb2p6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMTY1NDUsImV4cCI6MjA2Nzc5MjU0NX0.9om86eGS68cqtBexnK5f6RKJF1_eeXEnPtSKu1BTOek",
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzb3NkcXdtZXlkaXlyYnpjb2p6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMTY1NDUsImV4cCI6MjA2Nzc5MjU0NX0.9om86eGS68cqtBexnK5f6RKJF1_eeXEnPtSKu1BTOek",
-          "Content-Type": "application/json",
-          "Prefer": "return=representation"
-        },
-        body: JSON.stringify({ verified: true })
-      });
+    const data = await response.json();
 
-      const result = await res.json();
-
-      if (res.ok && result.length > 0) {
-        const userId = result[0].discord_id;
-        document.getElementById("status").innerText = "✅ Successfully linked!";
-        document.getElementById("linkedUser").innerText = `You are linked to Discord ID: ${userId}`;
-      } else {
-        document.getElementById("status").innerText = "❌ Invalid or expired code.";
-        document.getElementById("linkedUser").innerText = "";
-      }
+    if (response.ok && data.length > 0) {
+      document.getElementById("status").innerText = "✅ Successfully linked!";
+      document.getElementById("linkedUser").innerText = `You are linked to Discord ID: ${data[0].discord_id}`;
+    } else {
+      document.getElementById("status").innerText = "❌ Invalid or expired code.";
+      document.getElementById("linkedUser").innerText = "";
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
