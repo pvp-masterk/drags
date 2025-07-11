@@ -72,19 +72,21 @@
       transition: 0.2s ease;
     }
 
-    .dropdown {
-      position: absolute;
-      top: 50px;
-      right: 0;
-      background-color: var(--card-bg);
-      border: 1px solid var(--primary);
-      border-radius: 10px;
-      padding: 10px;
-      min-width: 150px;
-      display: none;
-      flex-direction: column;
-      animation: dropdownFade 0.3s ease;
-    }
+   .dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: var(--card-bg);
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  padding: 10px;
+  min-width: 150px;
+  display: none;
+  flex-direction: column;
+  animation: dropdownFade 0.3s ease;
+  z-index: 9999; /* 👈 Add this */
+}
+
 
     .dropdown a {
       color: var(--text);
