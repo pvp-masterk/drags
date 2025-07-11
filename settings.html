@@ -46,7 +46,7 @@
       font-weight: 500;
     }
 
-    input {
+    input, textarea {
       width: 100%;
       padding: 10px;
       border-radius: 10px;
@@ -54,6 +54,7 @@
       background: #323248;
       color: var(--text);
       font-size: 14px;
+      resize: vertical;
     }
 
     button {
@@ -108,10 +109,13 @@
     <h2>Edit Your Profile</h2>
 
     <label for="displayName">Display Name</label>
-    <input type="text" id="displayName" placeholder="Dragger#1234" />
+    <input type="text" id="displayName" placeholder="Display Name" />
 
     <label for="avatarUrl">Avatar URL</label>
     <input type="text" id="avatarUrl" placeholder="https://cdn.discordapp.com/..." />
+
+    <label for="bio">Bio</label>
+    <textarea id="bio" rows="4" placeholder="Tell us something cool..."></textarea>
 
     <button id="saveBtn">Save Changes</button>
 
@@ -134,6 +138,7 @@
 
     const displayNameInput = document.getElementById("displayName");
     const avatarUrlInput = document.getElementById("avatarUrl");
+    const bioInput = document.getElementById("bio");
     const successMsg = document.getElementById("successMsg");
     const backToProfile = document.getElementById("backToProfile");
 
@@ -154,16 +159,18 @@
       if (!error && data) {
         displayNameInput.value = data.display_name || "";
         avatarUrlInput.value = data.avatar_url || "";
+        bioInput.value = data.bio || "";
       }
     }
 
     document.getElementById("saveBtn").addEventListener("click", async () => {
       const display_name = displayNameInput.value.trim();
       const avatar_url = avatarUrlInput.value.trim();
+      const bio = bioInput.value.trim();
 
       const { error } = await supabase
         .from("users")
-        .update({ display_name, avatar_url })
+        .update({ display_name, avatar_url, bio })
         .eq("discord_id", discordId);
 
       if (!error) {
