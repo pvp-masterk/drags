@@ -13,6 +13,8 @@
         <label for="displayName">Display Name</label>
         <input type="text" id="displayName" name="displayName" placeholder="Enter display name" />
         <button type="submit">💾 Save</button>
+        <button id="updateAvatarBtn" class="btn-accent">🔁 Update Avatar</button>
+
         <p id="status" style="margin-top:10px;"></p>
       </form>
     </div>
@@ -67,6 +69,31 @@
         msg.style.color = 'var(--accent)';
       }
     });
+
+document.getElementById("updateAvatarBtn").addEventListener("click", async () => {
+  const userId = localStorage.getItem("discord_id");
+  if (!userId) return;
+
+  // Re-fetch from Discord API (or wherever your backend logic is)
+  try {
+    const res = await fetch(`/api/refresh-avatar?discord_id=${userId}`);
+    const data = await res.json();
+
+    if (data.success && data.avatar_url) {
+      // Update localStorage + UI
+      localStorage.setItem("avatar_url", data.avatar_url);
+      alert("✅ Avatar updated!");
+      window.location.reload(); // Reload to reflect changes
+    } else {
+      alert("❌ Failed to update avatar.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("⚠️ Something went wrong.");
+  }
+});
+
+    
   </script>
 </body>
 </html>
