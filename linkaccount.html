@@ -3,6 +3,14 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+<!-- 🔗 Load header file -->
+<div id="header-placeholder"></div>
+
+<!-- 👇 Header toggle button -->
+<button id="toggleHeaderBtn">🔻 Disable Header</button>
+
+  
   <div class="container">
     <div class="card slide-up">
       <h1>Login with Discord</h1>
@@ -11,5 +19,68 @@
       </a>
     </div>
   </div>
+  <script>
+  // 🧠 Load mainheader.html
+  fetch("mainheader.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("header-placeholder").innerHTML = html;
+      applyHeaderPreference();
+      loadUserInfo();
+      setupDropdownToggle();
+    });
+
+  // 🧠 Toggle header on/off
+  const toggleBtn = document.getElementById("toggleHeaderBtn");
+
+  toggleBtn.addEventListener("click", () => {
+    const header = document.getElementById("header-placeholder");
+    const hidden = header.classList.toggle("hidden-header");
+    localStorage.setItem("hideHeader", hidden ? "1" : "0");
+    toggleBtn.textContent = hidden ? "🔼 Enable Header" : "🔻 Disable Header";
+  });
+
+  function applyHeaderPreference() {
+    const shouldHide = localStorage.getItem("hideHeader") === "1";
+    const header = document.getElementById("header-placeholder");
+    if (shouldHide) {
+      header.classList.add("hidden-header");
+      toggleBtn.textContent = "🔼 Enable Header";
+    } else {
+      header.classList.remove("hidden-header");
+      toggleBtn.textContent = "🔻 Disable Header";
+    }
+  }
+
+  function loadUserInfo() {
+    const miniAvatar = document.getElementById("miniAvatar");
+    const editProfile = document.getElementById("editProfile");
+
+    const userId = localStorage.getItem("discord_id");
+    const avatarUrl = localStorage.getItem("avatar_url");
+
+    if (userId && avatarUrl && miniAvatar && editProfile) {
+      miniAvatar.src = avatarUrl;
+      miniAvatar.style.display = "block";
+      editProfile.href = `settings.html?discord_id=${userId}`;
+    }
+  }
+
+  function setupDropdownToggle() {
+    const avatar = document.getElementById("miniAvatar");
+    const dropdown = document.getElementById("dropdown");
+
+    avatar?.addEventListener("click", () => {
+      dropdown.classList.toggle("show");
+    });
+
+    window.addEventListener("click", (e) => {
+      if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+</script>
+
 </body>
 </html>
