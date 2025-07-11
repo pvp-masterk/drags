@@ -154,6 +154,18 @@
 
       const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
+      const { data: authData } = await supabase.auth.getUser();
+const myDiscordId = authData?.user?.user_metadata?.discord_id;
+
+const isOwner = myDiscordId === discordId;
+
+// Toggle dropdown visibility based on ownership
+if (!isOwner) {
+  document.getElementById("dropdownAvatar").style.display = "none";
+  document.getElementById("dropdownMenu").style.display = "none";
+}
+
+
       document.getElementById("profileAvatar").src = avatarUrl;
       document.getElementById("dropdownAvatar").src = avatarUrl;
       document.getElementById("username").textContent = `@${data.username}`;
