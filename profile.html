@@ -236,26 +236,6 @@
     );
 
   
-// 👋 Logout logic
-function setupLogout() {
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    // 🧹 Clear saved session
-    localStorage.removeItem("discord_id");
-    localStorage.removeItem("avatar_url");
-
-    // 🔁 Redirect to link page
-    window.location.href = "linkaccount.html";
-  });
-}
-
-
-
-
 
 
     const params = new URLSearchParams(window.location.search);
@@ -359,8 +339,7 @@ toggleBtn.addEventListener("click", () => {
       }
     }
 
-    const discordId = new URLSearchParams(window.location.search).get("discord_id");
-    if (discordId) loadProfile(discordId);
+    
 
     const discordId = new URLSearchParams(window.location.search).get("discord_id");
 console.log("Discord ID from URL:", discordId); // ✅ should be a real ID
