@@ -271,45 +271,7 @@ function setupLogout() {
     const dropdown = document.getElementById("dropdown");
     const editProfile = document.getElementById("editProfile");
 
-    // Load profile
-    async function loadProfile() {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("discord_id", did)
-        .single();
-
-      if (error || !data) {
-        showError("❌ User not found.");
-        return;
-      }
-
-      document.getElementById("name").textContent = data.username;
-      document.getElementById("displayName").textContent = data.display_name || "-";
-      document.getElementById("did").textContent = `ID: ${data.discord_id}`;
-
-      if (data.avatar_url) {
-        avatar.src = data.avatar_url;
-        avatar.style.display = "block";
-        miniAvatar.src = data.avatar_url;
-      }
-
-      editProfile.href = `settings.html?discord_id=${data.discord_id}`;
-    }
-
-    // Toggle dropdown
-    miniAvatar.addEventListener("click", () => {
-      dropdown.classList.toggle("show");
-    });
-
-    // Hide dropdown when clicking outside
-    window.addEventListener("click", e => {
-      if (!miniAvatar.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.classList.remove("show");
-      }
-    });
-
-    loadProfile();
+  
 
     // Optional: update online status on exit
     window.addEventListener("beforeunload", () => {
