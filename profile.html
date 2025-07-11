@@ -66,6 +66,22 @@
       setTimeout(() => toast.remove(), 400);
     }, 4000);
   }
+ 
+  // Catch regular JS errors (like undefined vars, fetch fails, etc.)
+  window.onerror = function(message, source, lineno, colno, error) {
+    console.error("Global Error:", message);
+    showError(`⚠️ Error: ${message}`);
+    return false; // Let browser log it too
+  };
+
+  // Catch Promise rejections (like fetch().then().catch() errors)
+  window.addEventListener("unhandledrejection", function(event) {
+    console.error("Unhandled Promise Rejection:", event.reason);
+    const msg = typeof event.reason === "string" ? event.reason : event.reason.message || "Unknown error";
+    showError(`⚠️ ${msg}`);
+  });
+
+
 </script>
 </body>
 </html>
