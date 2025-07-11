@@ -146,7 +146,66 @@
 
     fetch("header.html")
       .then(res => res.text())
-      .then(html => document.getElementById("header-placeholder").innerHTML = html);
+  .then(html => {
+      document.getElementById("header-placeholder").innerHTML = html;
+    applyHeaderPreference(); // 👈 Call this after loading
+    });
+
+    <!-- 🧲 Toggle Header Button -->
+<button id="toggleHeaderBtn">🔻 Disable Header</button>
+
+<style>
+  #toggleHeaderBtn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: var(--card-bg);
+    color: var(--text);
+    border: 2px solid var(--primary);
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    cursor: pointer;
+    z-index: 99999;
+    transition: 0.2s ease;
+  }
+
+  #toggleHeaderBtn:hover {
+    background: var(--primary-dark);
+  }
+
+  .hidden-header {
+    display: none !important;
+  }
+</style>
+
+<script>
+  const toggleBtn = document.getElementById("toggleHeaderBtn");
+
+  toggleBtn.addEventListener("click", () => {
+    const header = document.getElementById("header-placeholder");
+    const hidden = header.classList.toggle("hidden-header");
+
+    // Save state to localStorage
+    localStorage.setItem("hideHeader", hidden ? "1" : "0");
+
+    toggleBtn.textContent = hidden ? "🔼 Enable Header" : "🔻 Disable Header";
+  });
+
+  function applyHeaderPreference() {
+    const shouldHide = localStorage.getItem("hideHeader") === "1";
+    const header = document.getElementById("header-placeholder");
+
+    if (shouldHide) {
+      header.classList.add("hidden-header");
+      toggleBtn.textContent = "🔼 Enable Header";
+    } else {
+      header.classList.remove("hidden-header");
+      toggleBtn.textContent = "🔻 Disable Header";
+    }
+  }
+<script>
+
 
     const params = new URLSearchParams(window.location.search);
     const did = params.get('discord_id');
