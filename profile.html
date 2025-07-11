@@ -4,98 +4,155 @@
   <meta charset="UTF-8" />
   <title>Your Profile</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-   :root {
-  
-        
-        .cta-button {
-            background: var(--primary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            text-decoration: none;
-        }
-        
-        .cta-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
-        }
-    
-      
- 
 </head>
 <body>
+  <!-- 🔗 Reusable Header -->
+  <div id="header-placeholder"></div>
 
-  
- 
-          
+  <!-- 👤 User Card -->
   <div class="container">
     <div class="card slide-up" id="profileCard" style="text-align:center;">
       <img id="avatar" src="" alt="Avatar" style="width:120px; border-radius:50%; margin-bottom:10px; display:none;" />
       <h2 id="name">Loading...</h2>
       <p><strong>Display Name:</strong> <span id="displayName">-</span></p>
       <p><strong>ID:</strong> <span id="did">-</span></p>
-      <p><strong>Status:</strong> <span style="color:var(--secondary)">🟢 Online</span></p>
+      <p><strong>Status:</strong> <span id="status" style="color:gray">Checking...</span></p>
       <a id="settingsLink" href="#">⚙️ Edit Settings</a>
     </div>
   </div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const did = params.get('discord_id');
-    const API = 'https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users';
-    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg';
-
-    if (!did) {
-      document.getElementById('name').textContent = '❌ Missing Discord ID';
-      throw new Error('Missing discord_id');
+  <!-- 🔔 Toast Notification Styles (can move to style.css) -->
+  <style>
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255, 0, 0, 0.1);
+      color: #ff4d4d;
+      border: 2px solid var(--accent);
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideIn 0.4s ease-out forwards;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
     }
 
-    fetch(`${API}?select=*&discord_id=eq.${did}`, {
-      headers: {
-        apikey: KEY,
-        Authorization: `Bearer ${KEY}`
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-    })
-    .then(res => res.json())
-    .then(data => {
-      const user = data[0];
-      if (!user) return document.getElementById('name').textContent = '❌ User not found';
+    }
 
-      document.getElementById('name').textContent = user.username;
-      document.getElementById('displayName').textContent = user.display_name || '-';
-      document.getElementById('did').textContent = user.discord_id;
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+    }
+  </style>
 
-      if (user.avatar_url) {
-        const avatar = document.getElementById('avatar');
-        avatar.src = user.avatar_url;
-        avatar.style.display = 'block';
+  <!-- ✅ Logic -->
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+    const supabase = createClient(
+      'https://akektlyhqzbatuedgnuq.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'
+    );
+
+    // Load reusable header
+    fetch("header.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("header-placeholder").innerHTML = html);
+
+    const params = new URLSearchParams(window.location.search);
+    const did = params.get('discord_id');
+
+    if (!did) {
+      showError("❌ Missing Discord ID in URL");
+      throw new Error("Missing discord_id");
+    }
+
+    async function loadProfile() {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("discord_id", did)
+        .single();
+
+      if (error || !data) {
+        showError("❌ User not found.");
+        document.getElementById('name').textContent = "User not found";
+        return;
       }
 
-      document.getElementById('settingsLink').href = `settings.html?discord_id=${user.discord_id}`;
+      document.getElementById("name").textContent = data.username;
+      document.getElementById("did").textContent = data.discord_id;
+      document.getElementById("displayName").textContent = data.display_name || "-";
+      document.getElementById("status").textContent = data.online ? "🟢 Online" : "🔴 Offline";
+      document.getElementById("status").style.color = data.online ? "var(--secondary)" : "var(--accent)";
+      document.getElementById("settingsLink").href = `settings.html?discord_id=${data.discord_id}`;
+
+      if (data.avatar_url) {
+        const avatar = document.getElementById("avatar");
+        avatar.src = data.avatar_url;
+        avatar.style.display = "block";
+      }
+    }
+
+    // Live status updates
+    supabase
+      .channel('user-status')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'users',
+        filter: `discord_id=eq.${did}`
+      }, payload => {
+        const updated = payload.new;
+        if (updated) {
+          document.getElementById("status").textContent = updated.online ? "🟢 Online" : "🔴 Offline";
+          document.getElementById("status").style.color = updated.online ? "var(--secondary)" : "var(--accent)";
+        }
+      })
+      .subscribe();
+
+    loadProfile();
+
+    // Set online: false on tab close
+    window.addEventListener("beforeunload", () => {
+      supabase
+        .from("users")
+        .update({ online: false })
+        .eq("discord_id", did)
+        .then(() => {});
     });
 
- 
+    // 🔔 Error notification system
+    function showError(message) {
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.animation = "fadeOut 0.4s ease-out forwards";
+        setTimeout(() => toast.remove(), 400);
+      }, 4000);
+    }
 
-window.addEventListener("beforeunload", () => {
-  fetch(`https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users?discord_id=eq.${did}`, {
-    method: "PATCH",
-    headers: {
-      apikey: KEY,
-      Authorization: `Bearer ${KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ online: false })
-  });
-});
+    // Global JS error handling
+    window.onerror = function(message) {
+      showError(`⚠️ ${message}`);
+    };
 
-
-</script>
+    window.addEventListener("unhandledrejection", function(event) {
+      const msg = event.reason?.message || event.reason || "Unknown error";
+      showError(`⚠️ ${msg}`);
+    });
+  </script>
 </body>
 </html>
