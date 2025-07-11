@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Link Your Discord</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #1e1e2e;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    input, button {
+      padding: 12px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      margin: 10px;
+    }
+    input {
+      width: 200px;
+    }
+    button {
+      background: #5865F2;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4752C4;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Link Your Discord Account</h2>
+  <p>Enter the 6-digit code you received from the `/link` command.</p>
+
+  <input type="text" id="code" placeholder="Enter Code" maxlength="6">
+  <button onclick="verifyCode()">Verify</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function verifyCode() {
+      const code = document.getElementById("code").value.trim();
+      const resultBox = document.getElementById("result");
+
+      if (!/^\d{6}$/.test(code)) {
+        resultBox.textContent = "❌ Please enter a valid 6-digit code.";
+        return;
+      }
+
+      resultBox.textContent = "⏳ Verifying...";
+
+      try {
+        const res = await fetch(`https://yourdomain.com/api/verify?code=${code}`);
+        const data = await res.json();
+
+        if (data.success) {
+          resultBox.textContent = `✅ Linked successfully to ${data.username}`;
+        } else {
+          resultBox.textContent = "❌ Invalid or expired code.";
+        }
+      } catch (err) {
+        resultBox.textContent = "❌ Error contacting server.";
+        console.error(err);
+      }
+    }
+  </script>
+
+</body>
+</html>
