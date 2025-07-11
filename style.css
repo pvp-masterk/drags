@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
   --primary: #5865F2;
@@ -134,7 +133,7 @@ a:hover {
   }
 }
 
-   /* Header */
+ /* Header */
         header {
             position: fixed;
             top: 0;
@@ -172,7 +171,8 @@ a:hover {
         .nav-links {
             display: flex;
             gap: 30px;
-        }
+
+}
         
         .nav-links a {
             color: var(--text);
@@ -201,6 +201,7 @@ a:hover {
         .nav-links a:hover::after {
             width: 100%;
         }
+
 
       
 
