@@ -12,7 +12,21 @@
       </a>
     </div>
   </div>
- 
+ <script>
+   const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+// Insert user info (if not already in users table)
+await supabase.from("users").upsert({
+  id: user.id,  // This is the key that RLS will check!
+  discord_id: discordUser.id,
+  username: discordUser.username,
+  avatar_url: ..., 
+  ...
+});
+
+ </script>
 
 </body>
 </html>
