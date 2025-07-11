@@ -687,7 +687,14 @@
     </header>
 
   
+<input type="text" id="codeInput" placeholder="Enter your code" />
+<button onclick="verifyCode()">Link</button>
 
+<div id="profile" style="display:none;">
+  <p>Discord ID: <span id="discordId"></span></p>
+  <p>Username: <span id="username"></span></p>
+  <p>Points: <span id="points"></span></p>
+</div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -1072,6 +1079,26 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
     }
   });
+
+async function verifyCode() {
+    const code = document.getElementById("codeInput").value;
+    const res = await fetch("/api/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      document.getElementById("discordId").innerText = data.discord_id;
+      document.getElementById("username").innerText = data.profile_data.username;
+      document.getElementById("points").innerText = data.profile_data.points;
+      document.getElementById("profile").style.display = "block";
+    } else {
+      alert("Invalid or expired code");
+    }
+  }
+
 </script>
 
     
