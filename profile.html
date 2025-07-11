@@ -1,34 +1,62 @@
-<html>
-<head><link rel="stylesheet" href="style.css" /></head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Profile</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 <body>
   <div class="container">
     <div class="card slide-up" id="profileCard">
       <h1 id="name">Loading...</h1>
-      <img id="avatar" src="" alt="Avatar" />
+      <img id="avatar" src="" alt="Avatar" style="display:none; width:120px; border-radius:50%;" />
       <p><strong>ID:</strong> <span id="did"></span></p>
-      <p><strong>Online:</strong> Yes</p>
-      <a href="settings.html">⚙️ Settings</a>
+      <a href="settings.html?discord_id=" id="settingsLink">⚙️ Settings</a>
     </div>
   </div>
 
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const did = params.get('discord_id');
-  if (!did) window.location.href = '/';
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const did = params.get('discord_id');
 
-  fetch(`https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users?select=*&discord_id=eq.${did}`, {
-    headers: {
-      apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'
+    if (!did) {
+      document.getElementById('name').textContent = '❌ No Discord ID found in URL';
+      throw new Error('Missing discord_id');
     }
-  })
-  .then(r => r.json())
-  .then(u => {
-    const user = u[0];
-    document.getElementById('name').textContent = user.username;
-    document.getElementById('did').textContent = user.discord_id;
-    if (user.avatar_url) document.getElementById('avatar').src = user.avatar_url;
-  });
-</script>
+
+    const API = 'https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users';
+    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg';
+
+    fetch(`${API}?select=*&discord_id=eq.${did}`, {
+      headers: {
+        apikey: KEY,
+        Authorization: `Bearer ${KEY}`
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const user = data[0];
+      if (!user) {
+        document.getElementById('name').textContent = '❌ User not found';
+        return;
+      }
+
+      document.getElementById('name').textContent = user.display_name || user.username;
+      document.getElementById('did').textContent = user.discord_id;
+
+      if (user.avatar_url) {
+        const avatar = document.getElementById('avatar');
+        avatar.src = user.avatar_url;
+        avatar.style.display = 'block';
+      }
+
+      // Set settings link
+      document.getElementById('settingsLink').href = `settings.html?discord_id=${user.discord_id}`;
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById('name').textContent = '❌ Failed to load profile';
+    });
+  </script>
 </body>
 </html>
