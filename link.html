@@ -1,81 +1,40 @@
+<!-- link.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Link Your Discord</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link Discord</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #1e1e2e;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    input, button {
-      padding: 12px;
-      font-size: 18px;
-      border: none;
-      border-radius: 6px;
-      margin: 10px;
-    }
-    input {
-      width: 200px;
-    }
-    button {
-      background: #5865F2;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #4752C4;
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 18px;
-    }
+    body { background: #0e0e10; color: white; font-family: sans-serif; text-align: center; margin-top: 10%; }
+    input, button { padding: 10px; margin-top: 10px; font-size: 18px; }
   </style>
 </head>
 <body>
-
-  <h2>Link Your Discord Account</h2>
-  <p>Enter the 6-digit code you received from the `/link` command.</p>
-
-  <input type="text" id="code" placeholder="Enter Code" maxlength="6">
-  <button onclick="verifyCode()">Verify</button>
-
-  <div id="result"></div>
+  <h1>Link Your Discord</h1>
+  <input type="text" id="code" placeholder="Enter Code">
+  <br>
+  <button onclick="submitCode()">Submit</button>
+  <p id="status"></p>
 
   <script>
-    async function verifyCode() {
-      const code = document.getElementById("code").value.trim();
-      const resultBox = document.getElementById("result");
+    async function submitCode() {
+      const code = document.getElementById("code").value;
+      const res = await fetch("https://dsosdqwmeydiyrbzcojz.supabase.co/rest/v1/links?code=eq." + code, {
+        method: "PATCH",
+        headers: {
+          "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzb3NkcXdtZXlkaXlyYnpjb2p6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMTY1NDUsImV4cCI6MjA2Nzc5MjU0NX0.9om86eGS68cqtBexnK5f6RKJF1_eeXEnPtSKu1BTOek",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzb3NkcXdtZXlkaXlyYnpjb2p6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMTY1NDUsImV4cCI6MjA2Nzc5MjU0NX0.9om86eGS68cqtBexnK5f6RKJF1_eeXEnPtSKu1BTOek",
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({ verified: true })
+      });
 
-      if (!/^\d{6}$/.test(code)) {
-        resultBox.textContent = "❌ Please enter a valid 6-digit code.";
-        return;
-      }
-
-      resultBox.textContent = "⏳ Verifying...";
-
-      try {
-        const res = await fetch(`https://yourdomain.com/api/verify?code=${code}`);
-        const data = await res.json();
-
-        if (data.success) {
-          resultBox.textContent = `✅ Linked successfully to ${data.username}`;
-        } else {
-          resultBox.textContent = "❌ Invalid or expired code.";
-        }
-      } catch (err) {
-        resultBox.textContent = "❌ Error contacting server.";
-        console.error(err);
+      if (res.ok) {
+        document.getElementById("status").innerText = "Successfully linked! You can return to Discord.";
+      } else {
+        document.getElementById("status").innerText = "Invalid code.";
       }
     }
   </script>
-
 </body>
 </html>
