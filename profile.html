@@ -272,42 +272,12 @@
       showError(`⚠️ ${e.reason?.message || e.reason}`);
     });
 
-fetch("mainheader.html")
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById("header-placeholder").innerHTML = html;
-    applyHeaderPreference();
+
     
-  });
-    
-// headerLoader.js
-function applyHeaderPreference() {
-  const shouldHide = localStorage.getItem("hideHeader") === "1";
-  const header = document.getElementById("header-placeholder");
-
-  if (shouldHide) {
-    header.classList.add("hidden-header");
-    toggleBtn.textContent = "🔼 Enable Header";
-  } else {
-    header.classList.remove("hidden-header");
-    toggleBtn.textContent = "🔻 Disable Header";
-  }
-}
 
 
 
-const toggleBtn = document.getElementById("toggleHeaderBtn");
 
-toggleBtn.addEventListener("click", () => {
-  const header = document.getElementById("header-placeholder");
-  const hidden = header.classList.toggle("hidden-header");
-
-
-  // Save the preference
-  localStorage.setItem("hideHeader", hidden ? "1" : "0");
-
-  toggleBtn.textContent = hidden ? "🔼 Enable Header" : "🔻 Disable Header";
-});
 
     async function loadProfile(discordId) {
       try {
