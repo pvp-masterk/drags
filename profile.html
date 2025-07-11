@@ -144,32 +144,87 @@
 #header-placeholder {
   transition: opacity 0.3s ease;
 }
+
+    .identity-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 20px 30px;
+  margin: 50px auto;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  animation: fadeInCard 0.4s ease;
+}
+
+.identity-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+}
+
+.identity-info h2 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.identity-info h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.identity-info p {
+  color: #aaa;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.role-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.role-badge {
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--primary-dark);
+  color: white;
+  animation: badgeFade 0.3s ease;
+}
+
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes badgeFade {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
     
   </style>
 </head>
 <body>
-  <!-- 🔗 Load Reusable Header -->
-  <div id="header-placeholder"></div>
+  <div id="header-placeholder"></div> <!-- Optional header if you use it -->
 
-  <!-- 🔝 Top-Right Mini Avatar & Dropdown -->
-  <div class="avatar-dropdown-container">
-    <img id="miniAvatar" class="mini-avatar" src="" alt="User" />
-    <div id="dropdown" class="dropdown">
-      <a id="editProfile" href="#">✏️ Edit Profile</a>
+  <section class="identity-card">
+    <img id="profileAvatar" class="identity-avatar" src="" alt="Avatar" />
+    <div class="identity-info">
+      <h2 id="username">@username</h2>
+      <h3 id="displayName">Display Name</h3>
+      <p id="userId">ID: 000000000000000000</p>
+      <div id="roleContainer" class="role-badges"></div>
     </div>
-  </div>
+  </section>
 
-  <!-- 👤 Profile Main Content -->
-  <div class="container profile-wrapper">
-    <img id="avatar" class="profile-avatar" src="" alt="Avatar" style="display:none;" />
-    <div id="name" class="profile-username">Loading...</div>
-    <div id="displayName" class="profile-displayname"></div>
-    <div id="did" class="profile-id"></div>
-<!-- 🔗 Reusable Header + Toggle -->
-<div id="header-placeholder"></div>
-<button id="toggleHeaderBtn">🔻 Disable Header</button>
-
-  </div>
 
   <!-- 📦 Logic -->
   <script type="module">
@@ -316,6 +371,34 @@ toggleBtn.addEventListener("click", () => {
 
   toggleBtn.textContent = hidden ? "🔼 Enable Header" : "🔻 Disable Header";
 });
+
+    async function loadProfile(discordId) {
+      try {
+        const res = await fetch(`https://your-api.com/getProfile?discord_id=${discordId}`);
+        const data = await res.json();
+
+        document.getElementById("profileAvatar").src = data.avatar_url;
+        document.getElementById("username").textContent = `@${data.username}`;
+        document.getElementById("displayName").textContent = data.display_name || data.username;
+        document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
+
+        const roleContainer = document.getElementById("roleContainer");
+        if (Array.isArray(data.roles)) {
+          data.roles.forEach(role => {
+            const badge = document.createElement("span");
+            badge.className = "role-badge";
+            badge.textContent = role.name;
+            badge.style.backgroundColor = role.color || "var(--primary-dark)";
+            roleContainer.appendChild(badge);
+          });
+        }
+      } catch (err) {
+        console.error("Failed to load profile:", err);
+      }
+    }
+
+    const discordId = new URLSearchParams(window.location.search).get("discord_id");
+    if (discordId) loadProfile(discordId);
 
     
   </script>
