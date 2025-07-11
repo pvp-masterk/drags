@@ -181,6 +181,11 @@
         console.error(error);
       }
     });
+    if (discordId !== myDiscordId) {
+  document.querySelectorAll("input, textarea, button").forEach(el => el.disabled = true);
+  alert("⚠ You can't edit someone else's profile.");
+}
+
   </script>
 </body>
 </html>
