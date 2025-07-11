@@ -181,6 +181,24 @@
     );
 
   
+// 👋 Logout logic
+function setupLogout() {
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (!logoutBtn) return;
+
+  logoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    // 🧹 Clear saved session
+    localStorage.removeItem("discord_id");
+    localStorage.removeItem("avatar_url");
+
+    if (confirm("Are you sure you want to logout?")) {
+  window.location.href = "linkaccount.html";
+}
+
+  });
+}
 
 
 
@@ -281,6 +299,9 @@ fetch("header.html")
     const headerEl = document.getElementById("header-placeholder");
     headerEl.innerHTML = html;
     applyHeaderPreference(); // Apply saved toggle state
+    loadUserInfo();
+    setupDropdownToggle();
+    setupLogout(); // ✅ Add this
   });
 
 const toggleBtn = document.getElementById("toggleHeaderBtn");
@@ -288,6 +309,7 @@ const toggleBtn = document.getElementById("toggleHeaderBtn");
 toggleBtn.addEventListener("click", () => {
   const header = document.getElementById("header-placeholder");
   const hidden = header.classList.toggle("hidden-header");
+
 
   // Save the preference
   localStorage.setItem("hideHeader", hidden ? "1" : "0");
