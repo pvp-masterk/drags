@@ -126,6 +126,8 @@
     <div id="username" class="profile-username">@username</div>
     <div id="displayName" class="profile-displayname">Display Name</div>
     <div id="userId" class="profile-userid">ID: 000000000000000000</div>
+    <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
+
   </div>
 
   <script type="module">
@@ -157,6 +159,8 @@
       document.getElementById("username").textContent = `@${data.username}`;
       document.getElementById("displayName").textContent = data.display_name || data.username;
       document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
+      document.getElementById("userBio").textContent = data.bio || "";
+
     }
 
     if (discordId) {
