@@ -2,31 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Profile - Drags</title>
+  <title>Settings - Drags</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <div class="card slide-up" id="profileCard">
-      <h1>Your Profile</h1>
-      <p><strong>ID:</strong> <span id="userId">...</span></p>
-      <p><strong>Display Name:</strong> <span id="displayName">...</span></p>
-      <p><strong>Status:</strong> <span id="status">...</span></p>
-      <a href="settings.html">⚙️ Settings</a>
+    <div class="card slide-up">
+      <h1>Settings</h1>
+      <label>
+        Display Name:
+        <input type="text" id="displayName" />
+      </label>
+      <label>
+        Show Online Status:
+        <input type="checkbox" id="onlineStatus" />
+      </label>
+      <button onclick="saveSettings()">Save Settings</button>
+      <p id="saveStatus" class="fade-in"></p>
     </div>
   </div>
 
   <script>
-    async function loadProfile() {
-      const res = await fetch("https://your-backend-url.com/profile");
-      const data = await res.json();
+    async function saveSettings() {
+      const name = document.getElementById('displayName').value;
+      const online = document.getElementById('onlineStatus').checked;
 
-      document.getElementById("userId").textContent = data.id;
-      document.getElementById("displayName").textContent = data.name;
-      document.getElementById("status").textContent = data.online ? "Online" : "Offline";
+      const res = await fetch('https://your-backend-url.com/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, online })
+      });
+
+      const msg = document.getElementById('saveStatus');
+      msg.textContent = res.ok ? "✅ Settings saved!" : "❌ Failed to save.";
     }
-
-    loadProfile();
   </script>
 </body>
 </html>
