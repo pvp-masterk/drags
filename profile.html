@@ -7,25 +7,26 @@
 </head>
 <body>
   <div class="container">
-    <div class="card slide-up" id="profileCard">
-      <h1 id="name">Loading...</h1>
-      <img id="avatar" src="" alt="Avatar" style="display:none; width:120px; border-radius:50%;" />
-      <p><strong>ID:</strong> <span id="did"></span></p>
-      <a href="settings.html?discord_id=" id="settingsLink">⚙️ Settings</a>
+    <div class="card slide-up" id="profileCard" style="text-align:center;">
+      <img id="avatar" src="" alt="Avatar" style="width:120px; border-radius:50%; margin-bottom:10px; display:none;" />
+      <h2 id="name">Loading...</h2>
+      <p><strong>Display Name:</strong> <span id="displayName">-</span></p>
+      <p><strong>ID:</strong> <span id="did">-</span></p>
+      <p><strong>Status:</strong> <span style="color:var(--secondary)">🟢 Online</span></p>
+      <a id="settingsLink" href="#">⚙️ Edit Settings</a>
     </div>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const did = params.get('discord_id');
-
-    if (!did) {
-      document.getElementById('name').textContent = '❌ No Discord ID found in URL';
-      throw new Error('Missing discord_id');
-    }
-
     const API = 'https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users';
     const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg';
+
+    if (!did) {
+      document.getElementById('name').textContent = '❌ Missing Discord ID';
+      throw new Error('Missing discord_id');
+    }
 
     fetch(`${API}?select=*&discord_id=eq.${did}`, {
       headers: {
@@ -36,12 +37,10 @@
     .then(res => res.json())
     .then(data => {
       const user = data[0];
-      if (!user) {
-        document.getElementById('name').textContent = '❌ User not found';
-        return;
-      }
+      if (!user) return document.getElementById('name').textContent = '❌ User not found';
 
-      document.getElementById('name').textContent = user.display_name || user.username;
+      document.getElementById('name').textContent = user.username;
+      document.getElementById('displayName').textContent = user.display_name || '-';
       document.getElementById('did').textContent = user.discord_id;
 
       if (user.avatar_url) {
@@ -50,12 +49,7 @@
         avatar.style.display = 'block';
       }
 
-      // Set settings link
       document.getElementById('settingsLink').href = `settings.html?discord_id=${user.discord_id}`;
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById('name').textContent = '❌ Failed to load profile';
     });
   </script>
 </body>
