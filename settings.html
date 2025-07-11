@@ -2,98 +2,178 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Settings</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Settings | Drags</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+    :root {
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --secondary: #57F287;
+      --text: #f5f5f5;
+      --bg: #1e1e2e;
+      --card-bg: #2a2a3a;
+      --accent: #ED4245;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+    }
+
+    .settings-container {
+      max-width: 500px;
+      margin: 80px auto;
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      animation: fadeIn 0.4s ease;
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: #323248;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 30px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background-color: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .back-link a {
+      color: var(--secondary);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+
+    .success-msg {
+      color: var(--secondary);
+      margin-top: 15px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card slide-up">
-      <h2>Settings</h2>
-      <form id="settingsForm">
-        <label for="displayName">Display Name</label>
-        <input type="text" id="displayName" name="displayName" placeholder="Enter display name" />
-        <button type="submit">💾 Save</button>
-        <button id="updateAvatarBtn" class="btn-accent">🔁 Update Avatar</button>
+  <div class="settings-container">
+    <h2>Edit Your Profile</h2>
 
-        <p id="status" style="margin-top:10px;"></p>
-      </form>
+    <label for="displayName">Display Name</label>
+    <input type="text" id="displayName" placeholder="Dragger#1234" />
+
+    <label for="avatarUrl">Avatar URL</label>
+    <input type="text" id="avatarUrl" placeholder="https://cdn.discordapp.com/..." />
+
+    <button id="saveBtn">Save Changes</button>
+
+    <div class="success-msg" id="successMsg">✅ Profile updated!</div>
+
+    <div class="back-link">
+      <a id="backToProfile" href="#">← Back to Profile</a>
     </div>
   </div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const did = params.get('discord_id');
-    const API = 'https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users';
-    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg';
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    if (!did) {
-      document.body.innerHTML = '<p>❌ Missing Discord ID in URL</p>';
-      throw new Error('Missing discord_id');
-    }
+    const supabase = createClient(
+      "https://akektlyhqzbatuedgnuq.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
+    );
 
-    // Load existing data
-    fetch(`${API}?select=*&discord_id=eq.${did}`, {
-      headers: {
-        apikey: KEY,
-        Authorization: `Bearer ${KEY}`
-      }
-    })
-    .then(res => res.json())
-    .then(data => {
-      const user = data[0];
-      if (!user) return document.body.innerHTML = '<p>❌ User not found</p>';
-      document.getElementById('displayName').value = user.display_name || '';
-    });
+    const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
-    // Save settings
-    document.getElementById('settingsForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const displayName = document.getElementById('displayName').value;
+    const displayNameInput = document.getElementById("displayName");
+    const avatarUrlInput = document.getElementById("avatarUrl");
+    const successMsg = document.getElementById("successMsg");
+    const backToProfile = document.getElementById("backToProfile");
 
-      const res = await fetch(`${API}?discord_id=eq.${did}`, {
-        method: 'PATCH',
-        headers: {
-          apikey: KEY,
-          Authorization: `Bearer ${KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ display_name: displayName })
-      });
-
-      const msg = document.getElementById('status');
-      if (res.ok) {
-        msg.textContent = '✅ Display name updated!';
-        msg.style.color = 'var(--secondary)';
-      } else {
-        msg.textContent = '❌ Update failed.';
-        msg.style.color = 'var(--accent)';
-      }
-    });
-
-document.getElementById("updateAvatarBtn").addEventListener("click", async () => {
-  const userId = localStorage.getItem("discord_id");
-  if (!userId) return;
-
-  // Re-fetch from Discord API (or wherever your backend logic is)
-  try {
-    const res = await fetch(`/api/refresh-avatar?discord_id=${userId}`);
-    const data = await res.json();
-
-    if (data.success && data.avatar_url) {
-      // Update localStorage + UI
-      localStorage.setItem("avatar_url", data.avatar_url);
-      alert("✅ Avatar updated!");
-      window.location.reload(); // Reload to reflect changes
+    if (!discordId) {
+      alert("Missing discord_id in URL.");
     } else {
-      alert("❌ Failed to update avatar.");
+      backToProfile.href = `profile.html?discord_id=${discordId}`;
+      loadCurrentProfile();
     }
-  } catch (err) {
-    console.error(err);
-    alert("⚠️ Something went wrong.");
-  }
-});
 
-    
+    async function loadCurrentProfile() {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("discord_id", discordId)
+        .single();
+
+      if (!error && data) {
+        displayNameInput.value = data.display_name || "";
+        avatarUrlInput.value = data.avatar_url || "";
+      }
+    }
+
+    document.getElementById("saveBtn").addEventListener("click", async () => {
+      const display_name = displayNameInput.value.trim();
+      const avatar_url = avatarUrlInput.value.trim();
+
+      const { error } = await supabase
+        .from("users")
+        .update({ display_name, avatar_url })
+        .eq("discord_id", discordId);
+
+      if (!error) {
+        successMsg.style.display = "block";
+        setTimeout(() => (successMsg.style.display = "none"), 2500);
+      } else {
+        alert("Failed to update profile.");
+        console.error(error);
+      }
+    });
   </script>
 </body>
 </html>
