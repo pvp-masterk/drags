@@ -400,6 +400,16 @@ toggleBtn.addEventListener("click", () => {
     const discordId = new URLSearchParams(window.location.search).get("discord_id");
     if (discordId) loadProfile(discordId);
 
+    const discordId = new URLSearchParams(window.location.search).get("discord_id");
+console.log("Discord ID from URL:", discordId); // ✅ should be a real ID
+
+if (discordId) {
+  loadProfile(discordId);
+} else {
+  console.error("No discord_id found in URL");
+}
+
+
     
   </script>
 </body>
