@@ -59,10 +59,7 @@ else:
       online: true,
     }),
   });
-  const cors = require('cors');
-app.use(cors({
-  origin: 'https://dragswebapp.vercel.app'  // or "*" for dev only
-}));
+ 
 
 
   // Step 4: Redirect to profile
