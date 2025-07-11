@@ -92,6 +92,12 @@ window.addEventListener("beforeunload", () => {
     body: JSON.stringify({ online: false })
   });
 });
+document.getElementById('status').textContent = user.online
+  ? '🟢 Online'
+  : '🔴 Offline';
+document.getElementById('status').style.color = user.online
+  ? 'var(--secondary)'
+  : 'var(--accent)';
 
 </script>
 </body>
