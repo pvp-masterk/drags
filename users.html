@@ -79,6 +79,15 @@
     .user-card a:hover {
       text-decoration: underline;
     }
+
+    .verified-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-left: 4px;
+  filter: drop-shadow(0 0 2px #57F287);
+}
+
   </style>
 </head>
 <body>
@@ -103,7 +112,7 @@ const searchInput = document.getElementById("searchInput");
 const verifiedIds = [
   "1303491410472865793", // you
   "1392907277463457792", // another
-  "1200000000000000000"  // add more
+  "1359405784915509292"  // add more
 ];
 
 let allUsers = [];
@@ -146,7 +155,8 @@ function renderUsers(users) {
       <img class="user-avatar" src="${avatar}" />
       <div>
         <strong>${user.display_name || user.username}
-          ${isVerified ? ' <span title="Verified" style="color:#57F287;">✔️</span>' : ""}
+        ${isVerified ? ' <img src="https://cdn3.emoji.gg/emojis/9796-verified.png" alt="Verified" title="Verified" class="verified-icon" />' : ""}
+
         </strong>
       </div>
       <div style="font-size: 14px;">@${user.username}</div>
