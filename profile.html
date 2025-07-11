@@ -280,9 +280,7 @@ fetch("mainheader.html")
   .then(html => {
     document.getElementById("header-placeholder").innerHTML = html;
     applyHeaderPreference();
-    loadUserInfo();
-    setupDropdownToggle();
-    setupLogout(); // ✅ Add this
+    
   });
     
 // headerLoader.js
