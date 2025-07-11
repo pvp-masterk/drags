@@ -277,6 +277,17 @@ function setupLogout() {
     window.addEventListener("unhandledrejection", e => {
       showError(`⚠️ ${e.reason?.message || e.reason}`);
     });
+
+fetch("mainheader.html")
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById("header-placeholder").innerHTML = html;
+    applyHeaderPreference();
+    loadUserInfo();
+    setupDropdownToggle();
+    setupLogout(); // ✅ Add this
+  });
+    
 // headerLoader.js
 function applyHeaderPreference() {
   const shouldHide = localStorage.getItem("hideHeader") === "1";
