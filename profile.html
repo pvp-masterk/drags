@@ -93,11 +93,7 @@
         .nav-links a:hover::after {
             width: 100%;
         }
-
-      
-
-     
-        
+ 
 </head>
 <body>
 
@@ -166,33 +162,6 @@
     });
 
  
-  function showError(message) {
-    const toast = document.createElement("div");
-    toast.className = "toast";
-    toast.textContent = message;
-
-    document.body.appendChild(toast);
-
-    // Auto remove after 4 seconds
-    setTimeout(() => {
-      toast.style.animation = "fadeOut 0.4s ease-out forwards";
-      setTimeout(() => toast.remove(), 400);
-    }, 4000);
-  }
- 
-  // Catch regular JS errors (like undefined vars, fetch fails, etc.)
-  window.onerror = function(message, source, lineno, colno, error) {
-    console.error("Global Error:", message);
-    showError(`⚠️ Error: ${message}`);
-    return false; // Let browser log it too
-  };
-
-  // Catch Promise rejections (like fetch().then().catch() errors)
-  window.addEventListener("unhandledrejection", function(event) {
-    console.error("Unhandled Promise Rejection:", event.reason);
-    const msg = typeof event.reason === "string" ? event.reason : event.reason.message || "Unknown error";
-    showError(`⚠️ ${msg}`);
-  });
 
 window.addEventListener("beforeunload", () => {
   fetch(`https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users?discord_id=eq.${did}`, {
