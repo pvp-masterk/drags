@@ -2,40 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Settings - Drags</title>
+  <title>Settings</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <div class="card slide-up">
-      <h1>Settings</h1>
-      <label>
-        Display Name:
-        <input type="text" id="displayName" />
-      </label>
-      <label>
-        Show Online Status:
-        <input type="checkbox" id="onlineStatus" />
-      </label>
-      <button onclick="saveSettings()">Save Settings</button>
-      <p id="saveStatus" class="fade-in"></p>
+      <h2>Settings</h2>
+      <form id="settingsForm">
+        <label for="displayName">Display Name</label>
+        <input type="text" id="displayName" name="displayName" placeholder="Enter display name" />
+        <button type="submit">💾 Save</button>
+        <p id="status" style="margin-top:10px;"></p>
+      </form>
     </div>
   </div>
 
   <script>
-    async function saveSettings() {
-      const name = document.getElementById('displayName').value;
-      const online = document.getElementById('onlineStatus').checked;
+    const params = new URLSearchParams(window.location.search);
+    const did = params.get('discord_id');
+    const API = 'https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users';
+    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg';
 
-      const res = await fetch('https://your-backend-url.com/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, online })
+    if (!did) {
+      document.body.innerHTML = '<p>❌ Missing Discord ID in URL</p>';
+      throw new Error('Missing discord_id');
+    }
+
+    // Load existing data
+    fetch(`${API}?select=*&discord_id=eq.${did}`, {
+      headers: {
+        apikey: KEY,
+        Authorization: `Bearer ${KEY}`
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const user = data[0];
+      if (!user) return document.body.innerHTML = '<p>❌ User not found</p>';
+      document.getElementById('displayName').value = user.display_name || '';
+    });
+
+    // Save settings
+    document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const displayName = document.getElementById('displayName').value;
+
+      const res = await fetch(`${API}?discord_id=eq.${did}`, {
+        method: 'PATCH',
+        headers: {
+          apikey: KEY,
+          Authorization: `Bearer ${KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ display_name: displayName })
       });
 
-      const msg = document.getElementById('saveStatus');
-      msg.textContent = res.ok ? "✅ Settings saved!" : "❌ Failed to save.";
-    }
+      const msg = document.getElementById('status');
+      if (res.ok) {
+        msg.textContent = '✅ Display name updated!';
+        msg.style.color = 'var(--secondary)';
+      } else {
+        msg.textContent = '❌ Update failed.';
+        msg.style.color = 'var(--accent)';
+      }
+    });
   </script>
 </body>
 </html>
