@@ -50,12 +50,20 @@ export default async function handler(req, res) {
     body: JSON.stringify({
       discord_id: discordUser.id,
       username: discordUser.username + "#" + discordUser.discriminator,
-      avatar_url: discordUser.avatar
-        ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
-        : null,
+     if discord_user["avatar"]:
+    avatar_url = f"https://cdn.discordapp.com/avatars/{discord_user['id']}/{discord_user['avatar']}.png"
+else:
+    default_index = int(discord_user["discriminator"]) % 5  # Or any logic
+    avatar_url = f"https://cdn.discordapp.com/embed/avatars/{default_index}.png"
+
       online: true,
     }),
   });
+  const cors = require('cors');
+app.use(cors({
+  origin: 'https://dragswebapp.vercel.app'  // or "*" for dev only
+}));
+
 
   // Step 4: Redirect to profile
   res.redirect(`/profile.html?discord_id=${discordUser.id}`);
