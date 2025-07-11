@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drags - Link Account</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="card slide-up">
+      <h1>Link Your Discord Account</h1>
+      <p>Enter your verification code:</p>
+      <input type="text" id="codeInput" placeholder="Enter your code" />
+      <button onclick="linkAccount()">Link</button>
+      <p id="status" class="fade-in"></p>
+    </div>
+  </div>
+
+  <script>
+    async function linkAccount() {
+      const code = document.getElementById("codeInput").value;
+      const status = document.getElementById("status");
+
+      const res = await fetch("https://your-backend-url.com/link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        status.textContent = "✅ Linked successfully!";
+        status.style.color = "var(--secondary)";
+        setTimeout(() => (window.location.href = 'profile.html'), 1000);
+      } else {
+        status.textContent = "❌ " + data.message;
+        status.style.color = "var(--accent)";
+      }
+    }
+  </script>
+</body>
+</html>
