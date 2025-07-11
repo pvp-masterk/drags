@@ -2,335 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Your Profile</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Profile | Drags</title>
   <style>
-    .profile-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      margin-top: 60px;
-      animation: fadeIn 0.5s ease;
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+    :root {
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --secondary: #57F287;
+      --text: #f5f5f5;
+      --bg: #1e1e2e;
+      --card-bg: #2a2a3a;
+      --accent: #ED4245;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+    }
+
+    .profile-container {
+      max-width: 500px;
+      margin: 80px auto;
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: fadeIn 0.4s ease;
     }
 
     .profile-avatar {
-      width: 130px;
-      height: 130px;
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
-      object-fit: cover;
       border: 3px solid var(--primary);
+      object-fit: cover;
       margin-bottom: 15px;
-      transition: 0.3s ease;
     }
 
     .profile-username {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 600;
     }
 
     .profile-displayname {
-      font-size: 18px;
-      color: var(--secondary);
-      margin-top: 5px;
-    }
-
-    .profile-id {
-      font-size: 14px;
-      color: grey;
+      font-size: 16px;
+      color: #ccc;
       margin-top: 4px;
     }
 
-    .edit-btn {
-      background: var(--primary);
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 12px;
-      margin-top: 20px;
-      cursor: pointer;
+    .profile-userid {
+      margin-top: 10px;
       font-size: 14px;
-      transition: background 0.2s ease;
+      color: #888;
     }
 
-    .edit-btn:hover {
-      background: var(--primary-dark);
-    }
-
-    .avatar-dropdown-container {
+    .top-right-avatar {
       position: absolute;
       top: 20px;
       right: 20px;
-    }
-
-    .mini-avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
       cursor: pointer;
-      border: 2px solid var(--primary);
-      transition: 0.2s ease;
     }
 
-   .dropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background-color: var(--card-bg);
-  border: 1px solid var(--primary);
-  border-radius: 10px;
-  padding: 10px;
-  min-width: 150px;
-  display: none;
-  flex-direction: column;
-  animation: dropdownFade 0.3s ease;
-  z-index: 9999999; /* 👈 Add this */
-}
+    .dropdown {
+      position: absolute;
+      top: 70px;
+      right: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--primary-dark);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: 0.3s ease;
+      pointer-events: none;
+    }
 
+    .dropdown.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
 
-    .dropdown a {
+    .dropdown button {
+      display: block;
+      width: 100%;
+      padding: 10px 20px;
+      background: none;
+      border: none;
       color: var(--text);
-      text-decoration: none;
-      padding: 8px;
-      border-radius: 8px;
-      transition: 0.2s ease;
+      text-align: left;
+      cursor: pointer;
     }
 
-    .dropdown a:hover {
+    .dropdown button:hover {
       background: var(--primary-dark);
     }
 
-    .dropdown.show {
-      display: flex;
-    }
-
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    @keyframes dropdownFade {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-/* Header toggle button */
-#toggleHeaderBtn {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: var(--card-bg);
-  color: var(--text);
-  border: 2px solid var(--primary);
-  padding: 8px 14px;
-  border-radius: 12px;
-  font-size: 13px;
-  cursor: pointer;
-  z-index: 99999;
-  transition: 0.2s ease;
-}
-
-#toggleHeaderBtn:hover {
-  background: var(--primary-dark);
-}
-
-/* Smooth header hide */
-.hidden-header {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-#header-placeholder {
-  transition: opacity 0.3s ease;
-}
-
-    .identity-card {
-  background: var(--card-bg);
-  border-radius: 18px;
-  padding: 20px 30px;
-  margin: 50px auto;
-  width: 100%;
-  max-width: 600px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  animation: fadeInCard 0.4s ease;
-}
-
-.identity-avatar {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  border: 3px solid var(--primary);
-}
-
-.identity-info h2 {
-  font-size: 24px;
-  margin-bottom: 4px;
-}
-
-.identity-info h3 {
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--text);
-}
-
-.identity-info p {
-  color: #aaa;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.role-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.role-badge {
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 500;
-  background: var(--primary-dark);
-  color: white;
-  animation: badgeFade 0.3s ease;
-}
-
-@keyframes fadeInCard {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes badgeFade {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-    
   </style>
 </head>
 <body>
-  <div id="header-placeholder"></div> <!-- Optional header if you use it -->
 
-  <section class="identity-card">
-    <img id="profileAvatar" class="identity-avatar" src="" alt="Avatar" />
-    <div class="identity-info">
-      <h2 id="username">@username</h2>
-      <h3 id="displayName">Display Name</h3>
-      <p id="userId">ID: 000000000000000000</p>
-      <div id="roleContainer" class="role-badges"></div>
-    </div>
-  </section>
+  <!-- Top-right profile picture -->
+  <img id="dropdownAvatar" class="top-right-avatar" src="" width="45" height="45" style="border-radius: 50%;" />
 
+  <!-- Dropdown -->
+  <div id="dropdownMenu" class="dropdown">
+    <button onclick="window.location.href='settings.html'">Edit Profile</button>
+    <button onclick="window.location.href='linkaccount.html'">Logout</button>
+  </div>
 
-  <!-- 📦 Logic -->
+  <!-- Profile Card -->
+  <div class="profile-container">
+    <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
+    <div id="username" class="profile-username">@username</div>
+    <div id="displayName" class="profile-displayname">Display Name</div>
+    <div id="userId" class="profile-userid">ID: 000000000000000000</div>
+  </div>
+
   <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
     const supabase = createClient(
-      'https://akektlyhqzbatuedgnuq.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'
+      "https://akektlyhqzbatuedgnuq.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     );
 
-  const { data: roles, error: roleError } = await supabase
-  .from("roles")
-  .select("*")
-  .eq("user_id", discordId);
-
-if (!roleError && Array.isArray(roles)) {
-  roles.forEach(role => {
-    const badge = document.createElement("span");
-    badge.className = "role-badge";
-    badge.textContent = role.name;
-    badge.style.backgroundColor = role.color || "var(--primary-dark)";
-    document.getElementById("roleContainer").appendChild(badge);
-  });
-}
-
-
-
-    const params = new URLSearchParams(window.location.search);
-    const did = params.get('discord_id');
-
-    if (!did) {
-      showError("❌ Missing Discord ID");
-      throw new Error("Missing discord_id");
-    }
-
-    const avatar = document.getElementById("avatar");
-    const miniAvatar = document.getElementById("miniAvatar");
-    const dropdown = document.getElementById("dropdown");
-    const editProfile = document.getElementById("editProfile");
-
-  
-
-
-
-    // Error notifier
-    function showError(message) {
-      const toast = document.createElement("div");
-      toast.className = "toast";
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      setTimeout(() => {
-        toast.style.animation = "fadeOut 0.4s ease-out forwards";
-        setTimeout(() => toast.remove(), 400);
-      }, 4000);
-    }
-
-    window.onerror = (msg) => showError(`⚠️ ${msg}`);
-    window.addEventListener("unhandledrejection", e => {
-      showError(`⚠️ ${e.reason?.message || e.reason}`);
-    });
-
-
-    
-
-
-
-
+    const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
     async function loadProfile(discordId) {
-      try {
-        const res = await fetch(`https://your-api.com/getProfile?discord_id=${discordId}`);
-        const data = await res.json();
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("discord_id", discordId)
+        .single();
 
-        document.getElementById("profileAvatar").src = data.avatar_url;
-        document.getElementById("username").textContent = `@${data.username}`;
-        document.getElementById("displayName").textContent = data.display_name || data.username;
-        document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
-
-        const roleContainer = document.getElementById("roleContainer");
-        if (Array.isArray(data.roles)) {
-          data.roles.forEach(role => {
-            const badge = document.createElement("span");
-            badge.className = "role-badge";
-            badge.textContent = role.name;
-            badge.style.backgroundColor = role.color || "var(--primary-dark)";
-            roleContainer.appendChild(badge);
-          });
-        }
-      } catch (err) {
-        console.error("Failed to load profile:", err);
+      if (error) {
+        console.error("Failed to load profile:", error);
+        return;
       }
+
+      const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
+
+      document.getElementById("profileAvatar").src = avatarUrl;
+      document.getElementById("dropdownAvatar").src = avatarUrl;
+      document.getElementById("username").textContent = `@${data.username}`;
+      document.getElementById("displayName").textContent = data.display_name || data.username;
+      document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
     }
 
-    
+    if (discordId) {
+      loadProfile(discordId);
+    }
 
-    const discordId = new URLSearchParams(window.location.search).get("discord_id");
-console.log("Discord ID from URL:", discordId); // ✅ should be a real ID
+    // Dropdown toggle
+    const dropdownAvatar = document.getElementById("dropdownAvatar");
+    const dropdownMenu = document.getElementById("dropdownMenu");
 
-if (discordId) {
-  loadProfile(discordId);
-} else {
-  console.error("No discord_id found in URL");
-}
+    dropdownAvatar.addEventListener("click", () => {
+      dropdownMenu.classList.toggle("active");
+    });
 
-
-    
+    // Close dropdown when clicking outside
+    window.addEventListener("click", (e) => {
+      if (!dropdownAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove("active");
+      }
+    });
   </script>
 </body>
 </html>
