@@ -81,6 +81,17 @@
     showError(`⚠️ ${msg}`);
   });
 
+window.addEventListener("beforeunload", () => {
+  fetch(`https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users?discord_id=eq.${did}`, {
+    method: "PATCH",
+    headers: {
+      apikey: KEY,
+      Authorization: `Bearer ${KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ online: false })
+  });
+});
 
 </script>
 </body>
