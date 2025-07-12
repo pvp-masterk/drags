@@ -208,6 +208,35 @@
     transform: rotate(360deg);
   }
 }
+    .profile-container:hover {
+  transform: scale(1.02);
+}
+
+.profile-container.featured::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(270deg, #1e3a8a, #1d4ed8, #1e3a8a);
+  background-size: 600% 600%;
+  animation: gradientLoop 6s ease infinite;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  border-radius: inherit;
+}
+
+.profile-container.featured:hover::before {
+  opacity: 0.25;
+}
+
+@keyframes gradientLoop {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
   </style>
 </head>
@@ -280,7 +309,10 @@ async function loadProfile(discordId) {
   const myDiscordId = authData?.user?.user_metadata?.discord_id;
   const isOwner = myDiscordId === discordId;
 
- 
+ if (specialGradientUsers.includes(user.discord_id)) {
+  document.getElementById("profileCard").classList.add("featured");
+}
+
  
 
   // Update profile content
@@ -299,6 +331,12 @@ if (discordId) {
   loadProfile(discordId);
 }
 
+const specialGradientUsers = [
+  "1303491410472865793", // you
+  "1392907277463457792",
+  "123456789012345678"   // others
+];
+   
 
 
 </script>
