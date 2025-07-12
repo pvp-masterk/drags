@@ -87,11 +87,94 @@
   margin-left: 4px;
   filter: drop-shadow(0 0 2px #57F287);
 }
+ /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(30, 30, 46, 0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            padding: 15px 10%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+
+}
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
 
   </style>
 </head>
 <body>
+ <header id="header">
+        <a href="#" class="logo"><i class="fab fa-discord"></i> Drags</a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="users.html">User List</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Usage</a>
+            <li><a href="apply.html">Apply for Staff</a></li>
+            <div style="display: flex; align-items: center; gap: 20px;">
+        </nav>
+       <div id="user-box">
+  <a href="  partnerships.html" class="cta-button">Partnerships</a>
+         
 
+        
+    </header>
   <h1>Drags Users</h1>
   <input type="text" id="searchInput" placeholder="Search users by username or display name...">
 
