@@ -185,11 +185,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
    
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+
   </style>
 </head>
 <body>
@@ -225,9 +221,9 @@
   <!-- Profile Card -->
   <div class="profile-container">
     <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
-    <div id="username" class="profile-username">@username</div>
-    <div id="displayName" class="profile-displayname">Display Name</div>
-    <div id="userId" class="profile-userid">ID: 000000000000000000</div>
+    <div id="username" class="profile-username">Loading...</div>
+    <div id="displayName" class="profile-displayname">Loading...</div>
+    <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
 
   </div>
@@ -265,7 +261,7 @@ const isOwner = myDiscordId === discordId;
 
      
 }
-}
+
 
 
       document.getElementById("profileAvatar").src = avatarUrl;
