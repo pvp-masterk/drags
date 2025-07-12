@@ -267,7 +267,7 @@ const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
 async function loadProfile(discordId) {
   document.getElementById("loading-buffer").style.display = "block";
-  document.getElementById("profileCard").style.display = "none";
+  document.getElementById("profile-container").style.display = "none";
 
   const { data, error } = await supabase
     .from("users")
@@ -287,47 +287,27 @@ async function loadProfile(discordId) {
   const myDiscordId = authData?.user?.user_metadata?.discord_id;
   const isOwner = myDiscordId === discordId;
 
-  // Show/hide dropdown based on ownership
-  const dropdown = document.getElementById("dropdownAvatar");
-  const menu = document.getElementById("dropdownMenu");
-  if (!isOwner) {
-    dropdown.style.display = "none";
-    menu.style.display = "none";
-  }
+ 
+ 
 
   // Update profile content
   document.getElementById("profileAvatar").src = avatarUrl;
-  document.getElementById("dropdownAvatar").src = avatarUrl;
+  
   document.getElementById("username").textContent = `@${data.username}`;
   document.getElementById("displayName").textContent = data.display_name || data.username;
   document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
   document.getElementById("userBio").textContent = data.bio || "";
 
   document.getElementById("loading-buffer").style.display = "none";
-  document.getElementById("profileCard").style.display = "block";
+  document.getElementById("profile-container").style.display = "block";
 }
 
 if (discordId) {
   loadProfile(discordId);
 }
 
-// Toggle dropdown
-const dropdownAvatar = document.getElementById("dropdownAvatar");
-const dropdownMenu = document.getElementById("dropdownMenu");
 
-dropdownAvatar.addEventListener("click", () => {
-  dropdownMenu.classList.toggle("active");
-});
 
-window.addEventListener("click", (e) => {
-  if (!dropdownAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
-    dropdownMenu.classList.remove("active");
-  }
-});
-
-document.getElementById("editProfileBtn").addEventListener("click", () => {
-  window.location.href = `settings.html?discord_id=${discordId}`;
-});
 </script>
 </body>
 </html>
