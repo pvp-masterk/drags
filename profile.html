@@ -238,45 +238,49 @@ body {
 
     const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
-    async function loadProfile(discordId) {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("discord_id", discordId)
-        .single();
+   async function loadProfile() {
+  const discordId = new URLSearchParams(window.location.search).get("discord_id");
+  if (!discordId) {
+    console.error("No discord_id in URL");
+    return;
+  }
 
-      if (error) {
-        console.error("Failed to load profile:", error);
-        return;
-      }
+       // 🔄 Fetch the user from Supabase
+  const { data: user, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("discord_id", discordId)
+    .single();
 
+      if (error || !user) {
+    console.error("User not found:", error);
+    document.getElementById("profileCard").innerText = "User not found.";
+    return;
+  }
+ 
       const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
-    const theme = user.profile_theme;
+    // ✅ Theme handler function
+function applyTheme(theme) {
+  if (theme && typeof theme === "object") {
+    if (theme.bgImage) {
+      document.body.style.backgroundImage = `url(${theme.bgImage})`;
+      document.body.style.backgroundSize = "cover";
+    } else if (theme.gradient) {
+      document.body.style.background = theme.gradient;
+    }
 
-if (theme && typeof theme === "object") {
-  if (theme.bgImage) {
-    document.body.style.backgroundImage = `url(${theme.bgImage})`;
-    document.body.style.backgroundSize = "cover";
-    document.body.style.backgroundRepeat = "no-repeat";
-    document.body.style.backgroundPosition = "center";
-  } else if (theme.gradient) {
-    document.body.style.background = theme.gradient;
-  }
+    if (theme.textColor) {
+      document.body.style.color = theme.textColor;
+    }
 
-  if (theme.textColor) {
-    document.body.style.color = theme.textColor;
+    if (theme.preset) {
+      document.body.classList.add(`theme-${theme.preset}`);
+    }
   }
-
-  if (theme.preset) {
-    document.body.classList.add(`theme-${theme.preset}`);
-  }
-} else {
-  // fallback theme
-  document.body.style.background = "var(--bg)";
-  document.body.style.color = "var(--text)";
 }
-
+// ✅ Use the fetched user safely
+  applyTheme(user.profile_theme);
 
 
       const { data: authData } = await supabase.auth.getUser();
@@ -330,3 +334,4 @@ if (!isOwner) {
   </script>
 </body>
 </html>
+
