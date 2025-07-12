@@ -238,34 +238,47 @@ body {
 
     const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
-   async function loadProfile() {
-  const discordId = new URLSearchParams(window.location.search).get("discord_id");
-  if (!discordId) {
-    console.error("No discord_id in URL");
-    return;
+ async function loadProfile() {
+    const discordId = new URLSearchParams(window.location.search).get("discord_id");
+    if (!discordId) {
+      document.getElementById("profileCard").innerText = "⚠️ No Discord ID in URL.";
+      return;
+    }
+
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("discord_id", discordId)
+      .single();
+
+    if (error || !user) {
+      console.error("User fetch error:", error);
+      document.getElementById("profileCard").innerText = "❌ User not found.";
+      return;
+    }
+
+    // ✅ Set text data
+    document.getElementById("username").textContent = `@${user.username}`;
+    document.getElementById("displayName").textContent = user.display_name || user.username;
+    document.getElementById("discordId").textContent = `ID: ${user.discord_id}`;
+    document.getElementById("bio").textContent = user.bio || "No bio set yet.";
+    document.getElementById("profileAvatar").src =
+      user.avatar_url ||
+      `https://cdn.discordapp.com/embed/avatars/0.png`;
+
+    // ✅ Apply theme if it exists
+    applyTheme(user.profile_theme);
   }
 
-       // 🔄 Fetch the user from Supabase
-  const { data: user, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("discord_id", discordId)
-    .single();
+  // Theme handler
+  function applyTheme(theme) {
+    if (!theme || typeof theme !== "object") return;
 
-      if (error || !user) {
-    console.error("User not found:", error);
-    document.getElementById("profileCard").innerText = "User not found.";
-    return;
-  }
- 
-      const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
-
-    // ✅ Theme handler function
-function applyTheme(theme) {
-  if (theme && typeof theme === "object") {
     if (theme.bgImage) {
       document.body.style.backgroundImage = `url(${theme.bgImage})`;
       document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.backgroundPosition = "center";
     } else if (theme.gradient) {
       document.body.style.background = theme.gradient;
     }
@@ -278,39 +291,9 @@ function applyTheme(theme) {
       document.body.classList.add(`theme-${theme.preset}`);
     }
   }
-}
-// ✅ Use the fetched user safely
-  applyTheme(user.profile_theme);
 
-
-      const { data: authData } = await supabase.auth.getUser();
-const myDiscordId = authData?.user?.user_metadata?.discord_id;
-
-const isOwner = myDiscordId === discordId;
-
-// Toggle dropdown visibility based on ownership
-if (!isOwner) {
-  document.getElementById("dropdownAvatar").style.display = "none";
-  document.getElementById("dropdownMenu").style.display = "none";
-}
-
-
-      document.getElementById("profileAvatar").src = avatarUrl;
-      document.getElementById("dropdownAvatar").src = avatarUrl;
-      document.getElementById("username").textContent = `@${data.username}`;
-      document.getElementById("displayName").textContent = data.display_name || data.username;
-      document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
-      document.getElementById("userBio").textContent = data.bio || "";
-
-    }
-
-    
-
-
-    if (discordId) {
-      loadProfile(discordId);
-    }
-
+  // Call it
+  loadProfile();
     // Dropdown toggle
     const dropdownAvatar = document.getElementById("dropdownAvatar");
     const dropdownMenu = document.getElementById("dropdownMenu");
