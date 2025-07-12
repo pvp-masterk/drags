@@ -184,6 +184,31 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .loading-buffer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--text);
+  z-index: 9999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #5865F2;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  margin: 0 auto 10px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
   </style>
 </head>
 <body>
@@ -203,6 +228,15 @@
 
         
     </header>
+<div id="loading-buffer" class="loading-buffer">
+  <div class="spinner"></div>
+  <p>Loading profile...</p>
+</div>
+
+<!-- Your main profile card -->
+<div id="profile-card" style="display: none;">
+  <!-- Your profile content goes here -->
+</div>
 
   <!-- Top-right profile picture -->
   <img id="dropdownAvatar" class="top-right-avatar" src="" width="45" height="45" style="border-radius: 50%;" />
@@ -259,7 +293,8 @@ if (!isOwner) {
   document.getElementById("dropdownMenu").style.display = "none";
 }
 
-
+document.getElementById("loading-buffer").style.display = "block";
+  document.getElementById("profile-card").style.display = "none";
       document.getElementById("profileAvatar").src = avatarUrl;
       document.getElementById("dropdownAvatar").src = avatarUrl;
       document.getElementById("username").textContent = `@${data.username}`;
@@ -268,6 +303,17 @@ if (!isOwner) {
       document.getElementById("userBio").textContent = data.bio || "";
 
     }
+ if (error || !data) {
+      document.getElementById("loading-buffer").innerHTML = "<p>❌ Failed to load profile.</p>";
+      return;
+    }
+    document.getElementById("loading-buffer").style.display = "none";
+    document.getElementById("profile-card").style.display = "block";
+     } catch (err) {
+    console.error(err);
+    document.getElementById("loading-buffer").innerHTML = "<p>❌ Something went wrong.</p>";
+  }
+}
 
     if (discordId) {
       loadProfile(discordId);
