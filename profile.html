@@ -237,6 +237,73 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+.username-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.profile-username {
+  font-size: 18px;
+  font-weight: 500;
+  position: relative;
+  z-index: 2;
+}
+
+/* Particle container */
+.username-particles {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Shiny particles */
+.username-particles::before,
+.username-particles::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+  box-shadow:
+    0 0 6px white,
+    0 0 10px white;
+  animation: sparkle 3s infinite ease-in-out;
+  opacity: 0.6;
+}
+
+/* One sparkler goes top-left to bottom-right */
+.username-particles::before {
+  top: 0%;
+  left: 0%;
+  animation-delay: 0s;
+}
+
+/* Another sparkler goes bottom-right to top-left */
+.username-particles::after {
+  top: 100%;
+  left: 100%;
+  animation-delay: 1.5s;
+}
+
+@keyframes sparkle {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(100%, -100%) scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+}
 
   </style>
 </head>
@@ -270,12 +337,14 @@
   <!-- Profile Card -->
   <div id="profileCard" class="profile-container">
     <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
-    <div id="username" class="profile-username">Loading...</div>
+   <div class="username-wrapper">
+  <span id="username" class="profile-username">Loading...</span>
+  <div class="username-particles"></div>
+</div>
     <div id="displayName" class="profile-displayname">Loading...</div>
     <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
-    <p id="coinBalance" class="coin-balance">💰 Coins: 0</p>
-    <p id="coinEarnedMsg" style="display:none; color:#57F287; font-weight: 600;">+5 coins earned!</p>
+    
 
 
 
