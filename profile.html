@@ -293,25 +293,6 @@ const targetId = user.discord_id; // profile being viewed
 
 
 
-const badgeMap = {
-  early: "🚀 Early User",
-  beta: "🧪 Beta Tester",
-  verified: "✅ Verified",
-  admin: "🛡️ Admin"
-};
-
-if (user.badges && Array.isArray(user.badges)) {
-  const badgeContainer = document.getElementById("badgeContainer");
-  badgeContainer.innerHTML = "";
-
-  user.badges.forEach(badge => {
-    const badgeEl = document.createElement("div");
-    badgeEl.className = "badge";
-    badgeEl.textContent = badgeMap[badge] || badge;
-    badgeContainer.appendChild(badgeEl);
-  });
-}
-
 
 
       const { data: authData } = await supabase.auth.getUser();
@@ -334,6 +315,25 @@ if (!isOwner) {
       document.getElementById("userBio").textContent = data.bio || "";
 
     }
+const badgeMap = {
+  early: "🚀 Early User",
+  beta: "🧪 Beta Tester",
+  verified: "✅ Verified",
+  admin: "🛡️ Admin"
+};
+
+if (user.badges && Array.isArray(user.badges)) {
+  const badgeContainer = document.getElementById("badgeContainer");
+  badgeContainer.innerHTML = "";
+
+  user.badges.forEach(badge => {
+    const badgeEl = document.createElement("div");
+    badgeEl.className = "badge";
+    badgeEl.textContent = badgeMap[badge] || badge;
+    badgeContainer.appendChild(badgeEl);
+  });
+}
+
 
 
 
