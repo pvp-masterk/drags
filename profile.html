@@ -237,6 +237,22 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+.badge-container {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.badge-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+.badge-icon:hover {
+  transform: scale(1.15);
+}
 
   </style>
 </head>
@@ -277,6 +293,8 @@
     <div id="displayName" class="profile-displayname">Loading...</div>
     <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
+    <div class="badge-container" id="badgeContainer"></div>
+
     
 
 
@@ -320,6 +338,19 @@ async function loadProfile(discordId) {
  if (specialGradientUsers.includes(data.discord_id)) {
  
 }
+const badgeContainer = document.getElementById("badgeContainer");
+badgeContainer.innerHTML = "";
+
+(user.badges || []).forEach(roleId => {
+  if (roleBadges[roleId]) {
+    const img = document.createElement("img");
+    img.src = roleBadges[roleId].icon;
+    img.alt = roleBadges[roleId].name;
+    img.title = roleBadges[roleId].name;
+    img.className = "badge-icon";
+    badgeContainer.appendChild(img);
+  }
+});
 
 
  
@@ -341,7 +372,7 @@ if (discordId) {
 
 
 const specialGradientUsers = [
-  "1303491410472865793", // you
+  "123456789012345679", // you
   "1392907277463457792",
   "123456789012345678"   // others
 ];
