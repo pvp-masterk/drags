@@ -273,6 +273,22 @@ if (!isOwner) {
 
     }
 
+    const theme = user.profile_theme;
+
+if (theme) {
+  if (theme.bgImage) {
+    document.body.style.backgroundImage = `url(${theme.bgImage})`;
+    document.body.style.backgroundSize = "cover";
+  } else if (theme.gradient) {
+    document.body.style.background = theme.gradient;
+  }
+
+  if (theme.textColor) {
+    document.body.style.color = theme.textColor;
+  }
+}
+
+
     if (discordId) {
       loadProfile(discordId);
     }
