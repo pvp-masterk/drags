@@ -324,19 +324,19 @@ const { data: user, error } = await supabase
   .single();
 
 
-  if (error || !data) {
+  if (error || !user) {
     console.error("Failed to load profile:", error);
     document.getElementById("loading-buffer").innerHTML = "<p>❌ Failed to load profile.</p>";
     return;
   }
 
-  const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
+  const avatarUrl = user.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
   const { data: authData } = await supabase.auth.getUser();
   const myDiscordId = authData?.user?.user_metadata?.discord_id;
   const isOwner = myDiscordId === discordId;
 
-if (specialGradientUsers.includes(data.discord_id)) {
+if (specialGradientUsers.includes(user.discord_id)) {
   document.getElementById("profileCard").classList.add("featured");
 }
 
@@ -360,10 +360,10 @@ badgeContainer.innerHTML = "";
   // Update profile content
   document.getElementById("profileAvatar").src = avatarUrl;
   
-  document.getElementById("username").textContent = `@${data.username}`;
-  document.getElementById("displayName").textContent = data.display_name || data.username;
-  document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
-  document.getElementById("userBio").textContent = data.bio || "";
+  document.getElementById("username").textContent = `@${user.username}`;
+  document.getElementById("displayName").textContent = user.display_name || user.username;
+  document.getElementById("userId").textContent = `ID: ${user.discord_id}`;
+  document.getElementById("userBio").textContent = user.bio || "";
 
   document.getElementById("loading-buffer").style.display = "none";
   document.getElementById("profileCard").style.display = "block";
