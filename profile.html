@@ -260,7 +260,6 @@ const myDiscordId = authData?.user?.user_metadata?.discord_id;
 
 
       document.getElementById("profileAvatar").src = avatarUrl;
-      document.getElementById("dropdownAvatar").src = avatarUrl;
       document.getElementById("username").textContent = `@${data.username}`;
       document.getElementById("displayName").textContent = data.display_name || data.username;
       document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
