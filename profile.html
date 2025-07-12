@@ -157,13 +157,6 @@
       const { data: authData } = await supabase.auth.getUser();
 const myDiscordId = authData?.user?.user_metadata?.discord_id;
 
-const isOwner = myDiscordId === discordId;
-
-// Toggle dropdown visibility based on ownership
-if (!isOwner) {
-  document.getElementById("dropdownAvatar").style.display = "none";
-  document.getElementById("dropdownMenu").style.display = "none";
-}
 
 
       document.getElementById("profileAvatar").src = avatarUrl;
@@ -174,6 +167,22 @@ if (!isOwner) {
       document.getElementById("userBio").textContent = data.bio || "";
 
     }
+    const discordId = new URLSearchParams(window.location.search).get("discord_id");
+const loggedInId = localStorage.getItem("loggedInDiscordId");
+
+// Check if the viewer is the profile owner
+const isOwner = (loggedInId === discordId);
+
+if (isOwner) {
+  // Edit Mode
+  document.getElementById("dropdownAvatar").style.display = "block";
+  document.getElementById("dropdownMenu").style.display = "block";
+} else {
+  // View Mode
+  document.getElementById("dropdownAvatar").style.display = "none";
+  document.getElementById("dropdownMenu").style.display = "none";
+}
+
 
     if (discordId) {
       loadProfile(discordId);
