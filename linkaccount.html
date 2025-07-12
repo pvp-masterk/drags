@@ -13,7 +13,7 @@
     </div>
   </div>
  <script>
-   localStorage.setItem("loggedInDiscordId", discordUser.id);
+   
    const {
   data: { user },
 } = await supabase.auth.getUser();
@@ -27,7 +27,7 @@ await supabase.from("users").upsert({
   ...
    
 });
-   
+   localStorage.setItem("loggedInDiscordId", discordUser.id);
 
 
  </script>
