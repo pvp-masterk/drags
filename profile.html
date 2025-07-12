@@ -252,6 +252,21 @@ body {
 
       const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
+      const theme = user.profile_theme;
+
+if (theme) {
+  if (theme.bgImage) {
+    document.body.style.backgroundImage = `url(${theme.bgImage})`;
+    document.body.style.backgroundSize = "cover";
+  } else if (theme.gradient) {
+    document.body.style.background = theme.gradient;
+  }
+
+  if (theme.textColor) {
+    document.body.style.color = theme.textColor;
+  }
+}
+
       const { data: authData } = await supabase.auth.getUser();
 const myDiscordId = authData?.user?.user_metadata?.discord_id;
 
@@ -273,20 +288,7 @@ if (!isOwner) {
 
     }
 
-    const theme = user.profile_theme;
-
-if (theme) {
-  if (theme.bgImage) {
-    document.body.style.backgroundImage = `url(${theme.bgImage})`;
-    document.body.style.backgroundSize = "cover";
-  } else if (theme.gradient) {
-    document.body.style.background = theme.gradient;
-  }
-
-  if (theme.textColor) {
-    document.body.style.color = theme.textColor;
-  }
-}
+    
 
 
     if (discordId) {
