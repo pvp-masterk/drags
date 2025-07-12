@@ -274,6 +274,10 @@
     <div id="displayName" class="profile-displayname">Loading...</div>
     <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
+    <p id="coinBalance" class="coin-balance">💰 Coins: 0</p>
+    <p id="coinEarnedMsg" style="display:none; color:#57F287; font-weight: 600;">+5 coins earned!</p>
+
+
 
   </div>
 
@@ -284,6 +288,11 @@ const supabase = createClient(
   "https://akektlyhqzbatuedgnuq.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
 );
+   await supabase
+  .from("users")
+  .update({ coins: user.coins + 10 })
+  .eq("discord_id", user.discord_id);
+
 
 const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
@@ -311,6 +320,8 @@ async function loadProfile(discordId) {
 
  if (specialGradientUsers.includes(data.discord_id)) {
   document.getElementById("profileCard").classList.add("featured");
+   document.getElementById("coinBalance").textContent = `💰 Coins: ${user.coins || 0}`;
+
 }
 
 
@@ -331,6 +342,10 @@ async function loadProfile(discordId) {
 if (discordId) {
   loadProfile(discordId);
 }
+document.getElementById("coinEarnedMsg").style.display = "block";
+setTimeout(() => {
+  document.getElementById("coinEarnedMsg").style.display = "none";
+}, 2000);
 
 const specialGradientUsers = [
   "1303491410472865793", // you
