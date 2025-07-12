@@ -292,30 +292,7 @@ const myDiscordId = authData?.user?.user_metadata?.discord_id;
     const discordId = new URLSearchParams(window.location.search).get("discord_id");
 const loggedInId = localStorage.getItem("loggedInDiscordId");
 
-// Check if the viewer is the profile owner
-const isOwner = (loggedInId === discordId);
 
-if (isOwner) {
-  // Edit Mode
-  document.getElementById("dropdownAvatar").style.display = "block";
-  document.getElementById("dropdownMenu").style.display = "block";
-} else {
-  // View Mode
-  document.getElementById("dropdownAvatar").style.display = "none";
-  document.getElementById("dropdownMenu").style.display = "none";
-}
-const devButton = document.getElementById("devEditModeBtn");
-const discordIdFromURL = new URLSearchParams(window.location.search).get("discord_id");
-
-devButton.style.display = "block"; // Only show in dev mode
-
-devButton.addEventListener("click", () => {
-  if (discordIdFromURL) {
-    localStorage.setItem("loggedInDiscordId", discordIdFromURL);
-    alert("✅ Edit Mode enabled for this profile.\nReloading...");
-    location.reload();
-  }
-});
 
 
     if (discordId) {
@@ -339,7 +316,7 @@ devButton.addEventListener("click", () => {
     document.getElementById("editProfileBtn").addEventListener("click", () => {
   window.location.href = `settings.html?discord_id=${discordId}`;
 });
-<script>
+
   document.addEventListener("DOMContentLoaded", () => {
     const devButton = document.getElementById("devEditModeBtn");
     const discordIdFromURL = new URLSearchParams(window.location.search).get("discord_id");
@@ -361,7 +338,7 @@ devButton.addEventListener("click", () => {
       }
     });
   });
-</script>
+
 
   </script>
  
