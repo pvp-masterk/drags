@@ -5,6 +5,7 @@
   <title>Profile | Drags</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+<link rel="stylesheet" href="style.css" />
 
     :root {
       --primary: #5865F2;
@@ -109,6 +110,7 @@
   </style>
 </head>
 <body>
+<div id="header-placeholder"></div>
 
   <!-- Top-right profile picture -->
   <img id="dropdownAvatar" class="top-right-avatar" src="" width="45" height="45" style="border-radius: 50%;" />
@@ -196,6 +198,12 @@ if (!isOwner) {
     document.getElementById("editProfileBtn").addEventListener("click", () => {
   window.location.href = `settings.html?discord_id=${discordId}`;
 });
+
+  fetch("header.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("header-placeholder").innerHTML = html;
+    });
 
   </script>
 </body>
