@@ -219,13 +219,14 @@ body {
 
 
   <!-- Profile Card -->
- <div id="profileCard" class="profile-card">
-  <img id="profileAvatar" src="" alt="Avatar" />
-  <h2 id="displayName"></h2>
-  <p id="username"></p>
-  <p id="discordId"></p>
-  <p id="bio" class="bio"></p>
-</div>
+<div class="profile-container">
+    <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
+    <div id="username" class="profile-username">@username</div>
+    <div id="displayName" class="profile-displayname">Display Name</div>
+    <div id="userId" class="profile-userid">ID: 000000000000000000</div>
+    <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
+
+  </div>
 
 
   <script type="module">
@@ -238,62 +239,66 @@ body {
 
     const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
- async function loadProfile() {
-    const discordId = new URLSearchParams(window.location.search).get("discord_id");
-    if (!discordId) {
-      document.getElementById("profileCard").innerText = "⚠️ No Discord ID in URL.";
-      return;
-    }
+  async function loadProfile(discordId) {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("discord_id", discordId)
+        .single();
 
-    const { data: user, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("discord_id", discordId)
-      .single();
+      if (error) {
+        console.error("Failed to load profile:", error);
+        return;
+      }
 
-    if (error || !user) {
-      console.error("User fetch error:", error);
-      document.getElementById("profileCard").innerText = "❌ User not found.";
-      return;
-    }
+      const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
-    // ✅ Set text data
-    document.getElementById("username").textContent = `@${user.username}`;
-    document.getElementById("displayName").textContent = user.display_name || user.username;
-    document.getElementById("discordId").textContent = `ID: ${user.discord_id}`;
-    document.getElementById("bio").textContent = user.bio || "No bio set yet.";
-    document.getElementById("profileAvatar").src =
-      user.avatar_url ||
-      `https://cdn.discordapp.com/embed/avatars/0.png`;
+    
 
-    // ✅ Apply theme if it exists
-    applyTheme(user.profile_theme);
+
+  if (theme.textColor) {
+    document.body.style.color = theme.textColor;
   }
 
-  // Theme handler
-  function applyTheme(theme) {
-    if (!theme || typeof theme !== "object") return;
 
-    if (theme.bgImage) {
-      document.body.style.backgroundImage = `url(${theme.bgImage})`;
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundRepeat = "no-repeat";
-      document.body.style.backgroundPosition = "center";
-    } else if (theme.gradient) {
-      document.body.style.background = theme.gradient;
-    }
-
-    if (theme.textColor) {
-      document.body.style.color = theme.textColor;
-    }
-
-    if (theme.preset) {
-      document.body.classList.add(`theme-${theme.preset}`);
-    }
+  if (theme.preset) {
+    document.body.classList.add(`theme-${theme.preset}`);
   }
+} else {
+  // fallback theme
+  document.body.style.background = "var(--bg)";
+  document.body.style.color = "var(--text)";
+}
 
-  // Call it
-  loadProfile();
+
+
+      const { data: authData } = await supabase.auth.getUser();
+const myDiscordId = authData?.user?.user_metadata?.discord_id;
+
+const isOwner = myDiscordId === discordId;
+
+// Toggle dropdown visibility based on ownership
+if (!isOwner) {
+  document.getElementById("dropdownAvatar").style.display = "none";
+  document.getElementById("dropdownMenu").style.display = "none";
+}
+
+
+      document.getElementById("profileAvatar").src = avatarUrl;
+      document.getElementById("dropdownAvatar").src = avatarUrl;
+      document.getElementById("username").textContent = `@${data.username}`;
+      document.getElementById("displayName").textContent = data.display_name || data.username;
+      document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
+      document.getElementById("userBio").textContent = data.bio || "";
+
+    }
+
+
+
+
+    if (discordId) {
+      loadProfile(discordId);
+    }
     // Dropdown toggle
     const dropdownAvatar = document.getElementById("dropdownAvatar");
     const dropdownMenu = document.getElementById("dropdownMenu");
