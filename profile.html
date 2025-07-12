@@ -184,7 +184,30 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-   
+    .loading-buffer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--text);
+  z-index: 9999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--primary);
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  margin: 0 auto 10px auto;
+  animation: spin 1s linear infinite;
+}
+   @keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
   </style>
 </head>
@@ -206,7 +229,11 @@
         
     </header>
 
-
+<!-- ✅ Loading Spinner -->
+<div id="loading-buffer" class="loading-buffer">
+  <div class="spinner"></div>
+  <p>Loading profile...</p>
+</div>
 
   <!-- Top-right profile picture -->
   <img id="dropdownAvatar" class="top-right-avatar" src="" width="45" height="45" style="border-radius: 50%;" />
@@ -228,78 +255,79 @@
 
   </div>
 
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+ <script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    const supabase = createClient(
-      "https://akektlyhqzbatuedgnuq.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
-    );
+const supabase = createClient(
+  "https://akektlyhqzbatuedgnuq.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+);
 
-    const discordId = new URLSearchParams(window.location.search).get("discord_id");
+const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
-    async function loadProfile(discordId) {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("discord_id", discordId)
-        .single();
+async function loadProfile(discordId) {
+  document.getElementById("loading-buffer").style.display = "block";
+  document.getElementById("profileCard").style.display = "none";
 
-      if (error) {
-        console.error("Failed to load profile:", error);
-        return;
-      }
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("discord_id", discordId)
+    .single();
 
-      const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
+  if (error || !data) {
+    console.error("Failed to load profile:", error);
+    document.getElementById("loading-buffer").innerHTML = "<p>❌ Failed to load profile.</p>";
+    return;
+  }
 
-      const { data: authData } = await supabase.auth.getUser();
-const myDiscordId = authData?.user?.user_metadata?.discord_id;
+  const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
-const isOwner = myDiscordId === discordId;
+  const { data: authData } = await supabase.auth.getUser();
+  const myDiscordId = authData?.user?.user_metadata?.discord_id;
+  const isOwner = myDiscordId === discordId;
 
+  // Show/hide dropdown based on ownership
+  const dropdown = document.getElementById("dropdownAvatar");
+  const menu = document.getElementById("dropdownMenu");
+  if (!isOwner) {
+    dropdown.style.display = "none";
+    menu.style.display = "none";
+  }
 
+  // Update profile content
+  document.getElementById("profileAvatar").src = avatarUrl;
+  document.getElementById("dropdownAvatar").src = avatarUrl;
+  document.getElementById("username").textContent = `@${data.username}`;
+  document.getElementById("displayName").textContent = data.display_name || data.username;
+  document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
+  document.getElementById("userBio").textContent = data.bio || "";
 
-     
+  document.getElementById("loading-buffer").style.display = "none";
+  document.getElementById("profileCard").style.display = "block";
 }
 
+if (discordId) {
+  loadProfile(discordId);
+}
 
+// Toggle dropdown
+const dropdownAvatar = document.getElementById("dropdownAvatar");
+const dropdownMenu = document.getElementById("dropdownMenu");
 
-      document.getElementById("profileAvatar").src = avatarUrl;
-      document.getElementById("dropdownAvatar").src = avatarUrl;
-      document.getElementById("username").textContent = `@${data.username}`;
-      document.getElementById("displayName").textContent = data.display_name || data.username;
-      document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
-      document.getElementById("userBio").textContent = data.bio || "";
-
-    }
-
-  
-    
-
-    if (discordId) {
-      loadProfile(discordId);
-    }
-
-    // Dropdown toggle
-    const dropdownAvatar = document.getElementById("dropdownAvatar");
-    const dropdownMenu = document.getElementById("dropdownMenu");
-
-    dropdownAvatar.addEventListener("click", () => {
-      dropdownMenu.classList.toggle("active");
-    });
-
-    // Close dropdown when clicking outside
-    window.addEventListener("click", (e) => {
-      if (!dropdownAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.remove("active");
-      }
-    });
-    document.getElementById("editProfileBtn").addEventListener("click", () => {
-  window.location.href = `settings.html?discord_id=${discordId}`;
+dropdownAvatar.addEventListener("click", () => {
+  dropdownMenu.classList.toggle("active");
 });
 
- 
+window.addEventListener("click", (e) => {
+  if (!dropdownAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
+    dropdownMenu.classList.remove("active");
+  }
+});
 
-  </script>
+document.getElementById("editProfileBtn").addEventListener("click", () => {
+  window.location.href = `settings.html?discord_id=${discordId}`;
+});
+</script>
 </body>
 </html>
