@@ -106,118 +106,18 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .page-header {
-  background-color: var(--bg-color, #1e1f22);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  transition: background-color 0.3s ease;
-}
-
-.header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-}
-
-.logo {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: var(--text-color, white);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
-  animation: slideInLeft 0.7s ease forwards;
-}
-
-.nav-links a {
-  margin-left: 1.5rem;
-  text-decoration: none;
-  color: var(--text-color, #ccc);
-  font-weight: 500;
-  position: relative;
-  transition: color 0.3s ease;
-  animation: fadeIn 1s ease forwards;
-}
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  width: 0%;
-  height: 2px;
-  left: 0;
-  bottom: -4px;
-  background-color: var(--accent-color, #5865f2);
-  transition: width 0.3s ease;
-}
-
-.nav-links a:hover {
-  color: var(--accent-color, #7289da);
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive for small screens */
-@media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav-links {
-    margin-top: 0.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .nav-links a {
-    margin-left: 0;
-  }
-}
   </style>
 </head>
 <body>
-<header class="page-header">
-  <div class="header-container">
-    <div class="logo">Drags</div>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="users.html">User List</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms of Service</a>
-    </nav>
-  </div>
-</header>
 
+  <!-- Top-right profile picture -->
+  <img id="dropdownAvatar" class="top-right-avatar" src="" width="45" height="45" style="border-radius: 50%;" />
 
-
+  <!-- Dropdown -->
+ <div id="dropdownMenu" class="dropdown">
+  <button id="editProfileBtn">Edit Profile</button>
+  <button onclick="window.location.href='linkaccount.html'">Logout</button>
+</div>
 
 
   <!-- Profile Card -->
@@ -240,54 +140,63 @@
 
     const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
-  async function loadProfile(discordId) {
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("discord_id", discordId)
-      .single();
+    async function loadProfile(discordId) {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("discord_id", discordId)
+        .single();
 
-    if (error) throw error;
+      if (error) {
+        console.error("Failed to load profile:", error);
+        return;
+      }
 
-    const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
+      const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
-    // Wait for DOM to be ready before accessing elements
-    window.addEventListener("DOMContentLoaded", () => {
-      const avatarEl = document.getElementById("profileAvatar");
-      if (avatarEl) avatarEl.src = avatarUrl;
+      const { data: authData } = await supabase.auth.getUser();
+const myDiscordId = authData?.user?.user_metadata?.discord_id;
 
-      const usernameEl = document.getElementById("username");
-      if (usernameEl) usernameEl.textContent = `@${data.username}`;
+const isOwner = myDiscordId === discordId;
 
-      const displayEl = document.getElementById("displayName");
-      if (displayEl) displayEl.textContent = data.display_name || data.username;
-
-      const idEl = document.getElementById("userId");
-      if (idEl) idEl.textContent = `ID: ${data.discord_id}`;
-
-      const bioEl = document.getElementById("userBio");
-      if (bioEl) bioEl.textContent = data.bio || "";
-    });
-
-  } catch (err) {
-    console.error("Profile Load Error:", err);
-  }
+// Toggle dropdown visibility based on ownership
+if (!isOwner) {
+  document.getElementById("dropdownAvatar").style.display = "none";
+  document.getElementById("dropdownMenu").style.display = "none";
 }
 
 
+      document.getElementById("profileAvatar").src = avatarUrl;
+      document.getElementById("dropdownAvatar").src = avatarUrl;
+      document.getElementById("username").textContent = `@${data.username}`;
+      document.getElementById("displayName").textContent = data.display_name || data.username;
+      document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
+      document.getElementById("userBio").textContent = data.bio || "";
 
+    }
 
     if (discordId) {
       loadProfile(discordId);
     }
 
-   
-  
+    // Dropdown toggle
+    const dropdownAvatar = document.getElementById("dropdownAvatar");
+    const dropdownMenu = document.getElementById("dropdownMenu");
 
+    dropdownAvatar.addEventListener("click", () => {
+      dropdownMenu.classList.toggle("active");
+    });
+
+    // Close dropdown when clicking outside
+    window.addEventListener("click", (e) => {
+      if (!dropdownAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove("active");
+      }
+    });
+    document.getElementById("editProfileBtn").addEventListener("click", () => {
+  window.location.href = `settings.html?discord_id=${discordId}`;
+});
 
   </script>
- 
-
 </body>
 </html>
