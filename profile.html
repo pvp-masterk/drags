@@ -287,11 +287,8 @@ const myDiscordId = authData?.user?.user_metadata?.discord_id;
 
 const isOwner = myDiscordId === discordId;
 document.getElementById("loading-buffer").style.display = "block";
-  document.getElementById("profile-card").style.display = "none";
-// Toggle dropdown visibility based on ownership
-if (!isOwner) {
-  document.getElementById("dropdownAvatar").style.display = "none";
-  document.getElementById("dropdownMenu").style.display = "none";
+  document.getElementById("profile-container").style.display = "none";
+
    if (error || !data) {
       document.getElementById("loading-buffer").innerHTML = "<p>❌ Failed to load profile.</p>";
       return;
@@ -310,7 +307,7 @@ if (!isOwner) {
     }
 
    document.getElementById("loading-buffer").style.display = "none";
-    document.getElementById("profile-card").style.display = "block";
+    document.getElementById("profile-container").style.display = "block";
   } catch (err) {
     console.error(err);
     document.getElementById("loading-buffer").innerHTML = "<p>❌ Something went wrong.</p>";
