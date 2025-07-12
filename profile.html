@@ -252,20 +252,32 @@ body {
 
       const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
-      const theme = user.profile_theme;
+     const theme = user.profile_theme;
 
-if (theme) {
+if (theme && typeof theme === "object") {
+  // 🌈 Background gradient or image
   if (theme.bgImage) {
     document.body.style.backgroundImage = `url(${theme.bgImage})`;
     document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.backgroundPosition = "center";
   } else if (theme.gradient) {
     document.body.style.background = theme.gradient;
   }
 
+  // 🖋 Text color
   if (theme.textColor) {
     document.body.style.color = theme.textColor;
   }
+
+  // 🧪 Optional class for preset
+  if (theme.preset) {
+    document.body.classList.add(`theme-${theme.preset}`);
+  }
+} else {
+  console.log("No custom theme set, using default.");
 }
+
 
       const { data: authData } = await supabase.auth.getUser();
 const myDiscordId = authData?.user?.user_metadata?.discord_id;
