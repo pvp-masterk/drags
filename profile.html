@@ -118,6 +118,22 @@
   <button id="editProfileBtn">Edit Profile</button>
   <button onclick="window.location.href='linkaccount.html'">Logout</button>
 </div>
+<button id="devEditModeBtn" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #5865F2;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 1000;
+  display: none;
+">
+  🚧 Switch to Edit Mode
+</button>
 
 
   <!-- Profile Card -->
@@ -182,6 +198,18 @@ if (isOwner) {
   document.getElementById("dropdownAvatar").style.display = "none";
   document.getElementById("dropdownMenu").style.display = "none";
 }
+const devButton = document.getElementById("devEditModeBtn");
+const discordIdFromURL = new URLSearchParams(window.location.search).get("discord_id");
+
+devButton.style.display = "block"; // Only show in dev mode
+
+devButton.addEventListener("click", () => {
+  if (discordIdFromURL) {
+    localStorage.setItem("loggedInDiscordId", discordIdFromURL);
+    alert("✅ Edit Mode enabled for this profile.\nReloading...");
+    location.reload();
+  }
+});
 
 
     if (discordId) {
