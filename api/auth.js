@@ -68,11 +68,12 @@ else:
 
 const guildId = "1390462191630815434";
 const userId = discordUser.id;
+const botToken = process.env.DISCORD_BOT_TOKEN;
 
 // Fetch roles in the guild
 const memberData = await fetch(`https://discord.com/api/guilds/${guildId}/members/${userId}`, {
   headers: {
-    Authorization: `Bot MTM5MjM3NDAwODIyOTY1ODY0NQ.GNySjf.8iSEXmnmymia3tihLT_t2pus0KPhgFamasKEfM`
+   Authorization: `Bot ${botToken}`
   }
 }).then(res => res.json());
 
