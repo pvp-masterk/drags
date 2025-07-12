@@ -309,9 +309,10 @@ async function loadProfile(discordId) {
   const myDiscordId = authData?.user?.user_metadata?.discord_id;
   const isOwner = myDiscordId === discordId;
 
- if (specialGradientUsers.includes(user.discord_id)) {
+ if (specialGradientUsers.includes(data.discord_id)) {
   document.getElementById("profileCard").classList.add("featured");
 }
+
 
  
 
