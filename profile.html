@@ -240,34 +240,40 @@
 
     const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
-    async function loadProfile(discordId) {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("discord_id", discordId)
-        .single();
+  async function loadProfile(discordId) {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("discord_id", discordId)
+      .single();
 
-      if (error) {
-        console.error("Failed to load profile:", error);
-        return;
-      }
+    if (error) throw error;
 
-      const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
+    const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
-      const { data: authData } = await supabase.auth.getUser();
-const myDiscordId = authData?.user?.user_metadata?.discord_id;
+    // Wait for DOM to be ready before accessing elements
+    window.addEventListener("DOMContentLoaded", () => {
+      const avatarEl = document.getElementById("profileAvatar");
+      if (avatarEl) avatarEl.src = avatarUrl;
 
+      const usernameEl = document.getElementById("username");
+      if (usernameEl) usernameEl.textContent = `@${data.username}`;
 
+      const displayEl = document.getElementById("displayName");
+      if (displayEl) displayEl.textContent = data.display_name || data.username;
 
-      document.getElementById("profileAvatar").src = avatarUrl;
-      document.getElementById("username").textContent = `@${data.username}`;
-      document.getElementById("displayName").textContent = data.display_name || data.username;
-      document.getElementById("userId").textContent = `ID: ${data.discord_id}`;
-      document.getElementById("userBio").textContent = data.bio || "";
+      const idEl = document.getElementById("userId");
+      if (idEl) idEl.textContent = `ID: ${data.discord_id}`;
 
-    }
-    
-const loggedInId = localStorage.getItem("loggedInDiscordId");
+      const bioEl = document.getElementById("userBio");
+      if (bioEl) bioEl.textContent = data.bio || "";
+    });
+
+  } catch (err) {
+    console.error("Profile Load Error:", err);
+  }
+}
 
 
 
