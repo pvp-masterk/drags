@@ -317,11 +317,12 @@ async function loadProfile(discordId) {
   document.getElementById("loading-buffer").style.display = "block";
   document.getElementById("profileCard").style.display = "none";
 
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("discord_id", discordId)
-    .single();
+const { data: user, error } = await supabase
+  .from("users")
+  .select("*")
+  .eq("discord_id", discordId)
+  .single();
+
 
   if (error || !data) {
     console.error("Failed to load profile:", error);
