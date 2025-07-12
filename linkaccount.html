@@ -24,8 +24,9 @@ await supabase.from("users").upsert({
   username: discordUser.username,
   avatar_url: ..., 
   ...
+    localStorage.setItem("loggedInDiscordId", discordUser.id);
 });
-   localStorage.setItem("loggedInDiscordId", discordUser.id);
+   
 
 
  </script>
