@@ -188,6 +188,37 @@ body {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+.profile-card {
+  background-color: var(--card-bg);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px var(--primary);
+}
+
+    .badges {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.badge {
+  background-color: var(--card-bg);
+  border: 1px solid var(--primary);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--primary);
+  transition: 0.3s;
+}
+
+    
   </style>
 </head>
 <body>
@@ -225,6 +256,11 @@ body {
     <div id="displayName" class="profile-displayname">Display Name</div>
     <div id="userId" class="profile-userid">ID: 000000000000000000</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
+  <button id="followBtn">Follow</button>
+<p id="followerCount">👥 Followers: 0</p>
+  <div id="badgeContainer" class="badges"></div>
+
+
 
   </div>
 
@@ -253,21 +289,67 @@ body {
 
       const avatarUrl = data.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(discordId >> 22) % 5}.png`;
 
-    
+    const viewerId = localStorage.getItem("loggedInDiscordId"); // current logged-in user
+const targetId = user.discord_id; // profile being viewed
 
+// Check if viewer is following this user
+const { data: existingFollow } = await supabase
+  .from("followers")
+  .select("*")
+  .eq("follower_id", viewerId)
+  .eq("following_id", targetId);
 
-  if (theme.textColor) {
-    document.body.style.color = theme.textColor;
-  }
+const isFollowing = existingFollow.length > 0;
+const followBtn = document.getElementById("followBtn");
 
+if (viewerId !== targetId) {
+  followBtn.style.display = "inline-block";
+  followBtn.textContent = isFollowing ? "Unfollow" : "Follow";
 
-  if (theme.preset) {
-    document.body.classList.add(`theme-${theme.preset}`);
-  }
+  followBtn.onclick = async () => {
+    if (isFollowing) {
+      await supabase.from("followers").delete()
+        .eq("follower_id", viewerId)
+        .eq("following_id", targetId);
+      followBtn.textContent = "Follow";
+    } else {
+      await supabase.from("followers").insert({
+        follower_id: viewerId,
+        following_id: targetId
+      });
+      followBtn.textContent = "Unfollow";
+    }
+    location.reload(); // Reload to update count
+  };
 } else {
-  // fallback theme
-  document.body.style.background = "var(--bg)";
-  document.body.style.color = "var(--text)";
+  followBtn.style.display = "none"; // Don't show on your own profile
+}
+
+
+const { count } = await supabase
+  .from("followers")
+  .select("*", { count: "exact", head: true })
+  .eq("following_id", targetId);
+
+document.getElementById("followerCount").textContent = `👥 Followers: ${count}`;
+
+const badgeMap = {
+  early: "🚀 Early User",
+  beta: "🧪 Beta Tester",
+  verified: "✅ Verified",
+  admin: "🛡️ Admin"
+};
+
+if (user.badges && Array.isArray(user.badges)) {
+  const badgeContainer = document.getElementById("badgeContainer");
+  badgeContainer.innerHTML = "";
+
+  user.badges.forEach(badge => {
+    const badgeEl = document.createElement("div");
+    badgeEl.className = "badge";
+    badgeEl.textContent = badgeMap[badge] || badge;
+    badgeContainer.appendChild(badgeEl);
+  });
 }
 
 
