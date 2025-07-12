@@ -117,12 +117,15 @@
     <label for="bio">Bio</label>
     <textarea id="bio" rows="4" placeholder="Tell us something cool..."></textarea>
 
-    <select id="themePreset">
-  <option value="default">Default</option>
-  <option value="neon">Neon</option>
-  <option value="galaxy">Galaxy</option>
-  <option value="custom">Custom</option>
-</select>
+  <h3>Profile Theme</h3>
+
+<label>Background Gradient:</label>
+<input type="text" id="gradientInput" placeholder="e.g. linear-gradient(135deg, #5865F2, #ED4245)" style="width:100%">
+
+<label>Text Color:</label>
+<input type="color" id="textColorInput">
+
+<button id="saveThemeBtn">Save Theme</button>
 
 <input type="color" id="textColorPicker">
 <input type="text" id="gradientInput" placeholder="Enter gradient CSS">
@@ -197,12 +200,30 @@
   document.querySelectorAll("input, textarea, button").forEach(el => el.disabled = true);
   alert("⚠ You can't edit someone else's profile.");
 }
-    const themeData = {
-  preset: selectedPreset,
-  textColor: textColor,
-  gradient: gradientCSS,
-  bgImage: uploadedImageURL || ""
-};
+   document.getElementById("saveThemeBtn").addEventListener("click", async () => {
+  const gradient = document.getElementById("gradientInput").value;
+  const textColor = document.getElementById("textColorInput").value;
+  const discordId = localStorage.getItem("loggedInDiscordId");
+
+  if (!discordId) return alert("Not logged in.");
+
+  const themeData = {
+    gradient,
+    textColor
+  };
+
+  const { error } = await supabase
+    .from("users")
+    .update({ profile_theme: themeData })
+    .eq("discord_id", discordId);
+
+  if (error) {
+    alert("❌ Failed to save theme.");
+    console.error(error);
+  } else {
+    alert("✅ Theme saved!");
+  }
+});
 
 await supabase.from("users").update({
   profile_theme: themeData
