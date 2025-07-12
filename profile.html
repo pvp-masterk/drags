@@ -299,45 +299,8 @@ const loggedInId = localStorage.getItem("loggedInDiscordId");
       loadProfile(discordId);
     }
 
-    // Dropdown toggle
-    const dropdownAvatar = document.getElementById("dropdownAvatar");
-    const dropdownMenu = document.getElementById("dropdownMenu");
-
-    dropdownAvatar.addEventListener("click", () => {
-      dropdownMenu.classList.toggle("active");
-    });
-
-    // Close dropdown when clicking outside
-    window.addEventListener("click", (e) => {
-      if (!dropdownAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.remove("active");
-      }
-    });
-    document.getElementById("editProfileBtn").addEventListener("click", () => {
-  window.location.href = `settings.html?discord_id=${discordId}`;
-});
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const devButton = document.getElementById("devEditModeBtn");
-    const discordIdFromURL = new URLSearchParams(window.location.search).get("discord_id");
-
-    // OPTIONAL: Only show button for your account
-    // const ownerDiscordId = "1303491410472865793";
-    // if (localStorage.getItem("loggedInDiscordId") === ownerDiscordId) {
-    //   devButton.style.display = "block";
-    // }
-
-    // Show button for everyone (for dev)
-    devButton.style.display = "block";
-
-    devButton.addEventListener("click", () => {
-      if (discordIdFromURL) {
-        localStorage.setItem("loggedInDiscordId", discordIdFromURL);
-        alert("✅ Edit Mode enabled for this profile.\nReloading...");
-        location.reload();
-      }
-    });
-  });
+   
+  
 
 
   </script>
