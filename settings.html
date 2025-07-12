@@ -117,6 +117,18 @@
     <label for="bio">Bio</label>
     <textarea id="bio" rows="4" placeholder="Tell us something cool..."></textarea>
 
+    <select id="themePreset">
+  <option value="default">Default</option>
+  <option value="neon">Neon</option>
+  <option value="galaxy">Galaxy</option>
+  <option value="custom">Custom</option>
+</select>
+
+<input type="color" id="textColorPicker">
+<input type="text" id="gradientInput" placeholder="Enter gradient CSS">
+<input type="file" id="bgImageUploader">
+
+
     <button id="saveBtn">Save Changes</button>
 
     <div class="success-msg" id="successMsg">✅ Profile updated!</div>
@@ -185,6 +197,17 @@
   document.querySelectorAll("input, textarea, button").forEach(el => el.disabled = true);
   alert("⚠ You can't edit someone else's profile.");
 }
+    const themeData = {
+  preset: selectedPreset,
+  textColor: textColor,
+  gradient: gradientCSS,
+  bgImage: uploadedImageURL || ""
+};
+
+await supabase.from("users").update({
+  profile_theme: themeData
+}).eq("discord_id", loggedInDiscordId);
+
 
   </script>
 </body>
