@@ -256,8 +256,7 @@ body {
     <div id="displayName" class="profile-displayname">Display Name</div>
     <div id="userId" class="profile-userid">ID: 000000000000000000</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
-  <button id="followBtn">Follow</button>
-<p id="followerCount">👥 Followers: 0</p>
+  
   <div id="badgeContainer" class="badges"></div>
 
 
@@ -292,46 +291,7 @@ body {
     const viewerId = localStorage.getItem("loggedInDiscordId"); // current logged-in user
 const targetId = user.discord_id; // profile being viewed
 
-// Check if viewer is following this user
-const { data: existingFollow } = await supabase
-  .from("followers")
-  .select("*")
-  .eq("follower_id", viewerId)
-  .eq("following_id", targetId);
 
-const isFollowing = existingFollow.length > 0;
-const followBtn = document.getElementById("followBtn");
-
-if (viewerId !== targetId) {
-  followBtn.style.display = "inline-block";
-  followBtn.textContent = isFollowing ? "Unfollow" : "Follow";
-
-  followBtn.onclick = async () => {
-    if (isFollowing) {
-      await supabase.from("followers").delete()
-        .eq("follower_id", viewerId)
-        .eq("following_id", targetId);
-      followBtn.textContent = "Follow";
-    } else {
-      await supabase.from("followers").insert({
-        follower_id: viewerId,
-        following_id: targetId
-      });
-      followBtn.textContent = "Unfollow";
-    }
-    location.reload(); // Reload to update count
-  };
-} else {
-  followBtn.style.display = "none"; // Don't show on your own profile
-}
-
-
-const { count } = await supabase
-  .from("followers")
-  .select("*", { count: "exact", head: true })
-  .eq("following_id", targetId);
-
-document.getElementById("followerCount").textContent = `👥 Followers: ${count}`;
 
 const badgeMap = {
   early: "🚀 Early User",
