@@ -295,12 +295,7 @@ if (!isOwner) {
    if (error || !data) {
       document.getElementById("loading-buffer").innerHTML = "<p>❌ Failed to load profile.</p>";
       return;
-      document.getElementById("loading-buffer").style.display = "none";
-    document.getElementById("profile-card").style.display = "block";
-      } catch (err) {
-    console.error(err);
-    document.getElementById("loading-buffer").innerHTML = "<p>❌ Something went wrong.</p>";
-  }
+     
 }
 }
 
@@ -314,7 +309,13 @@ if (!isOwner) {
 
     }
 
-   
+   document.getElementById("loading-buffer").style.display = "none";
+    document.getElementById("profile-card").style.display = "block";
+  } catch (err) {
+    console.error(err);
+    document.getElementById("loading-buffer").innerHTML = "<p>❌ Something went wrong.</p>";
+  }
+}
     
 
     if (discordId) {
