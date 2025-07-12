@@ -235,18 +235,11 @@
   <p>Loading profile...</p>
 </div>
 
-  <!-- Top-right profile picture -->
-  <img id="dropdownAvatar" class="top-right-avatar" src="" width="45" height="45" style="border-radius: 50%;" />
-
-  <!-- Dropdown -->
- <div id="dropdownMenu" class="dropdown">
-  <button id="editProfileBtn">Edit Profile</button>
-  <button onclick="window.location.href='linkaccount.html'">Logout</button>
-</div>
+  
 
 
   <!-- Profile Card -->
-  <div class="profile-container">
+  <div id="profileCard" class="profile-container">
     <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
     <div id="username" class="profile-username">Loading...</div>
     <div id="displayName" class="profile-displayname">Loading...</div>
@@ -260,14 +253,14 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 const supabase = createClient(
   "https://akektlyhqzbatuedgnuq.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
 );
 
 const discordId = new URLSearchParams(window.location.search).get("discord_id");
 
 async function loadProfile(discordId) {
   document.getElementById("loading-buffer").style.display = "block";
-  document.getElementById("profile-container").style.display = "none";
+  document.getElementById("profileCard").style.display = "none";
 
   const { data, error } = await supabase
     .from("users")
@@ -299,7 +292,7 @@ async function loadProfile(discordId) {
   document.getElementById("userBio").textContent = data.bio || "";
 
   document.getElementById("loading-buffer").style.display = "none";
-  document.getElementById("profile-container").style.display = "block";
+  document.getElementById("profileCard").style.display = "block";
 }
 
 if (discordId) {
