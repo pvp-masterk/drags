@@ -130,7 +130,22 @@
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
 
   </div>
-
+ <button id="devEditModeBtn" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #5865F2;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 9999;
+  display: none;
+">
+  🚧 Switch to Edit Mode
+</button>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
@@ -218,24 +233,32 @@ devButton.addEventListener("click", () => {
     document.getElementById("editProfileBtn").addEventListener("click", () => {
   window.location.href = `settings.html?discord_id=${discordId}`;
 });
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const devButton = document.getElementById("devEditModeBtn");
+    const discordIdFromURL = new URLSearchParams(window.location.search).get("discord_id");
+
+    // OPTIONAL: Only show button for your account
+    // const ownerDiscordId = "1303491410472865793";
+    // if (localStorage.getItem("loggedInDiscordId") === ownerDiscordId) {
+    //   devButton.style.display = "block";
+    // }
+
+    // Show button for everyone (for dev)
+    devButton.style.display = "block";
+
+    devButton.addEventListener("click", () => {
+      if (discordIdFromURL) {
+        localStorage.setItem("loggedInDiscordId", discordIdFromURL);
+        alert("✅ Edit Mode enabled for this profile.\nReloading...");
+        location.reload();
+      }
+    });
+  });
+</script>
 
   </script>
-  <button id="devEditModeBtn" style="
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #5865F2;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  z-index: 9999;
-  display: none;
-">
-  🚧 Switch to Edit Mode
-</button>
+ 
 
 </body>
 </html>
