@@ -733,7 +733,7 @@
 <body>
   
 
-    <!-- Header -->
+   
     <header id="header">
         <a href="#" class="logo"><i class="fab fa-discord"></i> Drags</a>
         <nav class="nav-links">
@@ -763,7 +763,7 @@
   <p>Points: <span id="points"></span></p>
 </div>
 
-    <!-- Hero Section -->
+
     <section class="hero" id="home">
         <div class="hero-content">
             <h1>Welcome to <span>Drags</span> Official WebApp</h1>
@@ -776,7 +776,7 @@
         <div class="hero-image"></div>
     </section>
 
-    <!-- Features Section -->
+
     <section class="features" id="features">
         <h2 class="section-title">Why Join Drags?</h2>
         <div class="features-grid">
@@ -813,7 +813,7 @@
         </div>
     </section>
 
-    <!-- Community Section -->
+
     <section class="community" id="community">
         <h2 class="section-title">Our Growing Family</h2>
         <div class="community-content">
@@ -834,7 +834,7 @@
             <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Become Part of Drags</a>
         </div>
     </section>
-<!-- Application CTA Section -->
+
 <section class="application-cta" style="padding: 80px 10%; background: linear-gradient(135deg, var(--primary-dark), var(--primary)); text-align: center;">
     <div class="cta-container" style="max-width: 800px; margin: 0 auto;">
         <h2 style="font-size: 36px; margin-bottom: 20px; color: white;">Join Our Team</h2>
@@ -846,12 +846,12 @@
         </a>
     </div>
 </section>
-     <!-- Chain of Command Section -->
+
 <section class="command" id="command" style="padding: 100px 10%; background: var(--bg);">
     <h2 class="section-title">Chain of Command</h2>
     
     <div class="command-structure" style="max-width: 800px; margin: 0 auto;">
-        <!-- Tier 1 - Owners -->
+
         <div class="command-tier fade-in" style="margin-bottom: 40px;">
             <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
                 <i class="fas fa-crown" style="margin-right: 10px;"></i>Server Leadership
@@ -875,7 +875,7 @@
             </ul>
         </div>
         
-        <!-- Tier 2 - Admins -->
+
         <div class="command-tier fade-in" style="margin-bottom: 40px;">
             <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
                 <i class="fas fa-shield-alt" style="margin-right: 10px;"></i>Administration
@@ -893,7 +893,7 @@
             </ul>
         </div>
         
-        <!-- Tier 3 - Moderators -->
+
         <div class="command-tier fade-in" style="margin-bottom: 40px;">
             <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
                 <i class="fas fa-gavel" style="margin-right: 10px;"></i>Moderation Team
@@ -911,7 +911,7 @@
             </ul>
         </div>
         
-        <!-- Tier 4 - Support -->
+
         <div class="command-tier fade-in">
             <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
                 <i class="fas fa-hands-helping" style="margin-right: 10px;"></i>Support Staff
@@ -941,7 +941,7 @@
 </div>
 
 
-    <!-- Footer -->
+
     <footer>
         <div class="footer-content">
             <div class="footer-column">
@@ -988,7 +988,7 @@
 
         
 
-<!-- 👇 Header toggle button -->
+
 <button id="toggleHeaderBtn">🔻 Disable Header</button>
 
     </footer>
@@ -996,7 +996,7 @@
     <script>
 
         
-        // Header scroll effect
+
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
             if (window.scrollY > 50) {
@@ -1006,7 +1006,7 @@
             }
         });
         
-        // Scroll animations
+
         const fadeElements = document.querySelectorAll('.fade-in');
         
         const appearOptions = {
@@ -1032,7 +1032,7 @@
      
 
         
-        // Animated counter for member count
+
         function animateValue(id, start, end, duration) {
             let obj = document.getElementById(id);
             let range = end - start;
@@ -1060,7 +1060,7 @@
         }
 
         
-        // Start counter when community section is visible
+
         const communitySection = document.querySelector('.community');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1079,31 +1079,31 @@ document.addEventListener('DOMContentLoaded', function() {
   const acceptBtn = document.getElementById('accept-cookies');
   const denyBtn = document.getElementById('deny-cookies');
   
-  // Debugging point
+
   console.log('Cookie consent script loaded');
   console.log('Banner element:', cookieBanner);
   
-  // Check if cookie preference exists
+
   function hasCookieConsent() {
     return localStorage.getItem('cookiesAccepted') !== null;
   }
   
-  // Show banner with animation
+
   function showBanner() {
     console.log('Showing cookie banner');
     cookieBanner.classList.add('show');
   }
   
-  // Hide banner with animation
+
   function hideBanner() {
     cookieBanner.classList.remove('show');
-    // Remove after animation completes
+
     setTimeout(() => {
       cookieBanner.style.display = 'none';
     }, 500);
   }
   
-  // Initialize
+
   if (!hasCookieConsent()) {
     console.log('No consent found - showing banner');
     showBanner();
@@ -1112,25 +1112,25 @@ document.addEventListener('DOMContentLoaded', function() {
     cookieBanner.style.display = 'none';
   }
   
-  // Button event handlers
+
   acceptBtn.addEventListener('click', function() {
     console.log('Accepted cookies');
     localStorage.setItem('cookiesAccepted', 'true');
     hideBanner();
-    // Load your cookies/tracking scripts here
+
   });
   
   denyBtn.addEventListener('click', function() {
     console.log('Denied cookies');
     localStorage.setItem('cookiesAccepted', 'false');
     hideBanner();
-    // Remove any existing cookies
+
     document.cookie.split(";").forEach(function(c) {
       document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
   });
   
-  // Debug localStorage
+
   console.log('Current cookiesAccepted value:', localStorage.getItem('cookiesAccepted'));
 });
 
@@ -1173,7 +1173,7 @@ async function verifyCode() {
       alert("Invalid or expired code");
     }
   }
-    // 🧠 Load mainheader.html
+
   fetch("mainheader.html")
     .then(res => res.text())
     .then(html => {
@@ -1183,7 +1183,7 @@ async function verifyCode() {
       setupDropdownToggle();
     });
 
-  // 🧠 Toggle header on/off
+
   const toggleBtn = document.getElementById("toggleHeaderBtn");
 
   toggleBtn.addEventListener("click", () => {
