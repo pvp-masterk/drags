@@ -66,33 +66,3 @@ else:
   res.redirect(`/profile.html?discord_id=${discordUser.id}`);
 }
 
-const guildId = "1390462191630815434";
-const userId = discordUser.id;
-const botToken = process.env.DISCORD_BOT_TOKEN;
-
-// Fetch roles in the guild
-const memberData = await fetch(`https://discord.com/api/guilds/${guildId}/members/${userId}`, {
-  headers: {
-   Authorization: `Bot ${botToken}`
-  }
-}).then(res => res.json());
-
-const userRoles = memberData.roles || [];
-
-const assignedBadges = Object.keys(roleBadges).filter(roleId => userRoles.includes(roleId));
-
-// Save badge keys to Supabase
-await fetch("https://akektlyhqzbatuedgnuq.supabase.co/rest/v1/users", {
-  method: "PATCH",
-  headers: {
-    apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg",
-    Authorization: "BearereyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg",
-    "Content-Type": "application/json",
-    Prefer: "resolution=merge-duplicates"
-  },
-  body: JSON.stringify({
-    discord_id: userId,
-    badges: assignedBadges
-  })
-});
-
