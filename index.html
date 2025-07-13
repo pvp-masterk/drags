@@ -35,12 +35,12 @@
         }
         
         
-        /* Smooth scroll */
+        
         html {
             scroll-behavior: smooth;
         }
         
-        /* Scrollbar */
+        
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -54,7 +54,7 @@
             border-radius: 5px;
         }
         
-        /* Header */
+        
         header {
             position: fixed;
             top: 0;
@@ -162,7 +162,7 @@
             box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
         }
         
-        /* Hero Section */
+        
         .hero {
             height: 100vh;
             display: flex;
@@ -244,7 +244,7 @@
             }
         }
         
-        /* Features Section */
+        
         .features {
             padding: 100px 10%;
             background: var(--bg);
@@ -324,7 +324,7 @@
             line-height: 1.6;
         }
         
-        /* Community Section */
+        
         .community {
             padding: 100px 10%;
             background: var(--card-bg);
@@ -385,7 +385,7 @@
             opacity: 0.8;
         }
         
-        /* Team Section */
+        
         .team {
             padding: 100px 10%;
             background: var(--bg);
@@ -448,7 +448,7 @@
             transform: translateY(-3px);
         }
         
-        /* Footer */
+        
         footer {
             background: var(--card-bg);
             padding: 70px 10% 30px;
@@ -505,7 +505,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        /* Animations */
+        
         .fade-in {
             opacity: 0;
             transform: translateY(20px);
@@ -604,7 +604,7 @@
             }
         }
 
-            /* Cookie Banner Styles */
+           
 .cookie-banner {
   position: fixed;
   bottom: -100%;
@@ -1277,7 +1277,7 @@ function showProfileLink() {
   const discordId = localStorage.getItem("loggedInDiscordId");
 
   async function loadUser() {
-    if (!discordId) return; // no one is logged in
+    if (!discordId) return; 
 
     const { data, error } = await supabase
       .from("users")
@@ -1314,7 +1314,7 @@ function showProfileLink() {
 
   loadUser();
 
-  // Toggle dropdown
+  
   const avatarBtn = document.getElementById("userDropdownBtn");
   const dropdown = document.getElementById("dropdownMenu");
 
