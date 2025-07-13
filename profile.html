@@ -528,9 +528,6 @@ if (specialGradientUsers.includes(user.discord_id)) {
 
 
 
-
- 
-
   // Update profile content
   document.getElementById("profileAvatar").src = avatarUrl;
   
@@ -542,7 +539,7 @@ if (specialGradientUsers.includes(user.discord_id)) {
   document.getElementById("loading-buffer").style.display = "none";
   document.getElementById("profileCard").style.display = "block";
 }
-
+  }
 if (discordId) {
   loadProfile(discordId);
 }
