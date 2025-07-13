@@ -397,11 +397,13 @@ const { data: user, error } = await supabase
 const badgeBox = document.getElementById("badgeBox");
 const badgeContainer = document.getElementById("badgeContainer");
 
+// ✅ clear old badges before rendering
+badgeContainer.innerHTML = "";
+
 const assigned = manualBadges[user.discord_id] || [];
 
 if (assigned.length > 0) {
   badgeBox.style.display = "flex";
-  badgeContainer.innerHTML = "";
 
   assigned.forEach(key => {
     const badge = badgeMap[key];
@@ -411,29 +413,18 @@ if (assigned.length > 0) {
       img.alt = badge.name;
       img.title = badge.name;
       img.className = "badge-icon";
+
+      // Optional: glow class
+      if (["elite", "staff"].includes(key)) {
+        img.classList.add("glow");
+      }
+
       badgeContainer.appendChild(img);
     }
   });
 } else {
   badgeBox.style.display = "none";
 }
-  assigned.forEach(key => {
-  const badge = badgeMap[key];
-  if (badge) {
-    const img = document.createElement("img");
-    img.src = badge.icon;
-    img.alt = badge.name;
-    img.title = badge.name;
-    img.className = "badge-icon";
-
-    // 🔥 Add glow effect to selected badges
-    if (["owner", "dev"].includes(key)) {
-      img.classList.add("glow");
-    }
-
-    badgeContainer.appendChild(img);
-  }
-});
 
 
 
