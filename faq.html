@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ - Drags Discord</title>
+    <title>FAQ - Drags</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-  /* ===== Smooth Header Styles ===== */
+
     header {
         position: fixed;
         top: 0;
@@ -74,11 +74,10 @@
         width: 100%;
     }
     
-    /* Add this to make content appear below fixed header */
     body {
         padding-top: 80px;
     }
- /*Header */
+
         
         body {
             font-family: 'Poppins', sans-serif;
@@ -155,7 +154,7 @@
         <a href="rules.html">Rules</a>
         <a href="FAQ.html">FAQ</a>
         <a href="partnerships.html">Partnerships</a>
-        <!-- Add profile icon if logged in -->
+       
         <div class="profile-icon">
             <i class="fas fa-user"></i>
         </div>
@@ -232,7 +231,7 @@
                 const item = question.parentNode;
                 item.classList.toggle('active');
                 
-                // Close other open items
+             
                 document.querySelectorAll('.faq-item').forEach(otherItem => {
                     if (otherItem !== item && otherItem.classList.contains('active')) {
                         otherItem.classList.remove('active');
@@ -241,7 +240,7 @@
             });
         });
         
-    // Header scroll effect
+  
     window.addEventListener('scroll', function() {
         const header = document.querySelector('header');
         if (window.scrollY > 50) {
