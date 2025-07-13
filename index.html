@@ -135,59 +135,7 @@
   z-index: 99999;
   transition: 0.2s ease;
 }
-#toggleHeaderBtn:hover {
-  background: var(--primary-dark);
-}
-.hidden-header {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-.avatar-dropdown-container {
-  position: relative;
-  margin-left: auto;
-  margin-right: 10px;
-}
-.mini-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid var(--primary);
-  transition: 0.2s ease;
-}
 
-.dropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background-color: var(--card-bg);
-  border: 1px solid var(--primary);
-  border-radius: 10px;
-  padding: 10px;
-  min-width: 150px;
-  display: none;
-  flex-direction: column;
-  animation: dropdownFade 0.3s ease;
-  z-index: 9999;
-}
-.dropdown a {
-  color: var(--text);
-  text-decoration: none;
-  padding: 8px;
-  border-radius: 8px;
-  transition: 0.2s ease;
-}
-.dropdown a:hover {
-  background: var(--primary-dark);
-}
-.dropdown.show {
-  display: flex;
-}
-@keyframes dropdownFade {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
 
 
       
@@ -728,7 +676,77 @@
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
-      
+      .user-menu {
+  position: relative;
+}
+
+.mini-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  cursor: pointer;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  width: 250px;
+  background: rgba(30, 30, 46, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 15px;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.dropdown-info img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.dropdown-info p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #bbb;
+}
+
+.user-id {
+  font-size: 12px;
+  color: #777;
+}
+
+.dropdown a {
+  display: block;
+  padding: 8px;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: 6px;
+  transition: 0.2s ease;
+  font-size: 14px;
+}
+
+.dropdown a:hover {
+  background: var(--primary-dark);
+}
+
     </style>
 </head>
 <body>
@@ -746,11 +764,27 @@
             <div style="display: flex; align-items: center; gap: 20px;">
         </nav>
        <div id="user-box">
-  <a href="  https://dragswebapp.vercel.app/linkaccount.html" class="cta-button">Link</a>
+ 
 </div>
-        <a id="profileLink" style="display:none; margin-right: 10px;">
-  <img id="profileAvatar" class="mini-avatar" src="" alt="Profile" />
-</a>
+       <div class="user-menu" id="userMenu" style="display: none;">
+  <img id="userDropdownBtn" class="mini-avatar" src="" alt="User" />
+
+  <div class="dropdown" id="dropdownMenu">
+    <div id="userInfo" class="dropdown-info">
+      <img id="dropdownAvatar" src="" />
+      <div>
+        <strong id="dropdownDisplayName">Loading...</strong>
+        <p id="dropdownUsername">@username</p>
+        <p id="dropdownUserId" class="user-id">ID: 0000000000</p>
+      </div>
+    </div>
+    <hr />
+    <a href="#" id="viewProfileBtn">View Profile</a>
+    <a href="#" id="settingsBtn">Settings</a>
+    <a href="linkaccount.html" id="linkBtn">Link</a>
+  </div>
+</div>
+
 
         <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
 
@@ -1185,7 +1219,7 @@ async function verifyCode() {
       document.getElementById("header-placeholder").innerHTML = html;
       applyHeaderPreference();
       loadUserInfo();
-      setupDropdownToggle();
+      
     });
 
 
@@ -1225,20 +1259,7 @@ async function verifyCode() {
       showProfileLink(); // ✅ Add this here
   }
 
-  function setupDropdownToggle() {
-    const avatar = document.getElementById("miniAvatar");
-    const dropdown = document.getElementById("dropdown");
-
-    avatar?.addEventListener("click", () => {
-      dropdown.classList.toggle("show");
-    });
-
-    window.addEventListener("click", (e) => {
-      if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.classList.remove("show");
-      }
-    });
-  }
+ 
 function showProfileLink() {
   const discordId = localStorage.getItem("discord_id");
   const avatarUrl = localStorage.getItem("avatar_url");
@@ -1252,6 +1273,44 @@ function showProfileLink() {
     profileLink.style.display = "inline-block";
   }
 }
+    async function loadDropdownUser() {
+  const { data: user, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("discord_id", userId)
+    .single();
+
+  const menu = document.getElementById("userMenu");
+  const dropdown = document.getElementById("dropdownMenu");
+
+        // Show dropdown content
+  document.getElementById("dropdownAvatar").src = user.avatar_url;
+  document.getElementById("dropdownDisplayName").textContent = user.display_name;
+  document.getElementById("dropdownUsername").textContent = "@" + user.username;
+  document.getElementById("dropdownUserId").textContent = "ID: " + user.discord_id;
+
+  document.getElementById("viewProfileBtn").href = `profile.html?discord_id=${user.discord_id}`;
+  document.getElementById("settingsBtn").href = "underdev.html";
+  document.getElementById("linkBtn").style.display = "none";
+
+  document.getElementById("userDropdownBtn").src = user.avatar_url;
+  menu.style.display = "block";
+}
+    loadDropdownUser();
+
+    // Toggle dropdown visibility
+const avatarBtn = document.getElementById("userDropdownBtn");
+const dropdown = document.getElementById("dropdownMenu");
+
+avatarBtn.addEventListener("click", () => {
+  dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+});
+
+document.addEventListener("click", (e) => {
+  if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.style.display = "none";
+  }
+});
 
 </script>
 
