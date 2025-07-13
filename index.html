@@ -1267,65 +1267,64 @@ function showProfileLink() {
 
 </script>
 
-    <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+  const supabase = supabasejs.createClient(
+    "https://akektlyhqzbatuedgnuq.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
+  );
 
-const supabase = createClient(
-  'https://akektlyhqzbatuedgnuq.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
-);
+  async function loadLatestLinkedUser() {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
 
-const userId = localStorage.getItem("loggedInDiscordId");
+    const menu = document.getElementById("userMenu");
+    const dropdown = document.getElementById("dropdownMenu");
 
-async function loadDropdownUser() {
-  const { data: user, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("discord_id", userId)
-    .single();
+    if (!data || error) {
+      // Show "Link" button, hide profile options
+      document.getElementById("linkBtn").style.display = "block";
+      document.getElementById("viewProfileBtn").style.display = "none";
+      document.getElementById("settingsBtn").style.display = "none";
+      menu.style.display = "block";
+      return;
+    }
 
-  const menu = document.getElementById("userMenu");
+    // ✅ User found → fill dropdown
+    document.getElementById("dropdownAvatar").src = data.avatar_url;
+    document.getElementById("dropdownDisplayName").textContent = data.display_name || data.username;
+    document.getElementById("dropdownUsername").textContent = "@" + data.username;
+    document.getElementById("dropdownUserId").textContent = "ID: " + data.discord_id;
+
+    document.getElementById("viewProfileBtn").href = `profile.html?discord_id=${data.discord_id}`;
+    document.getElementById("settingsBtn").href = "underdev.html";
+    document.getElementById("linkBtn").style.display = "none";
+
+    document.getElementById("userDropdownBtn").src = data.avatar_url;
+    menu.style.display = "block";
+  }
+
+  loadLatestLinkedUser();
+
+  // Toggle dropdown
+  const avatarBtn = document.getElementById("userDropdownBtn");
   const dropdown = document.getElementById("dropdownMenu");
 
-  if (!user || error) {
-    // not linked
-    document.getElementById("linkBtn").style.display = "block";
-    document.getElementById("viewProfileBtn").style.display = "none";
-    document.getElementById("settingsBtn").style.display = "none";
-    menu.style.display = "block";
-    return;
-  }
+  avatarBtn.addEventListener("click", () => {
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  });
 
-  // Show dropdown content
-  document.getElementById("dropdownAvatar").src = user.avatar_url;
-  document.getElementById("dropdownDisplayName").textContent = user.display_name;
-  document.getElementById("dropdownUsername").textContent = "@" + user.username;
-  document.getElementById("dropdownUserId").textContent = "ID: " + user.discord_id;
-
-  document.getElementById("viewProfileBtn").href = `profile.html?discord_id=${user.discord_id}`;
-  document.getElementById("settingsBtn").href = "underdev.html";
-  document.getElementById("linkBtn").style.display = "none";
-
-  document.getElementById("userDropdownBtn").src = user.avatar_url;
-  menu.style.display = "block";
-}
-
-loadDropdownUser();
-
-// Toggle dropdown visibility
-const avatarBtn = document.getElementById("userDropdownBtn");
-const dropdown = document.getElementById("dropdownMenu");
-
-avatarBtn.addEventListener("click", () => {
-  dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-});
-
-document.addEventListener("click", (e) => {
-  if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.style.display = "none";
-  }
-});
+  document.addEventListener("click", (e) => {
+    if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.style.display = "none";
+    }
+  });
 </script>
+
 
     
 </body>
