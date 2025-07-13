@@ -365,8 +365,7 @@ const { data: user, error } = await supabase
   const { data: authData } = await supabase.auth.getUser();
   const myDiscordId = authData?.user?.user_metadata?.discord_id;
   const isOwner = myDiscordId === discordId;
-const badgeBox = document.getElementById("badgeBox");
-const badgeContainer = document.getElementById("badgeContainer");
+
 
 const badgeBox = document.getElementById("badgeBox");
 const badgeContainer = document.getElementById("badgeContainer");
