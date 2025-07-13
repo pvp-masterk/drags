@@ -1271,22 +1271,26 @@ function showProfileLink() {
 <script>
   const supabase = window.supabase.createClient(
     "https://akektlyhqzbatuedgnuq.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   );
 
-  async function loadLatestLinkedUser() {
+  const discordId = localStorage.getItem("loggedInDiscordId");
+
+  async function loadUser() {
+    if (!discordId) return; // no one is logged in
+
     const { data, error } = await supabase
       .from("users")
       .select("*")
-      .order("created_at", { ascending: false })
-      .limit(1)
+      .eq("discord_id", discordId)
       .single();
+
+    console.log("Fetched user from Supabase:", data);
 
     const menu = document.getElementById("userMenu");
     const dropdown = document.getElementById("dropdownMenu");
 
     if (!data || error) {
-      // Show "Link" button, hide profile options
       document.getElementById("linkBtn").style.display = "block";
       document.getElementById("viewProfileBtn").style.display = "none";
       document.getElementById("settingsBtn").style.display = "none";
@@ -1294,7 +1298,7 @@ function showProfileLink() {
       return;
     }
 
-    // ✅ User found → fill dropdown
+    // Set dropdown UI
     document.getElementById("dropdownAvatar").src = data.avatar_url;
     document.getElementById("dropdownDisplayName").textContent = data.display_name || data.username;
     document.getElementById("dropdownUsername").textContent = "@" + data.username;
@@ -1308,13 +1312,13 @@ function showProfileLink() {
     menu.style.display = "block";
   }
 
-  loadLatestLinkedUser();
+  loadUser();
 
   // Toggle dropdown
   const avatarBtn = document.getElementById("userDropdownBtn");
   const dropdown = document.getElementById("dropdownMenu");
 
-  avatarBtn.addEventListener("click", () => {
+  avatarBtn?.addEventListener("click", () => {
     dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
   });
 
@@ -1323,9 +1327,8 @@ function showProfileLink() {
       dropdown.style.display = "none";
     }
   });
-    console.log("Fetched user from Supabase:", data);
-
 </script>
+
 
 
     
