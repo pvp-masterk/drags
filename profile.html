@@ -344,6 +344,49 @@
   opacity: 1;
 }
 
+.badge-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.badge-tooltip {
+  position: absolute;
+  bottom: -65px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 30, 46, 0.95);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  width: max-content;
+  max-width: 220px;
+  z-index: 10;
+  text-align: left;
+  line-height: 1.3;
+}
+
+.badge-wrapper:hover .badge-tooltip {
+  opacity: 1;
+}
+
+.badge-tooltip strong {
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.badge-tooltip span {
+  display: block;
+  font-weight: 400;
+  color: #aaa;
+  margin-top: 2px;
+}
 
 
   </style>
@@ -447,26 +490,34 @@ if (assigned.length > 0) {
   badgeBox.style.display = "flex";
 
   assigned.forEach(key => {
-    const badge = badgeMap[key];
-    if (badge) {
-      const img = document.createElement("img");
-      img.src = badge.icon;
-      img.alt = badge.name;
-      img.title = badge.name;
-      img.className = "badge-icon";
+  const badge = badgeMap[key];
+  if (badge) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "badge-wrapper";
 
-     
-     if (["dev", "owner"].includes(key)) {
-  img.classList.add("rainbow");
-}
+    const img = document.createElement("img");
+    img.src = badge.icon;
+    img.alt = badge.name;
+    img.className = "badge-icon";
 
-
-      badgeContainer.appendChild(img);
+    if (["owner", "dev"].includes(key)) {
+      img.classList.add("rainbow");
     }
-  });
-} else {
-  badgeBox.style.display = "none";
-}
+
+    // Custom tooltip
+    const tooltip = document.createElement("div");
+    tooltip.className = "badge-tooltip";
+    tooltip.innerHTML = `
+      <strong>${badge.name}</strong><br />
+      <span>${badge.description}</span>
+    `;
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(tooltip);
+    badgeContainer.appendChild(wrapper);
+  }
+});
+
 
 
 
@@ -504,19 +555,23 @@ const specialGradientUsers = [
 const badgeMap = {
   owner: {
     name: "Founder & Owner",
-    icon: "https://cdn3.emoji.gg/emojis/8259-owner.png"
+    icon: "https://cdn3.emoji.gg/emojis/8259-owner.png",
+    description: "The Founder and Owner of Drags"
   },
     dev: {
     name: "Developer",
-    icon: "https://cdn3.emoji.gg/emojis/1166-partner.png"
+    icon: "https://cdn3.emoji.gg/emojis/1166-partner.png",
+      description: "Drags official Developer"
   },
   staff: {
     name: "Staff",
-    icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png"
+    icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png",
+    description: "Drags Staff Team"
   },
   early: {
     name: "Early User",
-    icon: "https://cdn3.emoji.gg/emojis/7549-member.png"
+    icon: "https://cdn3.emoji.gg/emojis/7549-member.png",
+    description: "Joined Drags in the first week"
   }
 };
    const manualBadges = {
