@@ -1032,17 +1032,9 @@
 
     </footer>
 
-        <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+        <script>
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const supabase = createClient(
-  'https://akektlyhqzbatuedgnuq.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'
-);
-
-const userId = localStorage.getItem("loggedInDiscordId");
         
 
         window.addEventListener('scroll', function() {
@@ -1253,20 +1245,7 @@ async function verifyCode() {
     }
   }
 
-  function loadUserInfo() {
-    const miniAvatar = document.getElementById("miniAvatar");
-    const editProfile = document.getElementById("editProfile");
-
-    const userId = localStorage.getItem("discord_id");
-    const avatarUrl = localStorage.getItem("avatar_url");
-
-    if (userId && avatarUrl && miniAvatar && editProfile) {
-      miniAvatar.src = avatarUrl;
-      miniAvatar.style.display = "block";
-      editProfile.href = `settings.html?discord_id=${userId}`;
-    }
-      showProfileLink(); // ✅ Add this here
-  }
+  
 
  
 function showProfileLink() {
@@ -1282,7 +1261,23 @@ function showProfileLink() {
     profileLink.style.display = "inline-block";
   }
 }
-    async function loadDropdownUser() {
+    
+
+   
+
+</script>
+
+    <script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabase = createClient(
+  'https://akektlyhqzbatuedgnuq.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+);
+
+const userId = localStorage.getItem("loggedInDiscordId");
+
+async function loadDropdownUser() {
   const { data: user, error } = await supabase
     .from("users")
     .select("*")
@@ -1292,7 +1287,16 @@ function showProfileLink() {
   const menu = document.getElementById("userMenu");
   const dropdown = document.getElementById("dropdownMenu");
 
-        // Show dropdown content
+  if (!user || error) {
+    // not linked
+    document.getElementById("linkBtn").style.display = "block";
+    document.getElementById("viewProfileBtn").style.display = "none";
+    document.getElementById("settingsBtn").style.display = "none";
+    menu.style.display = "block";
+    return;
+  }
+
+  // Show dropdown content
   document.getElementById("dropdownAvatar").src = user.avatar_url;
   document.getElementById("dropdownDisplayName").textContent = user.display_name;
   document.getElementById("dropdownUsername").textContent = "@" + user.username;
@@ -1305,9 +1309,10 @@ function showProfileLink() {
   document.getElementById("userDropdownBtn").src = user.avatar_url;
   menu.style.display = "block";
 }
-    loadDropdownUser();
 
-    // Toggle dropdown visibility
+loadDropdownUser();
+
+// Toggle dropdown visibility
 const avatarBtn = document.getElementById("userDropdownBtn");
 const dropdown = document.getElementById("dropdownMenu");
 
@@ -1320,7 +1325,6 @@ document.addEventListener("click", (e) => {
     dropdown.style.display = "none";
   }
 });
-
 </script>
 
     
