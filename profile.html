@@ -299,6 +299,47 @@
   z-index: 100;
 }
 
+    /* Rainbow glowing border + text fix */
+.badge-box h4 {
+  margin: 0 0 16px 0; /* ⬅️ spacing from badges increased */
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+/* Rainbow animation */
+@keyframes rainbowGlow {
+  0% {
+    box-shadow: 0 0 6px #ff0000, 0 0 12px #ff9900;
+    border-color: #ff0000;
+  }
+  25% {
+    box-shadow: 0 0 6px #ff9900, 0 0 12px #ffff00;
+    border-color: #ff9900;
+  }
+  50% {
+    box-shadow: 0 0 6px #33ff00, 0 0 12px #00ffff;
+    border-color: #33ff00;
+  }
+  75% {
+    box-shadow: 0 0 6px #0066ff, 0 0 12px #9900ff;
+    border-color: #0066ff;
+  }
+  100% {
+    box-shadow: 0 0 6px #ff00aa, 0 0 12px #ff0000;
+    border-color: #ff00aa;
+  }
+}
+
+
+
+/* Apply rainbow stroke & glow */
+.badge-icon.rainbow {
+  animation: rainbowGlow 3s infinite ease-in-out;
+  border-width: 2px;
+}
+
+
 .badge-icon:hover::after {
   opacity: 1;
 }
@@ -414,10 +455,11 @@ if (assigned.length > 0) {
       img.title = badge.name;
       img.className = "badge-icon";
 
-      // Optional: glow class
-      if (["owner", "dev"].includes(key)) {
-        img.classList.add("glow");
-      }
+     
+     if (["dev", "owner"].includes(key)) {
+  img.classList.add("rainbow");
+}
+
 
       badgeContainer.appendChild(img);
     }
