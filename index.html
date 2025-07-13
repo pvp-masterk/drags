@@ -156,6 +156,7 @@
   border: 2px solid var(--primary);
   transition: 0.2s ease;
 }
+
 .dropdown {
   position: absolute;
   top: 50px;
@@ -747,6 +748,10 @@
        <div id="user-box">
   <a href="  https://dragswebapp.vercel.app/linkaccount.html" class="cta-button">Link</a>
 </div>
+        <a id="profileLink" style="display:none; margin-right: 10px;">
+  <img id="profileAvatar" class="mini-avatar" src="" alt="Profile" />
+</a>
+
         <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
 
 
@@ -1217,6 +1222,7 @@ async function verifyCode() {
       miniAvatar.style.display = "block";
       editProfile.href = `settings.html?discord_id=${userId}`;
     }
+      showProfileLink(); // ✅ Add this here
   }
 
   function setupDropdownToggle() {
@@ -1233,6 +1239,19 @@ async function verifyCode() {
       }
     });
   }
+function showProfileLink() {
+  const discordId = localStorage.getItem("discord_id");
+  const avatarUrl = localStorage.getItem("avatar_url");
+
+  const profileLink = document.getElementById("profileLink");
+  const profileAvatar = document.getElementById("profileAvatar");
+
+  if (discordId && avatarUrl && profileLink && profileAvatar) {
+    profileLink.href = `profile.html?discord_id=${discordId}`;
+    profileAvatar.src = avatarUrl;
+    profileLink.style.display = "inline-block";
+  }
+}
 
 </script>
 
