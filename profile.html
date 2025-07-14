@@ -572,6 +572,7 @@ const supabase = createClient(
 
 
 const discordId = new URLSearchParams(window.location.search).get("discord_id");
+const currentUserId = localStorage.getItem("loggedInDiscordId");
 
 async function loadProfile(discordId) {
   document.getElementById("loading-buffer").style.display = "block";
