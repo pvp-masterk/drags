@@ -614,12 +614,7 @@ const currentUserId = localStorage.getItem("loggedInDiscordId");
 
 
 
-  // Fetch user data
-  const { data: users } = await supabase
-    .from("users")
-    .select("username, display_name, discord_id, avatar_url")
-    .in("discord_id", ids);
-
+  
   list.innerHTML = users.map(user => `
     <div class="follow-user-card">
       <img src="${user.avatar_url}" alt="${user.username}" />
