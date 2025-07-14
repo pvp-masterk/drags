@@ -608,20 +608,9 @@ const currentUserId = localStorage.getItem("loggedInDiscordId");
 }
 
 
-}
-
-
-
-
-
-
-
-
-
 
 
   document.getElementById("profileAvatar").src = avatarUrl;
-  
   document.getElementById("username").textContent = `@${user.username}`;
   displayName.innerHTML = `${user.display_name || user.username}${verifiedIconHTML}`;
   document.getElementById("userId").textContent = `ID: ${user.discord_id}`;
@@ -634,7 +623,7 @@ document.getElementById("dragcoins").textContent = `${user.dragcoins} DragCoins`
   if (specialGradientUsers.includes(user.discord_id)) {
   document.getElementById("profileCard").classList.add("featured");
 }
-
+}
 if (discordId) {
   loadProfile(discordId);
 }
