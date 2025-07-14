@@ -613,23 +613,6 @@ const currentUserId = localStorage.getItem("loggedInDiscordId");
 
 
 
-
-  
-  list.innerHTML = users.map(user => `
-    <div class="follow-user-card">
-      <img src="${user.avatar_url}" alt="${user.username}" />
-      <div class="user-info">
-        <strong>${user.display_name || user.username}</strong><br />
-        <span>@${user.username}</span><br />
-        <span style="font-size:12px; color:#999;">ID: ${user.discord_id}</span>
-      </div>
-      <button onclick="location.href='profile.html?discord_id=${user.discord_id}'">View</button>
-    </div>
-  `).join("");
-
-
-
-
 await loadFollowStats(); // refresh stats after action
 
 let verifiedIconHTML = '';
