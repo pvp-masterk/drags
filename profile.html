@@ -459,7 +459,179 @@
   background: var(--primary-dark);
 }
 
+/* Follow System Styles */
+.follow-section {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+}
 
+.follow-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.follow-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.follow-btn.following {
+  background: var(--secondary);
+  color: #1e1e2e;
+}
+
+.follow-btn.following:hover {
+  background: #45d67d;
+}
+
+.follow-stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.follow-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.follow-stat:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.follow-stat-count {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.follow-stat-label {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Follow Modal */
+.follow-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.follow-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.follow-modal-content {
+  background: var(--card-bg);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  max-height: 70vh;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease;
+}
+
+.follow-modal-header {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.follow-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.follow-modal-close {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.follow-modal-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow-y: auto;
+  max-height: calc(70vh - 60px);
+}
+
+.follow-modal-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+
+.follow-modal-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.follow-modal-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+.follow-modal-username {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.follow-modal-displayname {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.mutual-following {
+  color: var(--secondary);
+  font-size: 12px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mutual-following i {
+  font-size: 10px;
+}
     
   </style>
 </head>
@@ -501,7 +673,22 @@
     <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
    
+<div class="follow-section">
+  <button id="followBtn" class="follow-btn" style="display: none;">
+    <i class="fas fa-user-plus"></i> Follow
+  </button>
+</div>
 
+<div class="follow-stats">
+  <div class="follow-stat" id="followersStat">
+    <span class="follow-stat-count" id="followersCount">0</span>
+    <span class="follow-stat-label">Followers</span>
+  </div>
+  <div class="follow-stat" id="followingStat">
+    <span class="follow-stat-count" id="followingCount">0</span>
+    <span class="follow-stat-label">Following</span>
+  </div>
+</div>
 
 
     <div class="dragcoins" id="dragcoins">Loading balance...</div>
@@ -603,7 +790,264 @@ const profileUserId = new URLSearchParams(window.location.search).get("discord_i
 const currentUserId = localStorage.getItem("loggedInDiscordId");
 
 
+// Follow System Functions
+async function checkFollowStatus(targetId) {
+  const currentUserId = localStorage.getItem("loggedInDiscordId");
+  
+  if (!currentUserId) return { isFollowing: false, followers: 0, following: 0 };
+  
+  // Check if current user is following target
+  const { data: isFollowing } = await supabase
+    .from("follows")
+    .select()
+    .eq("follower_id", currentUserId)
+    .eq("following_id", targetId)
+    .single();
 
+  // Get follower count
+  const { count: followers } = await supabase
+    .from("follows")
+    .select("*", { count: "exact", head: true })
+    .eq("following_id", targetId);
+
+  // Get following count
+  const { count: following } = await supabase
+    .from("follows")
+    .select("*", { count: "exact", head: true })
+    .eq("follower_id", targetId);
+
+  return {
+    isFollowing: !!isFollowing,
+    followers: followers || 0,
+    following: following || 0
+  };
+}
+
+async function toggleFollow(targetId) {
+  const currentUserId = localStorage.getItem("loggedInDiscordId");
+  if (!currentUserId) return;
+
+  const { data: existingFollow } = await supabase
+    .from("follows")
+    .select()
+    .eq("follower_id", currentUserId)
+    .eq("following_id", targetId)
+    .single();
+
+  if (existingFollow) {
+    // Unfollow
+    await supabase
+      .from("follows")
+      .delete()
+      .eq("id", existingFollow.id);
+    return false;
+  } else {
+    // Follow
+    await supabase
+      .from("follows")
+      .insert([{
+        follower_id: currentUserId,
+        following_id: targetId,
+        created_at: new Date().toISOString()
+      }]);
+    return true;
+  }
+}
+
+async function loadFollowers(targetId) {
+  const { data: followers } = await supabase
+    .from("follows")
+    .select("follower_id, users!follows_follower_id_fkey(username, display_name, avatar_url)")
+    .eq("following_id", targetId)
+    .order("created_at", { ascending: false });
+
+  return followers || [];
+}
+
+async function loadFollowing(targetId) {
+  const { data: following } = await supabase
+    .from("follows")
+    .select("following_id, users!follows_following_id_fkey(username, display_name, avatar_url)")
+    .eq("follower_id", targetId)
+    .order("created_at", { ascending: false });
+
+  return following || [];
+}
+
+async function checkMutualFollows(targetId) {
+  const currentUserId = localStorage.getItem("loggedInDiscordId");
+  if (!currentUserId) return [];
+
+  // Get who the target is following
+  const { data: targetFollowing } = await supabase
+    .from("follows")
+    .select("following_id")
+    .eq("follower_id", targetId);
+
+  // Get who the current user is following
+  const { data: userFollowing } = await supabase
+    .from("follows")
+    .select("following_id")
+    .eq("follower_id", currentUserId);
+
+  if (!targetFollowing || !userFollowing) return [];
+
+  // Find mutual follows
+  const targetFollowingIds = targetFollowing.map(f => f.following_id);
+  const userFollowingIds = userFollowing.map(f => f.following_id);
+  
+  return targetFollowingIds.filter(id => 
+    userFollowingIds.includes(id) && id !== currentUserId && id !== targetId
+  );
+}
+
+// Update your loadProfile function to include follow system
+async function loadProfile(discordId) {
+  // ... existing code ...
+
+  // Show follow button if viewing someone else's profile
+  const currentUserId = localStorage.getItem("loggedInDiscordId");
+  const isOwner = currentUserId === discordId;
+  
+  const followBtn = document.getElementById("followBtn");
+  followBtn.style.display = isOwner ? "none" : "flex";
+  
+  // Load follow stats
+  const { isFollowing, followers, following } = await checkFollowStatus(discordId);
+  
+  document.getElementById("followersCount").textContent = followers;
+  document.getElementById("followingCount").textContent = following;
+  
+  if (isFollowing) {
+    followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
+    followBtn.classList.add("following");
+  } else {
+    followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+    followBtn.classList.remove("following");
+  }
+  
+  // Load mutual follows count
+  const mutualFollows = await checkMutualFollows(discordId);
+  if (mutualFollows.length > 0 && !isOwner) {
+    const mutualElement = document.createElement("div");
+    mutualElement.className = "mutual-following";
+    mutualElement.innerHTML = `<i class="fas fa-handshake"></i> ${mutualFollows.length} mutual following`;
+    document.querySelector(".username-wrapper").appendChild(mutualElement);
+  }
+  
+  // ... rest of existing code ...
+}
+
+// Event Listeners
+document.addEventListener("DOMContentLoaded", () => {
+  // Follow button click
+  document.getElementById("followBtn")?.addEventListener("click", async () => {
+    const discordId = new URLSearchParams(window.location.search).get("discord_id");
+    if (!discordId) return;
+    
+    const isFollowing = await toggleFollow(discordId);
+    const followBtn = document.getElementById("followBtn");
+    
+    if (isFollowing) {
+      followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
+      followBtn.classList.add("following");
+      // Increment followers count
+      const countElement = document.getElementById("followersCount");
+      countElement.textContent = parseInt(countElement.textContent) + 1;
+    } else {
+      followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+      followBtn.classList.remove("following");
+      // Decrement followers count
+      const countElement = document.getElementById("followersCount");
+      countElement.textContent = parseInt(countElement.textContent) - 1;
+    }
+  });
+  
+  // Followers stat click
+  document.getElementById("followersStat")?.addEventListener("click", async () => {
+    const discordId = new URLSearchParams(window.location.search).get("discord_id");
+    if (!discordId) return;
+    
+    const followers = await loadFollowers(discordId);
+    const listElement = document.getElementById("followersList");
+    listElement.innerHTML = "";
+    
+    if (followers.length === 0) {
+      listElement.innerHTML = "<li style='padding: 16px; text-align: center; color: #aaa;'>No followers yet</li>";
+    } else {
+      followers.forEach(follower => {
+        const li = document.createElement("li");
+        li.className = "follow-modal-item";
+        li.innerHTML = `
+          <img src="${follower.users.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(follower.follower_id >> 22) % 5}.png`}" 
+               class="follow-modal-avatar" alt="Avatar">
+          <div>
+            <div class="follow-modal-username">@${follower.users.username}</div>
+            <div class="follow-modal-displayname">${follower.users.display_name || follower.users.username}</div>
+          </div>
+        `;
+        li.addEventListener("click", () => {
+          window.location.href = `profile.html?discord_id=${follower.follower_id}`;
+        });
+        listElement.appendChild(li);
+      });
+    }
+    
+    document.getElementById("followersModal").classList.add("active");
+  });
+  
+  // Following stat click
+  document.getElementById("followingStat")?.addEventListener("click", async () => {
+    const discordId = new URLSearchParams(window.location.search).get("discord_id");
+    if (!discordId) return;
+    
+    const following = await loadFollowing(discordId);
+    const listElement = document.getElementById("followingList");
+    listElement.innerHTML = "";
+    
+    if (following.length === 0) {
+      listElement.innerHTML = "<li style='padding: 16px; text-align: center; color: #aaa;'>Not following anyone yet</li>";
+    } else {
+      following.forEach(follow => {
+        const li = document.createElement("li");
+        li.className = "follow-modal-item";
+        li.innerHTML = `
+          <img src="${follow.users.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(follow.following_id >> 22) % 5}.png`}" 
+               class="follow-modal-avatar" alt="Avatar">
+          <div>
+            <div class="follow-modal-username">@${follow.users.username}</div>
+            <div class="follow-modal-displayname">${follow.users.display_name || follow.users.username}</div>
+          </div>
+        `;
+        li.addEventListener("click", () => {
+          window.location.href = `profile.html?discord_id=${follow.following_id}`;
+        });
+        listElement.appendChild(li);
+      });
+    }
+    
+    document.getElementById("followingModal").classList.add("active");
+  });
+  
+  // Close modals
+  document.querySelectorAll(".follow-modal-close").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      document.querySelectorAll(".follow-modal").forEach(modal => {
+        modal.classList.remove("active");
+      });
+    });
+  });
+  
+  // Close modal when clicking outside
+  document.querySelectorAll(".follow-modal").forEach(modal => {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+  });
+});
   
 }
 
@@ -728,7 +1172,26 @@ const badgeMap = {
   
 </div>
   
+<!-- Follow Modals -->
+<div class="follow-modal" id="followersModal">
+  <div class="follow-modal-content">
+    <div class="follow-modal-header">
+      <h3>Followers</h3>
+      <button class="follow-modal-close">&times;</button>
+    </div>
+    <ul class="follow-modal-list" id="followersList"></ul>
+  </div>
+</div>
 
+<div class="follow-modal" id="followingModal">
+  <div class="follow-modal-content">
+    <div class="follow-modal-header">
+      <h3>Following</h3>
+      <button class="follow-modal-close">&times;</button>
+    </div>
+    <ul class="follow-modal-list" id="followingList"></ul>
+  </div>
+</div>
 
 
 </body>
