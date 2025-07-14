@@ -688,8 +688,25 @@ async function loadFollowStats() {
   
 
 
-  document.getElementById("followerCount").textContent = followerCount ?? 0;
-document.getElementById("followingCount").textContent = followingCount ?? 0;
+ function animateCount(el, newValue) {
+  const current = parseInt(el.textContent) || 0;
+  const duration = 400;
+  const step = Math.ceil(Math.abs(newValue - current) / (duration / 30));
+  let value = current;
+
+  const updater = setInterval(() => {
+    if (value === newValue) return clearInterval(updater);
+    value += (newValue > current) ? step : -step;
+    if ((step > 0 && value > newValue) || (step < 0 && value < newValue)) value = newValue;
+    el.textContent = value;
+  }, 30);
+}
+const followerEl = document.getElementById("followerCount");
+const followingEl = document.getElementById("followingCount");
+
+animateCount(followerEl, followerCount ?? 0);
+animateCount(followingEl, followingCount ?? 0);
+
 
 }
 await loadFollowStats(); // refresh stats after action
