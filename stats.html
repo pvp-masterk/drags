@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stats</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .stats-container {
+      max-width: 600px;
+      margin: 60px auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .stat-block {
+      font-size: 18px;
+      margin-bottom: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .stat-block strong {
+      color: var(--secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="stats-container">
+    <h2>Drags Website Stats</h2>
+    <div class="stat-block" id="totalUsers">Total Users: Loading...</div>
+    <div class="stat-block" id="totalVisitors">Total Visitors: Loading...</div>
+    <div class="stat-block" id="verifiedUsers">Verified Users: Loading...</div>
+    <div class="stat-block" id="tasksCompleted">Tasks Completed Today: Loading...</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const supabase = window.supabase.createClient(
+      "https://akektlyhqzbatuedgnuq.supabase.co",
+      "your-anon-key"
+    );
+
+    async function loadStats() {
+      // Total users
+      const { count: userCount } = await supabase
+        .from("users")
+        .select("*", { count: "exact", head: true });
+
+      // Total visitors
+      const { count: visitCount } = await supabase
+        .from("site_visits")
+        .select("*", { count: "exact", head: true });
+
+      // Verified users
+      const { count: verifiedCount } = await supabase
+        .from("users")
+        .select("*", { count: "exact", head: true })
+        .contains("badges", ["Verified"]);
+
+      // Tasks completed today
+      const today = new Date().toISOString().split("T")[0];
+      const { count: tasksToday } = await supabase
+        .from("user_tasks")
+        .select("*", { count: "exact", head: true })
+        .eq("completed", true)
+        .eq("assigned_date", today);
+
+      document.getElementById("totalUsers").innerHTML = `<strong>${userCount}</strong> total linked users`;
+      document.getElementById("totalVisitors").innerHTML = `<strong>${visitCount}</strong> total website visits`;
+      document.getElementById("verifiedUsers").innerHTML = `<strong>${verifiedCount}</strong> verified users`;
+      document.getElementById("tasksCompleted").innerHTML = `<strong>${tasksToday}</strong> tasks completed today`;
+    }
+
+    loadStats();
+  </script>
+</body>
+</html>
