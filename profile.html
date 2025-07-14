@@ -497,6 +497,73 @@
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.follow-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 20, 30, 0.9);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.follow-modal-content {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.close-modal {
+  margin-top: 20px;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.follow-user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  background: #2b2b3e;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.follow-user-card img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.follow-user-card .user-info {
+  flex-grow: 1;
+}
+
+.follow-user-card .user-info strong {
+  font-size: 15px;
+}
+
+.follow-user-card button {
+  background: var(--primary);
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
     
   </style>
@@ -538,10 +605,11 @@
     <div id="displayName" class="profile-displayname">Loading...</div>
     <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
-    <div id="followStats" class="follow-stats">
-  <span id="followerCount">0</span> Followers •
-  <span id="followingCount">0</span> Following
+   <div id="followStats" class="follow-stats">
+  <span id="followerCount" style="cursor:pointer;" onclick="openFollowModal('followers')">0</span> Followers •
+  <span id="followingCount" style="cursor:pointer;" onclick="openFollowModal('following')">0</span> Following
 </div>
+
 <div id="followTooltip" class="follow-tooltip" style="display: none;"></div>
 
     <div class="dragcoins" id="dragcoins">Loading balance...</div>
@@ -738,6 +806,51 @@ if (mutualFollows.length > 0 && profileUserId !== currentUserId) {
 } else {
   tooltip.style.display = "none";
 }
+function closeFollowModal() {
+  document.getElementById("followModal").style.display = "none";
+}
+
+async function openFollowModal(type) {
+  const modal = document.getElementById("followModal");
+  const title = document.getElementById("modalTitle");
+  const list = document.getElementById("followUserList");
+  const profileUserId = new URLSearchParams(window.location.search).get("discord_id");
+
+  modal.style.display = "flex";
+  title.textContent = type === "followers" ? "Followers" : "Following";
+  list.innerHTML = "Loading...";
+
+  // Get list of user IDs
+  const { data: relations } = await supabase
+    .from("follows")
+    .select(type === "followers" ? "follower_id" : "followed_id")
+    .eq(type === "followers" ? "followed_id" : "follower_id", profileUserId);
+
+  const ids = relations.map(r => type === "followers" ? r.follower_id : r.followed_id);
+
+  if (ids.length === 0) {
+    list.innerHTML = "<p>No users found.</p>";
+    return;
+  }
+
+  // Fetch user data
+  const { data: users } = await supabase
+    .from("users")
+    .select("username, display_name, discord_id, avatar_url")
+    .in("discord_id", ids);
+
+  list.innerHTML = users.map(user => `
+    <div class="follow-user-card">
+      <img src="${user.avatar_url}" alt="${user.username}" />
+      <div class="user-info">
+        <strong>${user.display_name || user.username}</strong><br />
+        <span>@${user.username}</span><br />
+        <span style="font-size:12px; color:#999;">ID: ${user.discord_id}</span>
+      </div>
+      <button onclick="location.href='profile.html?discord_id=${user.discord_id}'">View</button>
+    </div>
+  `).join("");
+}
 
 
 }
@@ -858,6 +971,15 @@ const badgeMap = {
 </div>
 
 <button id="taskToggleBtn" onclick="toggleTaskPanel()">📋</button>
+
+  <div id="followModal" class="follow-modal" style="display:none;">
+  <div class="follow-modal-content">
+    <h3 id="modalTitle">Loading...</h3>
+    <div id="followUserList">Loading users...</div>
+    <button onclick="closeFollowModal()" class="close-modal">Close</button>
+  </div>
+</div>
+
 
 </body>
 </html>
