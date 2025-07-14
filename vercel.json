@@ -1,0 +1,17 @@
+{
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1.html",
+      "headers": { "Content-Type": "text/html" }
+    },
+    {
+      "src": "/",
+      "dest": "/index.html",
+      "headers": { "Content-Type": "text/html" }
+    }
+    {
+ 
+}
+  ]
+}
