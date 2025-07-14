@@ -806,32 +806,9 @@ if (mutualFollows.length > 0 && profileUserId !== currentUserId) {
 } else {
   tooltip.style.display = "none";
 }
-function closeFollowModal() {
-  document.getElementById("followModal").style.display = "none";
-}
 
-async function openFollowModal(type) {
-  const modal = document.getElementById("followModal");
-  const title = document.getElementById("modalTitle");
-  const list = document.getElementById("followUserList");
-  const profileUserId = new URLSearchParams(window.location.search).get("discord_id");
 
-  modal.style.display = "flex";
-  title.textContent = type === "followers" ? "Followers" : "Following";
-  list.innerHTML = "Loading...";
 
-  // Get list of user IDs
-  const { data: relations } = await supabase
-    .from("follows")
-    .select(type === "followers" ? "follower_id" : "followed_id")
-    .eq(type === "followers" ? "followed_id" : "follower_id", profileUserId);
-
-  const ids = relations.map(r => type === "followers" ? r.follower_id : r.followed_id);
-
-  if (ids.length === 0) {
-    list.innerHTML = "<p>No users found.</p>";
-    return;
-  }
 
   // Fetch user data
   const { data: users } = await supabase
@@ -987,6 +964,41 @@ const badgeMap = {
     <button onclick="closeFollowModal()" class="close-modal">Close</button>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+
+const supabase = window.supabase.createClient(
+    "https://akektlyhqzbatuedgnuq.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
+  );
+
+    
+  async function openFollowModal(type) {
+  const modal = document.getElementById("followModal");
+  const title = document.getElementById("modalTitle");
+  const list = document.getElementById("followUserList");
+  const profileUserId = new URLSearchParams(window.location.search).get("discord_id");
+
+  modal.style.display = "flex";
+  title.textContent = type === "followers" ? "Followers" : "Following";
+  list.innerHTML = "Loading...";
+
+  // Get list of user IDs
+  const { data: relations } = await supabase
+    .from("follows")
+    .select(type === "followers" ? "follower_id" : "followed_id")
+    .eq(type === "followers" ? "followed_id" : "follower_id", profileUserId);
+
+  const ids = relations.map(r => type === "followers" ? r.follower_id : r.followed_id);
+
+  if (ids.length === 0) {
+    list.innerHTML = "<p>No users found.</p>";
+    return;
+    function closeFollowModal() {
+  document.getElementById("followModal").style.display = "none";
+}
+  }
+  <script/>
 
 
 </body>
