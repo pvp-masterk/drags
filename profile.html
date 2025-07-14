@@ -616,9 +616,6 @@ const currentUserId = localStorage.getItem("loggedInDiscordId");
 
 
 
-if (specialGradientUsers.includes(user.discord_id)) {
-  document.getElementById("profileCard").classList.add("featured");
-}
 
 
 
@@ -634,7 +631,10 @@ document.getElementById("dragcoins").textContent = `${user.dragcoins} DragCoins`
   document.getElementById("loading-buffer").style.display = "none";
   document.getElementById("profileCard").style.display = "block";
 
-  
+  if (specialGradientUsers.includes(user.discord_id)) {
+  document.getElementById("profileCard").classList.add("featured");
+}
+
 if (discordId) {
   loadProfile(discordId);
 }
