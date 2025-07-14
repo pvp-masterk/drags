@@ -613,7 +613,7 @@ const currentUserId = localStorage.getItem("loggedInDiscordId");
 
 
 
-await loadFollowStats(); // refresh stats after action
+
 
 let verifiedIconHTML = '';
 if (user.badges && user.badges.includes("Verified")) {
@@ -739,12 +739,7 @@ const badgeMap = {
 
 <button id="taskToggleBtn" onclick="toggleTaskPanel()">📋</button>
 
-  <div id="followModal" class="follow-modal" style="display:none;">
-  <div class="follow-modal-content">
-    <h3 id="modalTitle">Loading...</h3>
-    <div id="followUserList">Loading users...</div>
-    <button onclick="closeFollowModal()" class="close-modal">Close</button>
-  </div>
+  
 </div>
   
 
