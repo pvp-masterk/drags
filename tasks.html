@@ -104,11 +104,67 @@
       `).join("");
     }
 
-    async function markComplete(taskId) {
-      await supabase
-        .from("user_tasks")
-        .update({ completed: true })
-        .eq("id", taskId);
+   async function markComplete(taskId) {
+  // Mark task as completed
+  const { data: updated } = await supabase
+    .from("user_tasks")
+    .update({ completed: true })
+    .eq("id", taskId)
+    .select("discord_id, task_id")
+    .single();
+
+  if (!updated) return;
+
+  // Fetch reward amount from task_pool
+  const { data: task } = await supabase
+    .from("task_pool")
+    .select("reward")
+    .eq("id", updated.task_id)
+    .single();
+
+  if (!task) return;
+
+  // Add reward to user's DragCoins
+  await supabase.rpc("increment_dragcoins", {
+    user_discord_id: updated.discord_id,
+    coins_to_add: task.reward
+  });
+
+  loadTasks(); // reload tasks UI
+}
+
+      async function autoAssignDailyTasks(discordId) {
+  const today = new Date().toISOString().split("T")[0];
+
+  // Check if user already has tasks today
+  const { data: existing } = await supabase
+    .from("user_tasks")
+    .select("id")
+    .eq("discord_id", discordId)
+    .eq("assigned_date", today);
+
+  if (existing.length >= 3) return; // already has tasks
+
+  // Fetch random tasks
+  const { data: taskPool } = await supabase
+    .from("task_pool")
+    .select("id");
+
+  if (!taskPool || taskPool.length < 3) return;
+
+  // Shuffle and pick 3
+  const shuffled = taskPool.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+  const inserts = shuffled.map(task => ({
+    discord_id: discordId,
+    task_id: task.id,
+    assigned_date: today
+  }));
+
+  await supabase.from("user_tasks").insert(inserts);
+}
+await autoAssignDailyTasks(discordId);
+
 
       loadTasks(); // reload after marking
     }
