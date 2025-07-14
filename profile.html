@@ -388,6 +388,12 @@
   margin-top: 2px;
 }
 
+.dragcoins {
+  font-size: 14px;
+  color: var(--secondary);
+  margin-top: 8px;
+  font-weight: 500;
+}
 
   </style>
 </head>
@@ -428,6 +434,7 @@
     <div id="displayName" class="profile-displayname">Loading...</div>
     <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
+    <div class="dragcoins" id="dragcoins">Loading balance...</div>
  <div id="badgeBox" class="badge-box">
   <h4>Badges</h4>
   <div id="badgeContainer" class="badge-container"></div>
@@ -535,6 +542,7 @@ if (specialGradientUsers.includes(user.discord_id)) {
   document.getElementById("displayName").textContent = user.display_name || user.username;
   document.getElementById("userId").textContent = `ID: ${user.discord_id}`;
   document.getElementById("userBio").textContent = user.bio || "";
+document.getElementById("dragcoins").textContent = `${user.dragcoins} DragCoins`;
 
   document.getElementById("loading-buffer").style.display = "none";
   document.getElementById("profileCard").style.display = "block";
