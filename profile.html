@@ -771,7 +771,7 @@ async function loadFollowStats() {
     .from("follows")
     .select("*", { count: "exact", head: true })
     .eq("follower_id", profileUserId);
-  
+}
 
 
  function animateCount(el, newValue) {
@@ -859,7 +859,7 @@ document.getElementById("dragcoins").textContent = `${user.dragcoins} DragCoins`
 if (discordId) {
   loadProfile(discordId);
 }
-
+   
 
 const specialGradientUsers = [
   "123456789012345679", 
