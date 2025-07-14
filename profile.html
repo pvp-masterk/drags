@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -457,7 +458,31 @@
 #taskToggleBtn:hover {
   background: var(--primary-dark);
 }
+.follow-button {
+  padding: 8px 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 12px;
+}
 
+.follow-button.unfollow {
+  background: var(--accent);
+}
+
+.follow-stats {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #aaa;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+    
   </style>
 </head>
 <body>
@@ -497,7 +522,14 @@
     <div id="displayName" class="profile-displayname">Loading...</div>
     <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio" style="margin-top: 15px; font-size: 14px; color: #aaa;"></p>
+    <div id="followStats" class="follow-stats">
+  <span id="followerCount">0</span> Followers •
+  <span id="followingCount">0</span> Following
+</div>
+
     <div class="dragcoins" id="dragcoins">Loading balance...</div>
+    <button id="followBtn" class="follow-button">Follow</button>
+
  <div id="badgeBox" class="badge-box">
   <h4>Badges</h4>
   <div id="badgeContainer" class="badge-container"></div>
@@ -589,6 +621,72 @@ if (assigned.length > 0) {
 });
 
 
+const profileUserId = new URLSearchParams(window.location.search).get("discord_id");
+const currentUserId = localStorage.getItem("loggedInDiscordId");
+
+const followBtn = document.getElementById("followBtn");
+
+if (profileUserId === currentUserId) {
+  followBtn.style.display = "none"; // don't show follow button on own profile
+} else {
+  checkFollowState();
+  followBtn.addEventListener("click", toggleFollow);
+}
+
+async function checkFollowState() {
+  const { data, error } = await supabase
+    .from("follows")
+    .select("*")
+    .eq("follower_id", currentUserId)
+    .eq("followed_id", profileUserId)
+    .single();
+
+  if (data) {
+    followBtn.textContent = "Unfollow";
+    followBtn.classList.add("unfollow");
+  } else {
+    followBtn.textContent = "Follow";
+    followBtn.classList.remove("unfollow");
+  }
+}
+
+async function toggleFollow() {
+  const isUnfollowing = followBtn.classList.contains("unfollow");
+
+  if (isUnfollowing) {
+    await supabase
+      .from("follows")
+      .delete()
+      .eq("follower_id", currentUserId)
+      .eq("followed_id", profileUserId);
+  } else {
+    await supabase
+      .from("follows")
+      .insert({ follower_id: currentUserId, followed_id: profileUserId });
+  }
+
+  checkFollowState();
+}
+async function loadFollowStats() {
+  const profileUserId = new URLSearchParams(window.location.search).get("discord_id");
+
+  // Followers: people following this profile
+  const { count: followerCount } = await supabase
+    .from("follows")
+    .select("*", { count: "exact", head: true })
+    .eq("followed_id", profileUserId);
+
+  // Following: people this user is following
+  const { count: followingCount } = await supabase
+    .from("follows")
+    .select("*", { count: "exact", head: true })
+    .eq("follower_id", profileUserId);
+  await loadFollowStats(); // refresh stats after action
+
+
+  document.getElementById("followerCount").textContent = followerCount || 0;
+  document.getElementById("followingCount").textContent = followingCount || 0;
+}
 
 
 
@@ -614,6 +712,7 @@ document.getElementById("dragcoins").textContent = `${user.dragcoins} DragCoins`
 if (discordId) {
   loadProfile(discordId);
 }
+loadFollowStats();
 
 const specialGradientUsers = [
   "123456789012345679", 
