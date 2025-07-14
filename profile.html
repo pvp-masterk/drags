@@ -719,35 +719,11 @@ const supabase = createClient(
 
 
 // Enhanced Security Check
-const urlParams = new URLSearchParams(window.location.search);
+
 const discordId = urlParams.get("discord_id");
-const token = urlParams.get("token");
+
 const currentUserId = localStorage.getItem("loggedInDiscordId");
 
-// Always allow accessing your own profile
-if (discordId === currentUserId) {
-  // Continue loading profile
-} 
-// Allow access with valid token
-else if (token && isValidToken(token, discordId)) {
-  // Continue loading profile
-} 
-// Redirect if unauthorized
-else {
-  window.location.href = "users.html";
-  throw new Error("Unauthorized profile access");
-}
-
-// Simple token validation - expand this for production
-function isValidToken(token, discordId) {
-  try {
-    // In a real app, you'd verify this against a server-side check
-    const tokenData = atob(token);
-    return tokenData.startsWith(`${discord_id}:`);
-  } catch {
-    return false;
-  }
-}
 
 async function loadProfile(discordId) {
   document.getElementById("loading-buffer").style.display = "block";
