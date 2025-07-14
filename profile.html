@@ -615,10 +615,7 @@ const currentUserId = localStorage.getItem("loggedInDiscordId");
 
 
 
-let verifiedIconHTML = '';
-if (user.badges && user.badges.includes("Verified")) {
-  verifiedIconHTML = `<img src="https://cdn3.emoji.gg/emojis/74424-partner.png" alt="Verified" title="Verified" style="width:16px; height:16px; margin-left:6px; vertical-align:middle;" />`;
-}
+
 if (specialGradientUsers.includes(user.discord_id)) {
   document.getElementById("profileCard").classList.add("featured");
 }
