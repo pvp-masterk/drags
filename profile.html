@@ -481,6 +481,22 @@
   gap: 10px;
   justify-content: center;
 }
+.follow-tooltip {
+  background: rgba(50, 50, 70, 0.9);
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #f5f5f5;
+  font-size: 13px;
+  margin-top: 4px;
+  text-align: center;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
     
   </style>
@@ -526,6 +542,7 @@
   <span id="followerCount">0</span> Followers •
   <span id="followingCount">0</span> Following
 </div>
+<div id="followTooltip" class="follow-tooltip" style="display: none;"></div>
 
     <div class="dragcoins" id="dragcoins">Loading balance...</div>
     <button id="followBtn" class="follow-button">Follow</button>
@@ -706,6 +723,20 @@ const followingEl = document.getElementById("followingCount");
 
 animateCount(followerEl, followerCount ?? 0);
 animateCount(followingEl, followingCount ?? 0);
+const { data: mutualFollows } = await supabase
+  .from("follows")
+  .select("follower_id")
+  .eq("followed_id", profileUserId)
+  .in("follower_id", [currentUserId]); // user you're viewing has followers that include you?
+
+const tooltip = document.getElementById("followTooltip");
+
+if (mutualFollows.length > 0 && profileUserId !== currentUserId) {
+  tooltip.style.display = "block";
+  tooltip.textContent = `Followed by ${mutualFollows.length} user${mutualFollows.length > 1 ? "s" : ""} you follow.`;
+} else {
+  tooltip.style.display = "none";
+}
 
 
 }
