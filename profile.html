@@ -742,7 +742,7 @@ const { data: user, error } = await supabase
 
   const { data: authData } = await supabase.auth.getUser();
   const myDiscordId = authData?.user?.user_metadata?.discord_id;
-  const isOwner = myDiscordId === discordId;
+  
 
 
 const badgeBox = document.getElementById("badgeBox");
@@ -788,9 +788,10 @@ if (assigned.length > 0) {
 
 const profileUserId = new URLSearchParams(window.location.search).get("discord_id");
 const currentUserId = localStorage.getItem("loggedInDiscordId");
+// Show follow button if viewing someone else's profile
+  
+  const isOwner = currentUserId === discordId;
 
-
-// Follow System Functions
 async function checkFollowStatus(targetId) {
   const currentUserId = localStorage.getItem("loggedInDiscordId");
   
@@ -801,20 +802,20 @@ async function checkFollowStatus(targetId) {
     .from("follows")
     .select()
     .eq("follower_id", currentUserId)
-    .eq("following_id", targetId)
+    .eq("followed_id", targetId)
     .single();
 
   // Get follower count
   const { count: followers } = await supabase
     .from("follows")
     .select("*", { count: "exact", head: true })
-    .eq("following_id", targetId);
+    .eq("followed_id", targetId);
 
   // Get following count
   const { count: following } = await supabase
     .from("follows")
     .select("*", { count: "exact", head: true })
-    .eq("follower_id", targetId);
+    .eq("follower_id", currentUserId);
 
   return {
     isFollowing: !!isFollowing,
@@ -825,230 +826,113 @@ async function checkFollowStatus(targetId) {
 
 async function toggleFollow(targetId) {
   const currentUserId = localStorage.getItem("loggedInDiscordId");
-  if (!currentUserId) return;
+  if (!currentUserId) {
+    alert("Please log in to follow users");
+    return;
+  }
 
-  const { data: existingFollow } = await supabase
-    .from("follows")
-    .select()
-    .eq("follower_id", currentUserId)
-    .eq("following_id", targetId)
-    .single();
+  const followBtn = document.getElementById("followBtn");
+  followBtn.disabled = true;
+  
+  try {
+    const { data: existingFollow } = await supabase
+      .from("follows")
+      .select()
+      .eq("follower_id", currentUserId)
+      .eq("followed_id", targetId)
+      .single();
 
-  if (existingFollow) {
-    // Unfollow
-    await supabase
-      .from("follows")
-      .delete()
-      .eq("id", existingFollow.id);
-    return false;
-  } else {
-    // Follow
-    await supabase
-      .from("follows")
-      .insert([{
-        follower_id: currentUserId,
-        following_id: targetId,
-        created_at: new Date().toISOString()
-      }]);
-    return true;
+    if (existingFollow) {
+      // Unfollow
+      const { error } = await supabase
+        .from("follows")
+        .delete()
+        .eq("id", existingFollow.id);
+      
+      if (!error) {
+        followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+        followBtn.classList.remove("following");
+        // Update followers count
+        const countElement = document.getElementById("followersCount");
+        countElement.textContent = parseInt(countElement.textContent) - 1;
+      }
+    } else {
+      // Follow
+      const { error } = await supabase
+        .from("follows")
+        .insert([{
+          follower_id: currentUserId,
+          followed_id: targetId,
+          created_at: new Date().toISOString()
+        }]);
+      
+      if (!error) {
+        followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
+        followBtn.classList.add("following");
+        // Update followers count
+        const countElement = document.getElementById("followersCount");
+        countElement.textContent = parseInt(countElement.textContent) + 1;
+      }
+    }
+  } catch (error) {
+    console.error("Follow error:", error);
+    alert("An error occurred. Please try again.");
+  } finally {
+    followBtn.disabled = false;
   }
 }
 
 async function loadFollowers(targetId) {
-  const { data: followers } = await supabase
+  const { data: followers, error } = await supabase
     .from("follows")
-    .select("follower_id, users!follows_follower_id_fkey(username, display_name, avatar_url)")
-    .eq("following_id", targetId)
+    .select(`
+      follower_id, 
+      users:follows_follower_id_fkey(username, display_name, avatar_url)
+    `)
+    .eq("followed_id", targetId)
     .order("created_at", { ascending: false });
 
+  if (error) {
+    console.error("Error loading followers:", error);
+    return [];
+  }
   return followers || [];
 }
 
 async function loadFollowing(targetId) {
-  const { data: following } = await supabase
+  const { data: following, error } = await supabase
     .from("follows")
-    .select("following_id, users!follows_following_id_fkey(username, display_name, avatar_url)")
+    .select(`
+      followed_id, 
+      users:follows_followed_id_fkey(username, display_name, avatar_url)
+    `)
     .eq("follower_id", targetId)
     .order("created_at", { ascending: false });
 
+  if (error) {
+    console.error("Error loading following:", error);
+    return [];
+  }
   return following || [];
 }
-
-async function checkMutualFollows(targetId) {
-  const currentUserId = localStorage.getItem("loggedInDiscordId");
-  if (!currentUserId) return [];
-
-  // Get who the target is following
-  const { data: targetFollowing } = await supabase
-    .from("follows")
-    .select("following_id")
-    .eq("follower_id", targetId);
-
-  // Get who the current user is following
-  const { data: userFollowing } = await supabase
-    .from("follows")
-    .select("following_id")
-    .eq("follower_id", currentUserId);
-
-  if (!targetFollowing || !userFollowing) return [];
-
-  // Find mutual follows
-  const targetFollowingIds = targetFollowing.map(f => f.following_id);
-  const userFollowingIds = userFollowing.map(f => f.following_id);
-  
-  return targetFollowingIds.filter(id => 
-    userFollowingIds.includes(id) && id !== currentUserId && id !== targetId
-  );
-}
-
-// Update your loadProfile function to include follow system
-async function loadProfile(discordId) {
-  // ... existing code ...
-
-  // Show follow button if viewing someone else's profile
-  const currentUserId = localStorage.getItem("loggedInDiscordId");
-  const isOwner = currentUserId === discordId;
-  
-  const followBtn = document.getElementById("followBtn");
-  followBtn.style.display = isOwner ? "none" : "flex";
-  
-  // Load follow stats
-  const { isFollowing, followers, following } = await checkFollowStatus(discordId);
-  
-  document.getElementById("followersCount").textContent = followers;
-  document.getElementById("followingCount").textContent = following;
-  
-  if (isFollowing) {
-    followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
-    followBtn.classList.add("following");
-  } else {
-    followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
-    followBtn.classList.remove("following");
-  }
-  
-  // Load mutual follows count
-  const mutualFollows = await checkMutualFollows(discordId);
-  if (mutualFollows.length > 0 && !isOwner) {
-    const mutualElement = document.createElement("div");
-    mutualElement.className = "mutual-following";
-    mutualElement.innerHTML = `<i class="fas fa-handshake"></i> ${mutualFollows.length} mutual following`;
-    document.querySelector(".username-wrapper").appendChild(mutualElement);
-  }
-  
-  // ... rest of existing code ...
-}
-
-// Event Listeners
-document.addEventListener("DOMContentLoaded", () => {
-  // Follow button click
-  document.getElementById("followBtn")?.addEventListener("click", async () => {
-    const discordId = new URLSearchParams(window.location.search).get("discord_id");
-    if (!discordId) return;
+const followBtn = document.getElementById("followBtn");
+  if (followBtn) {
+    followBtn.style.display = isOwner ? "none" : "flex";
     
-    const isFollowing = await toggleFollow(discordId);
-    const followBtn = document.getElementById("followBtn");
+    // Load follow stats
+    const { isFollowing, followers, following } = await checkFollowStatus(discordId);
+    
+    document.getElementById("followersCount").textContent = followers;
+    document.getElementById("followingCount").textContent = following;
     
     if (isFollowing) {
       followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
       followBtn.classList.add("following");
-      // Increment followers count
-      const countElement = document.getElementById("followersCount");
-      countElement.textContent = parseInt(countElement.textContent) + 1;
     } else {
       followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
       followBtn.classList.remove("following");
-      // Decrement followers count
-      const countElement = document.getElementById("followersCount");
-      countElement.textContent = parseInt(countElement.textContent) - 1;
     }
-  });
-  
-  // Followers stat click
-  document.getElementById("followersStat")?.addEventListener("click", async () => {
-    const discordId = new URLSearchParams(window.location.search).get("discord_id");
-    if (!discordId) return;
-    
-    const followers = await loadFollowers(discordId);
-    const listElement = document.getElementById("followersList");
-    listElement.innerHTML = "";
-    
-    if (followers.length === 0) {
-      listElement.innerHTML = "<li style='padding: 16px; text-align: center; color: #aaa;'>No followers yet</li>";
-    } else {
-      followers.forEach(follower => {
-        const li = document.createElement("li");
-        li.className = "follow-modal-item";
-        li.innerHTML = `
-          <img src="${follower.users.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(follower.follower_id >> 22) % 5}.png`}" 
-               class="follow-modal-avatar" alt="Avatar">
-          <div>
-            <div class="follow-modal-username">@${follower.users.username}</div>
-            <div class="follow-modal-displayname">${follower.users.display_name || follower.users.username}</div>
-          </div>
-        `;
-        li.addEventListener("click", () => {
-          window.location.href = `profile.html?discord_id=${follower.follower_id}`;
-        });
-        listElement.appendChild(li);
-      });
-    }
-    
-    document.getElementById("followersModal").classList.add("active");
-  });
-  
-  // Following stat click
-  document.getElementById("followingStat")?.addEventListener("click", async () => {
-    const discordId = new URLSearchParams(window.location.search).get("discord_id");
-    if (!discordId) return;
-    
-    const following = await loadFollowing(discordId);
-    const listElement = document.getElementById("followingList");
-    listElement.innerHTML = "";
-    
-    if (following.length === 0) {
-      listElement.innerHTML = "<li style='padding: 16px; text-align: center; color: #aaa;'>Not following anyone yet</li>";
-    } else {
-      following.forEach(follow => {
-        const li = document.createElement("li");
-        li.className = "follow-modal-item";
-        li.innerHTML = `
-          <img src="${follow.users.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(follow.following_id >> 22) % 5}.png`}" 
-               class="follow-modal-avatar" alt="Avatar">
-          <div>
-            <div class="follow-modal-username">@${follow.users.username}</div>
-            <div class="follow-modal-displayname">${follow.users.display_name || follow.users.username}</div>
-          </div>
-        `;
-        li.addEventListener("click", () => {
-          window.location.href = `profile.html?discord_id=${follow.following_id}`;
-        });
-        listElement.appendChild(li);
-      });
-    }
-    
-    document.getElementById("followingModal").classList.add("active");
-  });
-  
-  // Close modals
-  document.querySelectorAll(".follow-modal-close").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      document.querySelectorAll(".follow-modal").forEach(modal => {
-        modal.classList.remove("active");
-      });
-    });
-  });
-  
-  // Close modal when clicking outside
-  document.querySelectorAll(".follow-modal").forEach(modal => {
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.classList.remove("active");
-      }
-    });
-  });
-});
-  
+  }
 }
 
 
