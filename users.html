@@ -191,6 +191,11 @@ const supabase = createClient(
 const userList = document.getElementById("userList");
 const searchInput = document.getElementById("searchInput");
 
+   function generateAccessToken(discordId) {
+  // Simple token generation - you might want to make this more secure
+  return btoa(`${discord_id}:${Date.now()}`).slice(0, 32);
+}
+
 // ✅ Hardcoded verified users list
 const verifiedIds = [
   "1303491410472865793", // you
@@ -235,16 +240,15 @@ function renderUsers(users) {
     const isVerified = verifiedIds.includes(user.discord_id);
 
     card.innerHTML = `
-      <img class="user-avatar" src="${avatar}" />
-      <div>
-        <strong>${user.display_name || user.username}
-        ${isVerified ? ' <img src="https://cdn3.emoji.gg/emojis/9796-verified.png" alt="Verified" title="Verified" class="verified-icon" />' : ""}
-
-        </strong>
-      </div>
-      <div style="font-size: 14px;">@${user.username}</div>
-      <a href="profile.html?discord_id=${user.discord_id}">View Profile</a>
-    `;
+  <img class="user-avatar" src="${avatar}" />
+  <div>
+    <strong>${user.display_name || user.username}
+    ${isVerified ? ' <img src="https://cdn3.emoji.gg/emojis/9796-verified.png" alt="Verified" title="Verified" class="verified-icon" />' : ""}
+    </strong>
+  </div>
+  <div style="font-size: 14px;">@${user.username}</div>
+  <a href="profile.html?discord_id=${user.discord_id}&token=${generateAccessToken(user.discord_id)}">View Profile</a>
+`;
 
     userList.appendChild(card);
   });
