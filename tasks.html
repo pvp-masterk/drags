@@ -68,108 +68,101 @@
     <div id="taskList">Loading tasks...</div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
-    const supabase = window.supabase.createClient(
-      "https://akektlyhqzbatuedgnuq.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-    );
+  const supabase = window.supabase.createClient(
+    "https://akektlyhqzbatuedgnuq.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg" // your real anon key
+  );
 
-    const discordId = localStorage.getItem("loggedInDiscordId");
+  const discordId = localStorage.getItem("loggedInDiscordId");
 
-    async function loadTasks() {
-      const today = new Date().toISOString().split("T")[0];
+  async function loadTasks() {
+    const today = new Date().toISOString().split("T")[0];
+    const { data: assignedTasks, error } = await supabase
+      .from("user_tasks")
+      .select("id, completed, task_pool(title, description, reward)")
+      .eq("discord_id", discordId)
+      .eq("assigned_date", today);
 
-      // Fetch today's assigned tasks
-      const { data: assignedTasks, error } = await supabase
-        .from("user_tasks")
-        .select("id, completed, task_pool(title, description, reward)")
-        .eq("discord_id", discordId)
-        .eq("assigned_date", today);
+    const taskList = document.getElementById("taskList");
 
-      const taskList = document.getElementById("taskList");
-
-      if (!assignedTasks || assignedTasks.length === 0) {
-        taskList.innerHTML = "<p>No tasks yet today. Check back tomorrow!</p>";
-        return;
-      }
-
-      taskList.innerHTML = assignedTasks.map(t => `
-        <div class="task">
-          <h3>${t.task_pool.title}</h3>
-          <p>${t.task_pool.description}</p>
-          <div class="reward">🎁 ${t.task_pool.reward} DragCoins</div>
-          ${t.completed ? `<p style="color:#57F287;">✅ Completed</p>` : `<button class="complete-btn" onclick="markComplete('${t.id}')">Mark as Done</button>`}
-        </div>
-      `).join("");
+    if (!assignedTasks || assignedTasks.length === 0) {
+      taskList.innerHTML = "<p>No tasks yet today. Check back tomorrow!</p>";
+      return;
     }
 
-   async function markComplete(taskId) {
-  // Mark task as completed
-  const { data: updated } = await supabase
-    .from("user_tasks")
-    .update({ completed: true })
-    .eq("id", taskId)
-    .select("discord_id, task_id")
-    .single();
+    taskList.innerHTML = assignedTasks.map(t => `
+      <div class="task">
+        <h3>${t.task_pool.title}</h3>
+        <p>${t.task_pool.description}</p>
+        <div class="reward">🎁 ${t.task_pool.reward} DragCoins</div>
+        ${t.completed
+          ? `<p style="color:#57F287;">✅ Completed</p>`
+          : `<button class="complete-btn" onclick="markComplete('${t.id}')">Mark as Done</button>`}
+      </div>
+    `).join("");
+  }
 
-  if (!updated) return;
+  async function markComplete(taskId) {
+    const { data: updated } = await supabase
+      .from("user_tasks")
+      .update({ completed: true })
+      .eq("id", taskId)
+      .select("discord_id, task_id")
+      .single();
 
-  // Fetch reward amount from task_pool
-  const { data: task } = await supabase
-    .from("task_pool")
-    .select("reward")
-    .eq("id", updated.task_id)
-    .single();
+    if (!updated) return;
 
-  if (!task) return;
+    const { data: task } = await supabase
+      .from("task_pool")
+      .select("reward")
+      .eq("id", updated.task_id)
+      .single();
 
-  // Add reward to user's DragCoins
-  await supabase.rpc("increment_dragcoins", {
-    user_discord_id: updated.discord_id,
-    coins_to_add: task.reward
-  });
+    if (!task) return;
 
-  loadTasks(); // reload tasks UI
-}
-
-      async function autoAssignDailyTasks(discordId) {
-  const today = new Date().toISOString().split("T")[0];
-
-  // Check if user already has tasks today
-  const { data: existing } = await supabase
-    .from("user_tasks")
-    .select("id")
-    .eq("discord_id", discordId)
-    .eq("assigned_date", today);
-
-  if (existing.length >= 3) return; // already has tasks
-
-  // Fetch random tasks
-  const { data: taskPool } = await supabase
-    .from("task_pool")
-    .select("id");
-
-  if (!taskPool || taskPool.length < 3) return;
-
-  // Shuffle and pick 3
-  const shuffled = taskPool.sort(() => 0.5 - Math.random()).slice(0, 3);
-
-  const inserts = shuffled.map(task => ({
-    discord_id: discordId,
-    task_id: task.id,
-    assigned_date: today
-  }));
-
-  await supabase.from("user_tasks").insert(inserts);
-}
-await autoAssignDailyTasks(discordId);
-
-
-      loadTasks(); // reload after marking
-    }
+    await supabase.rpc("increment_dragcoins", {
+      user_discord_id: updated.discord_id,
+      coins_to_add: task.reward
+    });
 
     loadTasks();
-  </script>
+  }
+
+  async function autoAssignDailyTasks(discordId) {
+    const today = new Date().toISOString().split("T")[0];
+    const { data: existing } = await supabase
+      .from("user_tasks")
+      .select("id")
+      .eq("discord_id", discordId)
+      .eq("assigned_date", today);
+
+    if (existing.length >= 3) return;
+
+    const { data: taskPool } = await supabase
+      .from("task_pool")
+      .select("id");
+
+    if (!taskPool || taskPool.length < 3) return;
+
+    const shuffled = taskPool.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+    const inserts = shuffled.map(task => ({
+      discord_id: discordId,
+      task_id: task.id,
+      assigned_date: today
+    }));
+
+    await supabase.from("user_tasks").insert(inserts);
+  }
+
+  async function initTasksPage() {
+    await autoAssignDailyTasks(discordId);
+    await loadTasks();
+  }
+
+  initTasksPage();
+</script>
+
 </body>
 </html>
