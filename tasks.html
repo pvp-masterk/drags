@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Daily Tasks | Drags</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 30px;
+    }
+
+    .tasks-container {
+      max-width: 600px;
+      margin: auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    .task {
+      border: 1px solid var(--primary-dark);
+      border-left: 5px solid var(--primary);
+      background: #26263b;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      transition: 0.3s;
+    }
+
+    .task h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .task p {
+      margin: 0;
+      color: #aaa;
+    }
+
+    .task .reward {
+      font-weight: bold;
+      color: var(--secondary);
+      margin-top: 8px;
+    }
+
+    .complete-btn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .complete-btn:hover {
+      background: var(--primary-dark);
+    }
+  </style>
+</head>
+<body>
+  <div class="tasks-container">
+    <h2>🗓️ Your Daily Tasks</h2>
+    <div id="taskList">Loading tasks...</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supabase = window.supabase.createClient(
+      "https://akektlyhqzbatuedgnuq.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    );
+
+    const discordId = localStorage.getItem("loggedInDiscordId");
+
+    async function loadTasks() {
+      const today = new Date().toISOString().split("T")[0];
+
+      // Fetch today's assigned tasks
+      const { data: assignedTasks, error } = await supabase
+        .from("user_tasks")
+        .select("id, completed, task_pool(title, description, reward)")
+        .eq("discord_id", discordId)
+        .eq("assigned_date", today);
+
+      const taskList = document.getElementById("taskList");
+
+      if (!assignedTasks || assignedTasks.length === 0) {
+        taskList.innerHTML = "<p>No tasks yet today. Check back tomorrow!</p>";
+        return;
+      }
+
+      taskList.innerHTML = assignedTasks.map(t => `
+        <div class="task">
+          <h3>${t.task_pool.title}</h3>
+          <p>${t.task_pool.description}</p>
+          <div class="reward">🎁 ${t.task_pool.reward} DragCoins</div>
+          ${t.completed ? `<p style="color:#57F287;">✅ Completed</p>` : `<button class="complete-btn" onclick="markComplete('${t.id}')">Mark as Done</button>`}
+        </div>
+      `).join("");
+    }
+
+    async function markComplete(taskId) {
+      await supabase
+        .from("user_tasks")
+        .update({ completed: true })
+        .eq("id", taskId);
+
+      loadTasks(); // reload after marking
+    }
+
+    loadTasks();
+  </script>
+</body>
+</html>
