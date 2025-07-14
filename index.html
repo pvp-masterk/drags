@@ -765,7 +765,7 @@
             <a href="#features">Features</a>
             <a href="#community">Community</a>
             <a href="#command">Chain of Command</a>
-            <li><a href="apply.html">Apply for Staff</a></li>
+            <li><a href="apply">Apply for Staff</a></li>
             <div style="display: flex; align-items: center; gap: 20px;">
         </nav>
        <div id="user-box">
@@ -786,7 +786,7 @@
     <hr />
     <a href="#" id="viewProfileBtn">View Profile</a>
     <a href="#" id="settingsBtn">Settings</a>
-    <a href="linkaccount.html" id="linkBtn">Link</a>
+    <a href="linkaccount" id="linkBtn">Link</a>
   </div>
 </div>
 
@@ -885,7 +885,7 @@
         <p style="font-size: 18px; margin-bottom: 30px; color: rgba(255,255,255,0.9);">
             We're looking for passionate members to help grow our community. Apply for a staff position today!
         </p>
-        <a href="apply.html" class="cta-button" style="background: white; color: var(--primary); font-size: 18px; padding: 15px 30px;">
+        <a href="apply" class="cta-button" style="background: white; color: var(--primary); font-size: 18px; padding: 15px 30px;">
             Apply Now <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
         </a>
     </div>
@@ -1005,24 +1005,24 @@
                     <li><a href="#features">Features</a></li>
                     <li><a href="#community">Community</a></li>
                     <li><a href="#command">Chain of Command</a></li>
-                    <li><a href="apply.html">Apply for Staff</a></li>
+                    <li><a href="apply">Apply for Staff</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h3>Resources</h3>
                 <ul>
-                    <li><a href="rules.html">Rules</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="partnerships.html">Partnerships</a></li>
-        <li><a href="underdev.html">Support</a></li>
+                    <li><a href="rules">Rules</a></li>
+        <li><a href="faq">FAQ</a></li>
+        <li><a href="partnerships">Partnerships</a></li>
+        <li><a href="underdev">Support</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h3>Legal</h3>
                 <ul>
-                    <li><a href="terms.html">Terms of Service</a></li>
-                    <li><a href="privacy.html">Privacy Policy</a></li>
-                    <li><a href="cookies.html">Cookie Policy</a></li>
+                    <li><a href="terms">Terms of Service</a></li>
+                    <li><a href="privacy">Privacy Policy</a></li>
+                    <li><a href="cookies">Cookie Policy</a></li>
                 </ul>
             </div>
         </div>
@@ -1261,7 +1261,7 @@ function showProfileLink() {
   const profileAvatar = document.getElementById("profileAvatar");
 
   if (discordId && avatarUrl && profileLink && profileAvatar) {
-    profileLink.href = `profile.html?discord_id=${discordId}`;
+    profileLink.href = `profile?discord_id=${discordId}`;
     profileAvatar.src = avatarUrl;
     profileLink.style.display = "inline-block";
   }
@@ -1315,8 +1315,8 @@ menu.style.display = "block";
     document.getElementById("dropdownUsername").textContent = "@" + data.username;
     document.getElementById("dropdownUserId").textContent = "ID: " + data.discord_id;
 
-    document.getElementById("viewProfileBtn").href = `profile.html?discord_id=${data.discord_id}`;
-    document.getElementById("settingsBtn").href = "underdev.html";
+    document.getElementById("viewProfileBtn").href = `profile?discord_id=${data.discord_id}`;
+    document.getElementById("settingsBtn").href = "underdev";
     document.getElementById("linkBtn").style.display = "none";
 
     document.getElementById("userDropdownBtn").src = data.avatar_url;
