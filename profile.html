@@ -720,8 +720,8 @@ const supabase = createClient(
 
 // Enhanced Security Check
 
-const discordId = urlParams.get("discord_id");
 
+const discordId = new URLSearchParams(window.location.search).get("discord_id");
 const currentUserId = localStorage.getItem("loggedInDiscordId");
 
 
