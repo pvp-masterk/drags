@@ -1341,6 +1341,13 @@ menu.style.display = "block";
     document.getElementById("userDropdownBtn").src = data.avatar_url;
 menu.style.display = "block";
 
+async function logSiteVisit() {
+  await supabase.from("site_visits").insert({
+    ip: null, // optional: skip IP for privacy
+    user_agent: navigator.userAgent
+  });
+}
+logSiteVisit();
 
 
 </script>
