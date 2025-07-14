@@ -69,7 +69,7 @@ export default async function handler(req, res) {
     });
 
     // Step 4: Redirect to profile
-    res.redirect(`/profile.html?discord_id=${discordUser.id}`);
+    res.redirect(`/profile?discord_id=${discordUser.id}`);
   } catch (error) {
     console.error("Authentication error:", error);
     res.status(500).send("Internal Server Error");
