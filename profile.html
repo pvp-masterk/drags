@@ -632,7 +632,24 @@
 .mutual-following i {
   font-size: 10px;
 }
-    
+    .theme-bg {
+  background: linear-gradient(135deg, #1e1e2e, #2a2a3a); /* default fallback */
+  transition: background 0.4s ease;
+}
+
+.theme-majestic {
+  background: linear-gradient(135deg, #1c2e6c, #3e64ff);
+}
+
+.theme-fractal {
+  background: linear-gradient(135deg, #eeeeee, #c0c0c0);
+  color: #000; /* for readability */
+}
+
+.theme-drags_featured {
+  background: linear-gradient(135deg, #1c2e6c, #000000);
+}
+
   </style>
 </head>
 <body>
@@ -746,7 +763,16 @@ const { data: user, error } = await supabase
 
   const { data: authData } = await supabase.auth.getUser();
   const myDiscordId = authData?.user?.user_metadata?.discord_id;
-  
+  const profileContainer = document.querySelector(".profile-container") || document.body;
+
+// Remove existing theme classes
+profileContainer.classList.remove("theme-majestic", "theme-fractal", "theme-drags_featured");
+
+// Add new theme
+if (user.profile_theme) {
+  profileContainer.classList.add(`theme-${user.profile_theme}`);
+}
+
 
 
 const badgeBox = document.getElementById("badgeBox");
