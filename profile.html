@@ -856,7 +856,10 @@ async function openFollowModal(type) {
 }
 await loadFollowStats(); // refresh stats after action
 
-
+let verifiedIconHTML = '';
+if (user.badges && user.badges.includes("Verified")) {
+  verifiedIconHTML = `<img src="https://cdn3.emoji.gg/emojis/74424-partner.png" alt="Verified" title="Verified" style="width:16px; height:16px; margin-left:6px; vertical-align:middle;" />`;
+}
 if (specialGradientUsers.includes(user.discord_id)) {
   document.getElementById("profileCard").classList.add("featured");
 }
@@ -867,7 +870,7 @@ if (specialGradientUsers.includes(user.discord_id)) {
   document.getElementById("profileAvatar").src = avatarUrl;
   
   document.getElementById("username").textContent = `@${user.username}`;
-  document.getElementById("displayName").textContent = user.display_name || user.username;
+  displayNameEl.innerHTML = `${user.display_name || user.username}${verifiedIconHTML}`;
   document.getElementById("userId").textContent = `ID: ${user.discord_id}`;
   document.getElementById("userBio").textContent = user.bio || "";
 document.getElementById("dragcoins").textContent = `${user.dragcoins} DragCoins`;
@@ -902,6 +905,11 @@ const badgeMap = {
     icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png",
     description: "Drags Staff Team"
   },
+  verified: {
+    name: "Verified",
+    icon: "https://cdn3.emoji.gg/emojis/74424-partner.png",
+    description: "Verified Member"
+  },
   early: {
     name: "Early User",
     icon: "https://cdn3.emoji.gg/emojis/7549-member.png",
@@ -909,7 +917,7 @@ const badgeMap = {
   }
 };
    const manualBadges = {
-  "1303491410472865793": ["early", "staff", "owner", "dev"], 
+  "1303491410472865793": ["early", "staff", "owner", "dev", "verified"], 
   "1359405784915509292": ["owner"],
   "1359405784915509232": ["staff"]
 };
