@@ -612,7 +612,7 @@ const currentUserId = localStorage.getItem("loggedInDiscordId");
 
   document.getElementById("profileAvatar").src = avatarUrl;
   document.getElementById("username").textContent = `@${user.username}`;
-  displayName.innerHTML = `${user.display_name || user.username}${verifiedIconHTML}`;
+  displayName.innerHTML = `${user.display_name || user.username}`;
   document.getElementById("userId").textContent = `ID: ${user.discord_id}`;
   document.getElementById("userBio").textContent = user.bio || "";
 document.getElementById("dragcoins").textContent = `${user.dragcoins} DragCoins`;
