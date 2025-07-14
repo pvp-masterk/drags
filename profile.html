@@ -665,7 +665,11 @@ async function toggleFollow() {
       .insert({ follower_id: currentUserId, followed_id: profileUserId });
   }
 
-  checkFollowState();
+  await checkFollowState();    // update button label
+  await loadFollowStats();     // 🔁 update counts
+}
+
+
 }
 async function loadFollowStats() {
   const profileUserId = new URLSearchParams(window.location.search).get("discord_id");
@@ -684,8 +688,9 @@ async function loadFollowStats() {
   await loadFollowStats(); // refresh stats after action
 
 
-  document.getElementById("followerCount").textContent = followerCount || 0;
-  document.getElementById("followingCount").textContent = followingCount || 0;
+  document.getElementById("followerCount").textContent = followerCount ?? 0;
+document.getElementById("followingCount").textContent = followingCount ?? 0;
+
 }
 
 
