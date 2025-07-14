@@ -155,44 +155,7 @@
         .nav-links a:hover::after {
             width: 100%;
         }
-.loading, .error, .no-users {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 20px;
-  color: #aaa;
-}
 
-.error {
-  color: #ED4245;
-}
-
-.error button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.user-username {
-  color: #aaa;
-  margin: 4px 0;
-  font-size: 14px;
-}
-
-.profile-link {
-  display: inline-block;
-  margin-top: 8px;
-  color: var(--primary);
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.profile-link:hover {
-  text-decoration: underline;
-}
   </style>
 </head>
 <body>
@@ -228,11 +191,6 @@ const supabase = createClient(
 const userList = document.getElementById("userList");
 const searchInput = document.getElementById("searchInput");
 
-   function generateAccessToken(discordId) {
-  // Simple token generation - you might want to make this more secure
-  return btoa(`${discord_id}:${Date.now()}`).slice(0, 32);
-}
-
 // ✅ Hardcoded verified users list
 const verifiedIds = [
   "1303491410472865793", // you
@@ -243,63 +201,49 @@ const verifiedIds = [
 let allUsers = [];
 
 async function loadUsers() {
-  userList.innerHTML = '<div class="loading">Loading users...</div>';
+  const { data, error } = await supabase
+    .from("users")
+    .select("discord_id, username, display_name, avatar_url");
 
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("discord_id, username, display_name, avatar_url")
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-    if (!data || data.length === 0) throw new Error("No users found");
-
-    allUsers = data;
-
-    // Sort verified users first
-    allUsers.sort((a, b) => {
-      const aVerified = verifiedIds.includes(a.discord_id);
-      const bVerified = verifiedIds.includes(b.discord_id);
-      return bVerified - aVerified;
-    });
-
-    renderUsers(allUsers);
-  } catch (error) {
-    console.error("Error loading users:", error);
-    userList.innerHTML = `
-      <div class="error">
-        Failed to load users. ${error.message}
-        <button onclick="loadUsers()">Retry</button>
-      </div>
-    `;
-  }
-}
-function renderUsers(users) {
-  userList.innerHTML = "";
-
-  if (users.length === 0) {
-    userList.innerHTML = '<div class="no-users">No users found</div>';
+  if (error) {
+    userList.textContent = "Failed to load users.";
+    console.error("Supabase error:", error);
     return;
   }
+
+  allUsers = data;
+
+  // Sort: verified first
+  allUsers.sort((a, b) => {
+    const aVerified = verifiedIds.includes(a.discord_id);
+    const bVerified = verifiedIds.includes(b.discord_id);
+    return bVerified - aVerified;
+  });
+
+  renderUsers(allUsers);
+}
+
+function renderUsers(users) {
+  userList.innerHTML = "";
 
   users.forEach(user => {
     const card = document.createElement("div");
     card.className = "user-card";
 
-    // Fallback avatar using Discord's default avatar system
-    const avatar = user.avatar_url || 
-      `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discord_id) % 5}.png`;
+    const avatar = user.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discord_id >> 22) % 5}.png`;
 
     const isVerified = verifiedIds.includes(user.discord_id);
 
     card.innerHTML = `
-      <img class="user-avatar" src="${avatar}" alt="${user.username}'s avatar" />
+      <img class="user-avatar" src="${avatar}" />
       <div>
-        <strong>${user.display_name || user.username}</strong>
-        ${isVerified ? '<img src="https://cdn3.emoji.gg/emojis/9796-verified.png" alt="Verified" class="verified-icon" />' : ''}
+        <strong>${user.display_name || user.username}
+        ${isVerified ? ' <img src="https://cdn3.emoji.gg/emojis/9796-verified.png" alt="Verified" title="Verified" class="verified-icon" />' : ""}
+
+        </strong>
       </div>
-      <div class="user-username">@${user.username}</div>
-      <a href="profile.html?discord_id=${user.discord_id}" class="profile-link">View Profile</a>
+      <div style="font-size: 14px;">@${user.username}</div>
+      <a href="profile.html?discord_id=${user.discord_id}">View Profile</a>
     `;
 
     userList.appendChild(card);
