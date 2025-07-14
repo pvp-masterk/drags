@@ -394,6 +394,69 @@
   margin-top: 8px;
   font-weight: 500;
 }
+/* Task Panel */
+.task-panel {
+  position: fixed;
+  top: 0;
+  right: -360px;
+  width: 320px;
+  height: 100%;
+  background: rgba(30, 30, 46, 0.98);
+  backdrop-filter: blur(6px);
+  border-left: 2px solid var(--primary);
+  color: var(--text);
+  padding: 20px;
+  transition: right 0.4s ease;
+  z-index: 1000;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+}
+
+.task-panel.active {
+  right: 0;
+}
+
+.task-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.task-panel-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--secondary);
+}
+
+.task-panel button {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Toggle Button */
+#taskToggleBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 50%;
+  font-size: 20px;
+  z-index: 1001;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: background 0.3s ease;
+}
+
+#taskToggleBtn:hover {
+  background: var(--primary-dark);
+}
 
   </style>
 </head>
@@ -590,5 +653,57 @@ const badgeMap = {
 
 
 </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+  const supabase = window.supabase.createClient(
+    "https://akektlyhqzbatuedgnuq.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
+  );
+
+  function toggleTaskPanel() {
+    const panel = document.getElementById("taskPanel");
+    panel.classList.toggle("active");
+  }
+
+  async function loadTaskPanel() {
+    const discordId = localStorage.getItem("loggedInDiscordId");
+    const today = new Date().toISOString().split("T")[0];
+    const { data: assignedTasks, error } = await supabase
+      .from("user_tasks")
+      .select("id, completed, task_pool(title, reward)")
+      .eq("discord_id", discordId)
+      .eq("assigned_date", today);
+
+    const container = document.getElementById("taskPanelContent");
+
+    if (!assignedTasks || assignedTasks.length === 0) {
+      container.innerHTML = "<p>No tasks assigned today.</p>";
+      return;
+    }
+
+    container.innerHTML = assignedTasks.map(t => `
+      <div class="task">
+        <strong>${t.task_pool.title}</strong><br/>
+        <span style="color:${t.completed ? '#57F287' : '#aaa'}">
+          ${t.completed ? '✅ Completed' : '🕒 In Progress'}
+        </span>
+        <div class="reward">🎁 ${t.task_pool.reward} DragCoins</div>
+      </div>
+    `).join("");
+  }
+
+  document.addEventListener("DOMContentLoaded", loadTaskPanel);
+</script>
+
+  <div id="taskPanel" class="task-panel">
+  <div class="task-panel-header">
+    <h3>🗓️ Daily Tasks</h3>
+    <button onclick="toggleTaskPanel()">✖</button>
+  </div>
+  <div id="taskPanelContent">Loading...</div>
+</div>
+
+<button id="taskToggleBtn" onclick="toggleTaskPanel()">📋</button>
+
 </body>
 </html>
