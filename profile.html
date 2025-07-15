@@ -945,26 +945,7 @@ async function loadFollowing(targetId) {
   }
   return following || [];
 }
-const followBtn = document.getElementById("followBtn");
-  if (followBtn) {
-    followBtn.style.display = isOwner ? "none" : "flex";
-    
-    // Load follow stats
-    const { isFollowing, followers, following } = await checkFollowStatus(discordId);
-    
-    document.getElementById("followersCount").textContent = followers;
-    document.getElementById("followingCount").textContent = following;
-    
-    if (isFollowing) {
-      followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
-      followBtn.classList.add("following");
-    } else {
-      followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
-      followBtn.classList.remove("following");
-    }
-  }
-}
-// ===== ADD THIS CODE ===== //
+  // ===== ADD THIS CODE ===== //
 // Click handlers for followers/following stats
 document.getElementById('followersStat').addEventListener('click', async () => {
   const discordId = new URLSearchParams(window.location.search).get("discord_id") || 
@@ -1023,6 +1004,26 @@ document.querySelectorAll('.follow-modal').forEach(modal => {
   });
 });
 // ===== END OF NEW CODE ===== //
+const followBtn = document.getElementById("followBtn");
+  if (followBtn) {
+    followBtn.style.display = isOwner ? "none" : "flex";
+    
+    // Load follow stats
+    const { isFollowing, followers, following } = await checkFollowStatus(discordId);
+    
+    document.getElementById("followersCount").textContent = followers;
+    document.getElementById("followingCount").textContent = following;
+    
+    if (isFollowing) {
+      followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
+      followBtn.classList.add("following");
+    } else {
+      followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+      followBtn.classList.remove("following");
+    }
+  }
+}
+
 
 
 
