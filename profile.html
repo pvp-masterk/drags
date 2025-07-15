@@ -965,47 +965,7 @@ document.getElementById('followingStat').addEventListener('click', async () => {
   showFollowModal('followingModal', 'followingList', following, 'Following');
 });
 
-// Function to show modals
-function showFollowModal(modalId, listId, items, title) {
-  const modal = document.getElementById(modalId);
-  const list = document.getElementById(listId);
-  
-  list.innerHTML = '';
-  
-  items.forEach(item => {
-    // Handle both query structures
-    const user = item.profiles || item.users || item;
-    const li = document.createElement('li');
-    li.className = 'follow-modal-item';
-    li.innerHTML = `
-      <img src="${user.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discord_id >> 22) % 5}.png`}" 
-           class="follow-modal-avatar">
-      <div>
-        <div class="follow-modal-username">${user.display_name || user.username}</div>
-        <div class="follow-modal-displayname">@${user.username}</div>
-      </div>
-    `;
-    list.appendChild(li);
-  });
-  
-  modal.classList.add('active');
-}
-  
-  // Close button handler
-  modal.querySelector('.follow-modal-close').onclick = () => {
-    modal.classList.remove('active');
-  };
-}
 
-// Close modal when clicking outside content
-document.querySelectorAll('.follow-modal').forEach(modal => {
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.remove('active');
-    }
-  });
-});
-// ===== END OF NEW CODE ===== //
 const followBtn = document.getElementById("followBtn");
   if (followBtn) {
     followBtn.style.display = isOwner ? "none" : "flex";
@@ -1042,7 +1002,7 @@ document.getElementById("dragcoins").textContent = `${user.dragcoins} DragCoins`
   if (specialGradientUsers.includes(user.discord_id)) {
   document.getElementById("profileCard").classList.add("featured");
 }
-
+   }
 if (discordId) {
   loadProfile(discordId);
 }
