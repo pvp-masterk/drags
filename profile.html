@@ -757,10 +757,10 @@ const currentUserId = localStorage.getItem("loggedInDiscordId");
 
 async function loadProfile(discordId) {
   const loadingBuffer = document.getElementById("loading-buffer");
-  const profileCard = document.getElementById("profileCard");
+  
   
   if (loadingBuffer) loadingBuffer.style.display = "block";
-  if (profileCard) profileCard.style.display = "none";
+  
 
   const { data: user, error } = await supabase
     .from("users")
@@ -927,23 +927,8 @@ async function loadProfile(discordId) {
     }
   }
 
-  // Background image overrides
-  if (user.page_bg_url) {
-    document.body.style.backgroundImage = `url(${user.page_bg_url})`;
-    document.body.style.backgroundSize = "cover";
-    document.body.style.backgroundPosition = "center";
-  } else {
-    // fallback to theme
-    document.body.classList.add(`theme-${user.profile_theme}`);
-  }
+ 
 
-  // Card background
-  const card = document.querySelector(".profile-card");
-  if (user.card_bg_url && card) {
-    card.style.backgroundImage = `url(${user.card_bg_url})`;
-    card.style.backgroundSize = "cover";
-    card.style.backgroundPosition = "center";
-  }
 
   async function loadFollowers(targetId) {
     const { data: followers, error } = await supabase
