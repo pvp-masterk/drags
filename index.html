@@ -1269,7 +1269,7 @@ function showProfileLink() {
 }
     
 
-document.getElementById("userDropdownBtn").src = data.avatar_url;
+document.getElementById("userDropdownBtn").src = localStorage.getItem("avatar_url");
 menu.style.display = "block";
 
 
