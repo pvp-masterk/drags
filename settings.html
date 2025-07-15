@@ -234,11 +234,7 @@ input[type="text"], select {
     <button onclick="closeThemeModal()" class="close-modal">Close</button>
   </div>
 </div>
-    <label>Profile Card Background</label>
-<input type="text" id="cardBgInput" placeholder="Paste image URL..." />
-
-<label>Page Background</label>
-<input type="text" id="pageBgInput" placeholder="Paste image URL..." />
+   
 
 <label>Username Effect</label>
 <select id="usernameEffect">
@@ -273,8 +269,6 @@ let badgeOrder = [];
       if (data) {
         document.getElementById("displayName").value = data.display_name || "";
         document.getElementById("bio").value = data.bio || "";
-        document.getElementById("cardBgInput").value = data.card_bg_url || "";
-document.getElementById("pageBgInput").value = data.page_bg_url || "";
 document.getElementById("usernameEffect").value = data.username_effect || "";
 
       }
@@ -286,8 +280,7 @@ async function saveSettings() {
 
   
 
-  const cardBg = document.getElementById("cardBgInput").value;
-const pageBg = document.getElementById("pageBgInput").value;
+  
 const usernameEffect = document.getElementById("usernameEffect").value;
 
 await supabase
@@ -297,8 +290,6 @@ await supabase
     bio: bio,
     badges: badgeOrder,
     profile_theme: selectedTheme,
-    card_bg_url: cardBg,
-    page_bg_url: pageBg,
     username_effect: usernameEffect
   })
   .eq("discord_id", discordId);
