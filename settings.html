@@ -374,9 +374,9 @@ async function saveSettings() {
   const glowColor = document.getElementById("glowColorPicker").value;
 
 await supabase.from("users").update({
-  ...
   username_effect: usernameEffect,
   username_glow_color: glowColor
+  ...
 })
 .eq("discord_id", discordId);
 
