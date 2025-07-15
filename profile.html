@@ -800,6 +800,27 @@
         gap: 20px;
       }
     }
+    .back-btn {
+  background: var(--bg-dark);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-medium);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  margin-left: 10px;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
   </style>
 </head>
 <body class="theme-bg">
@@ -829,11 +850,14 @@
     <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio"></p>
     
-    <div class="follow-section">
-      <button id="followBtn" class="follow-btn" style="display: none;">
-        <i class="fas fa-user-plus"></i> Follow
-      </button>
-    </div>
+   <div class="follow-section">
+  <button id="followBtn" class="follow-btn" style="display: none;">
+    <i class="fas fa-user-plus"></i> Follow
+  </button>
+  <a href="profile" id="backToProfileBtn" class="follow-btn" style="display: none; text-decoration: none;">
+    <i class="fas fa-arrow-left"></i> Back to My Profile
+  </a>
+</div>
 
     <div class="follow-stats">
       <div class="follow-stat" id="followersStat">
@@ -1136,9 +1160,17 @@
         });
       }
 
-      const followBtn = document.getElementById("followBtn");
-      if (followBtn) {
-        followBtn.style.display = isOwner ? "none" : "flex";
+// Show/hide back button
+const backBtn = document.getElementById('backToProfileBtn');
+if (backBtn) {
+  backBtn.style.display = isOwner ? 'none' : 'flex';
+}
+
+// Show/hide follow button
+const followBtn = document.getElementById("followBtn");
+if (followBtn) {
+  followBtn.style.display = isOwner ? "none" : "flex";
+}
         
         // Load follow stats
         const { isFollowing, followers, following } = await checkFollowStatus(discordId);
