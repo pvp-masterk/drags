@@ -748,6 +748,24 @@
   background: var(--primary-dark);
 }
 
+.global-notice {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: var(--accent);
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  font-weight: bold;
+  z-index: 9999;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 
 
     </style>
@@ -755,7 +773,8 @@
 <body>
   
 
-    
+    <div id="globalNotice" class="global-notice" style="display: none;"></div>
+
 
    
     <header id="header">
@@ -1297,6 +1316,23 @@ menu.style.display = "block";
       .single();
 
     console.log("Fetched user from Supabase:", data);
+
+      async function loadGlobalAnnouncement() {
+  const { data, error } = await supabase
+    .from("announcements")
+    .select("message")
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (data?.message) {
+    const box = document.getElementById("globalNotice");
+    box.textContent = data.message;
+    box.style.display = "block";
+  }
+}
+loadGlobalAnnouncement();
+
 
     const menu = document.getElementById("userMenu");
     const dropdown = document.getElementById("dropdownMenu");
