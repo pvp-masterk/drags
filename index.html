@@ -1415,12 +1415,8 @@ async function showLiveAnnouncement(data) {
 
     document.getElementById("userDropdownBtn").src = data.avatar_url;
     menu.style.display = "block";
-  }
 
-  loadUser();
-
-  
-  const avatarBtn = document.getElementById("userDropdownBtn");
+const avatarBtn = document.getElementById("userDropdownBtn");
   const dropdown = document.getElementById("dropdownMenu");
 
   avatarBtn?.addEventListener("click", () => {
@@ -1442,6 +1438,13 @@ async function logSiteVisit() {
   });
 }
 logSiteVisit();
+      
+  }
+
+  loadUser();
+
+  
+  
 
 
 </script>
