@@ -964,7 +964,65 @@ const followBtn = document.getElementById("followBtn");
     }
   }
 }
+// ===== ADD THIS CODE ===== //
+// Click handlers for followers/following stats
+document.getElementById('followersStat').addEventListener('click', async () => {
+  const discordId = new URLSearchParams(window.location.search).get("discord_id") || 
+                   localStorage.getItem("loggedInDiscordId");
+  if (!discordId) return;
+  
+  const followers = await loadFollowers(discordId);
+  showFollowModal('followersModal', 'followersList', followers, 'Followers');
+});
 
+document.getElementById('followingStat').addEventListener('click', async () => {
+  const discordId = new URLSearchParams(window.location.search).get("discord_id") || 
+                   localStorage.getItem("loggedInDiscordId");
+  if (!discordId) return;
+  
+  const following = await loadFollowing(discordId);
+  showFollowModal('followingModal', 'followingList', following, 'Following');
+});
+
+// Function to show modals
+function showFollowModal(modalId, listId, items, title) {
+  const modal = document.getElementById(modalId);
+  const list = document.getElementById(listId);
+  
+  list.innerHTML = ''; // Clear previous content
+  
+  items.forEach(item => {
+    const user = item.users || item;
+    const li = document.createElement('li');
+    li.className = 'follow-modal-item';
+    li.innerHTML = `
+      <img src="${user.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discord_id || user.follower_id || user.followed_id >> 22) % 5}.png`}" 
+           class="follow-modal-avatar" alt="${user.username}'s avatar">
+      <div>
+        <div class="follow-modal-username">${user.display_name || user.username}</div>
+        <div class="follow-modal-displayname">@${user.username}</div>
+      </div>
+    `;
+    list.appendChild(li);
+  });
+  
+  modal.classList.add('active'); // Show modal
+  
+  // Close button handler
+  modal.querySelector('.follow-modal-close').onclick = () => {
+    modal.classList.remove('active');
+  };
+}
+
+// Close modal when clicking outside content
+document.querySelectorAll('.follow-modal').forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+    }
+  });
+});
+// ===== END OF NEW CODE ===== //
 
 
 
