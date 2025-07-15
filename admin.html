@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-container {
+      max-width: 600px;
+      margin: 100px auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      background: #2a2a3a;
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 15px;
+      border: none;
+    }
+
+    .admin-container button {
+      margin-top: 15px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container" id="adminPanel" style="display: none;">
+    <h2>Global Announcement Panel</h2>
+    <textarea id="announcementText" placeholder="Write your message..."></textarea>
+    <button onclick="submitAnnouncement()">Announce</button>
+  </div>
+
+  <div style="text-align:center; margin-top:100px;" id="deniedMsg">🔒 Invalid access code.</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = window.supabase.createClient(
+      "https://akektlyhqzbatuedgnuq.supabase.co",
+      "your-anon-key"
+    );
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+
+    // 🧠 Replace with your actual secret code
+    const secretCode = "dragsAdminSecret2025";
+
+    if (code === secretCode) {
+      document.getElementById("adminPanel").style.display = "block";
+      document.getElementById("deniedMsg").style.display = "none";
+    }
+
+    async function submitAnnouncement() {
+      const message = document.getElementById("announcementText").value;
+
+      const { error } = await supabase
+        .from("announcements")
+        .insert({ message });
+
+      if (!error) {
+        alert("✅ Announcement sent!");
+        document.getElementById("announcementText").value = "";
+      } else {
+        alert("❌ Failed to announce.");
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
