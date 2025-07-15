@@ -947,14 +947,7 @@ if (user.card_bg_url) {
   card.style.backgroundSize = "cover";
   card.style.backgroundPosition = "center";
 }
-const usernameEl = document.getElementById("discordUsername");
-usernameEl.classList.remove("username-rainbow", "username-glow");
 
-if (user.username_effect === "rainbow") {
-  usernameEl.classList.add("username-rainbow");
-} else if (user.username_effect === "glow") {
-  usernameEl.classList.add("username-glow");
-}
 
 async function loadFollowers(targetId) {
   const { data: followers, error } = await supabase
@@ -1028,6 +1021,15 @@ const followBtn = document.getElementById("followBtn");
       followBtn.classList.remove("following");
     }
   }
+  const usernameEl = document.getElementById("username");
+usernameEl.classList.remove("username-rainbow", "username-glow");
+
+if (user.username_effect === "rainbow") {
+  usernameEl.classList.add("username-rainbow");
+} else if (user.username_effect === "glow") {
+  usernameEl.classList.add("username-glow");
+}
+
 }
 
 
@@ -1089,7 +1091,6 @@ const badgeMap = {
   "1359405784915509292": ["owner"],
   "1359405784915509232": ["staff"]
 };
-
 
 
 
