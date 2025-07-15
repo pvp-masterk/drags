@@ -545,7 +545,7 @@
       try {
         const { data, error } = await supabase
           .from("users")
-          .select("discord_id, username, display_name, avatar_url, profile_theme, status");
+          .select("discord_id, username, display_name, avatar_url, profile_theme, online");
         
         if (error) throw error;
 
