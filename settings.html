@@ -184,6 +184,15 @@
   border-radius: 6px;
   font-weight: bold;
 }
+input[type="text"], select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  background: #2f2f45;
+  color: white;
+  border: none;
+}
 
   </style>
 </head>
@@ -225,6 +234,19 @@
     <button onclick="closeThemeModal()" class="close-modal">Close</button>
   </div>
 </div>
+    <label>Profile Card Background</label>
+<input type="text" id="cardBgInput" placeholder="Paste image URL..." />
+
+<label>Page Background</label>
+<input type="text" id="pageBgInput" placeholder="Paste image URL..." />
+
+<label>Username Effect</label>
+<select id="usernameEffect">
+  <option value="">None</option>
+  <option value="rainbow">Rainbow Gradient</option>
+  <option value="glow">Shiny</option>
+</select>
+
 
 
 
@@ -251,6 +273,10 @@ let badgeOrder = [];
       if (data) {
         document.getElementById("displayName").value = data.display_name || "";
         document.getElementById("bio").value = data.bio || "";
+        document.getElementById("cardBgInput").value = data.card_bg_url || "";
+document.getElementById("pageBgInput").value = data.page_bg_url || "";
+document.getElementById("usernameEffect").value = data.username_effect || "";
+
       }
     }
 
@@ -267,6 +293,24 @@ async function saveSettings() {
       profile_theme: selectedTheme
     })
     .eq("discord_id", discordId);
+
+  const cardBg = document.getElementById("cardBgInput").value;
+const pageBg = document.getElementById("pageBgInput").value;
+const usernameEffect = document.getElementById("usernameEffect").value;
+
+await supabase
+  .from("users")
+  .update({
+    display_name,
+    bio,
+    badges: badgeOrder,
+    profile_theme: selectedTheme,
+    card_bg_url: cardBg,
+    page_bg_url: pageBg,
+    username_effect: usernameEffect
+  })
+  .eq("discord_id", discordId);
+
 
  
 }
