@@ -5,117 +5,234 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ - Drags</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-
-    header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding: 20px 10%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 100;
-        background: rgba(30, 30, 46, 0.9);
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-    }
-    
-    header.scrolled {
-        padding: 15px 10%;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-    }
-    
-    .logo {
-        font-size: 28px;
-        font-weight: 700;
-        color: #f5f5f5;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .logo i {
-        color: #5865F2;
-    }
-    
-    .nav-links {
-        display: flex;
-        gap: 30px;
-    }
-    
-    .nav-links a {
-        color: #f5f5f5;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 16px;
-        position: relative;
-        transition: all 0.3s ease;
-    }
-    
-    .nav-links a:hover {
-        color: #5865F2;
-    }
-    
-    .nav-links a::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: #5865F2;
-        transition: width 0.3s ease;
-    }
-    
-    .nav-links a:hover::after {
-        width: 100%;
-    }
-    
-    body {
-        padding-top: 80px;
-    }
-
+        :root {
+            --primary: #5865F2;
+            --primary-light: rgba(88, 101, 242, 0.2);
+            --primary-lighter: rgba(88, 101, 242, 0.1);
+            --bg-dark: #1e1e2e;
+            --bg-darker: #161622;
+            --bg-card: #2a2a3a;
+            --text-light: #f5f5f5;
+            --text-lighter: #e0e0e0;
+            --text-gray: #b0b0b0;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #1e1e2e;
-            color: #f5f5f5;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(88, 101, 242, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(88, 101, 242, 0.1) 0%, transparent 20%);
         }
         
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(30, 30, 46, 0.9);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(88, 101, 242, 0.1);
+        }
+        
+        header.scrolled {
+            padding: 15px 10%;
+            box-shadow: var(--shadow);
+            background: rgba(22, 22, 34, 0.98);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+        
+        .logo:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 2px 10px rgba(88, 101, 242, 0.5);
+        }
+        
+        .logo i {
+            color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .logo:hover i {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            transition: var(--transition);
+            padding: 8px 0;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .profile-icon {
+            margin-left: 20px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            transition: var(--transition);
+        }
+        
+        .profile-icon:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+        }
+        
+        .profile-icon i {
+            color: var(--text-light);
+            font-size: 18px;
+        }
+        
+        /* FAQ Container */
         .faq-container {
-            max-width: 800px;
-            margin: 80px auto;
-            padding: 0 20px;
+            max-width: 900px;
+            margin: 100px auto;
+            padding: 0 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s forwards 0.3s;
         }
         
         h1 {
-            color: #5865F2;
+            color: var(--primary);
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        h1 i {
+            margin-right: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: none;
+            background: var(--bg-card);
+            color: var(--text-light);
+            font-size: 16px;
+            box-shadow: var(--shadow);
+            padding-left: 50px;
+            transition: var(--transition);
+            border: 1px solid rgba(88, 101, 242, 0.3);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.3);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
         }
         
         .faq-item {
-            background: #2a2a3a;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 20px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+        
+        .faq-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-left-color: var(--primary);
         }
         
         .faq-question {
-            padding: 15px 20px;
-            background: rgba(88, 101, 242, 0.2);
-            color: #f5f5f5;
+            padding: 20px 25px;
+            background: var(--primary-light);
+            color: var(--text-light);
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: 500;
+            font-weight: 600;
+            transition: var(--transition);
         }
         
         .faq-question:hover {
@@ -123,46 +240,151 @@
         }
         
         .faq-answer {
-            padding: 0 20px;
+            padding: 0 25px;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
+            transition: var(--transition);
+            color: var(--text-lighter);
+            line-height: 1.6;
+        }
+        
+        .faq-item.active {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
         
         .faq-item.active .faq-answer {
-            padding: 15px 20px;
+            padding: 20px 25px;
             max-height: 500px;
         }
         
         .faq-question i {
-            transition: transform 0.3s ease;
+            transition: var(--transition);
+            color: var(--primary);
         }
         
         .faq-item.active .faq-question i {
             transform: rotate(180deg);
         }
+        
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(88, 101, 242, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+            z-index: 99;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(88, 101, 242, 0.6);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 5%;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .faq-container {
+                margin: 80px auto;
+                padding: 0 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
-   <header>
-    <a href="index.html" class="logo">
-        <i class="fab fa-discord"></i>
-        <span>Drags</span>
-    </a>
-    <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="rules.html">Rules</a>
-        <a href="FAQ.html">FAQ</a>
-        <a href="partnerships.html">Partnerships</a>
-       
-        <div class="profile-icon">
-            <i class="fas fa-user"></i>
-        </div>
-    </nav>
-</header>
+    <header>
+        <a href="index.html" class="logo">
+            <i class="fab fa-discord"></i>
+            <span>Drags</span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="rules.html">Rules</a>
+            <a href="FAQ.html">FAQ</a>
+            <a href="partnerships.html">Partnerships</a>
+            <div class="profile-icon">
+                <i class="fas fa-user"></i>
+            </div>
+        </nav>
+    </header>
 
     <div class="faq-container">
         <h1><i class="fas fa-question-circle"></i> Frequently Asked Questions</h1>
+        
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search FAQs...">
+        </div>
         
         <div class="faq-item">
             <div class="faq-question">
@@ -170,7 +392,7 @@
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                <p>Click the "Join Server" button in our website.</p>
+                <p>Click the "Join Server" button on our website or use our invite link: <a href="#" style="color: var(--primary);">discord.gg/drags</a>. You'll need a Discord account to join. Once you're in, make sure to read our rules in the #welcome channel!</p>
             </div>
         </div>
         
@@ -180,7 +402,14 @@
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                <p>Some roles are earned through participation, others are only given by owners. Boosters get special colors!</p>
+                <p>We offer several ways to get special roles:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Participate in community events</li>
+                    <li>Be an active and helpful member</li>
+                    <li>Server boosters get exclusive colors</li>
+                    <li>Some roles are given by admins for special contributions</li>
+                </ul>
+                <p style="margin-top: 10px;">Check #roles-info for current role opportunities!</p>
             </div>
         </div>
         
@@ -190,7 +419,8 @@
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                <p>Use the #main channel. We respect each suggestion.</p>
+                <p>We welcome all suggestions in our #suggestions channel! Please format your suggestions clearly and include as much detail as possible. Our team reviews suggestions weekly, and popular ideas often get implemented.</p>
+                <p style="margin-top: 10px;">For major suggestions, consider creating a poll in #polls to gauge community interest.</p>
             </div>
         </div>
         
@@ -200,7 +430,13 @@
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                <p>Check our home page for application.</p>
+                <p>Staff applications open periodically when we need new team members. Requirements include:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Minimum 3 months in the server</li>
+                    <li>Good standing with no recent warnings</li>
+                    <li>Active participation in the community</li>
+                </ul>
+                <p style="margin-top: 10px;">When applications are open, you'll find the form in /apply. We notify everyone when we're hiring!</p>
             </div>
         </div>
         
@@ -210,7 +446,13 @@
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                <p>We do not moderate anyone without a valid reason, if you think your moderation was unfair please dm one of the owner.</p>
+                <p>All moderation actions are logged with reasons. If you were muted or banned:</p>
+                <ol style="margin-top: 10px; padding-left: 20px;">
+                    <li>Check your DMs for a message from our bot with details</li>
+                    <li>Review our rules in #rules to understand what might have happened</li>
+                    <li>For appeals, contact the moderator who took action or DM an owner</li>
+                </ol>
+                <p style="margin-top: 10px;">We're happy to explain our decisions and help you understand how to avoid issues in the future.</p>
             </div>
         </div>
         
@@ -220,36 +462,168 @@
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                <p>See our Partnerships page for requirements. Both servers must meet member activity standards.</p>
+                <p>Server partnerships are mutually beneficial relationships between communities. Our requirements:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Minimum 100 active members</li>
+                    <li>Similar community focus/values</li>
+                    <li>Active staff team</li>
+                    <li>No NSFW content</li>
+                </ul>
+                <p style="margin-top: 10px;">Apply through our Partnerships page or DM an owner with your server details. We review applications weekly.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>What are the server's premium features?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <p>By boosting our server, you unlock:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Exclusive color roles</li>
+                    <li>Special badge on your profile</li>
+                    <li>Access to VIP channels</li>
+                    <li>Priority in event participation</li>
+                    <li>Custom emoji slots</li>
+                </ul>
+                <p style="margin-top: 10px;">Boosts also help us pay for better bots and server features for everyone!</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>How do I report a user or issue?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <p>For urgent issues:</p>
+                <ol style="margin-top: 10px; padding-left: 20px;">
+                    <li>Use the @Staff mention in serious situations</li>
+                    <li>DM any available moderator</li>
+                    <li>Submit a ticket in #help-desk</li>
+                </ol>
+                <p style="margin-top: 10px;">For non-urgent reports, please use our ticket system to keep mod DMs clear for emergencies.</p>
             </div>
         </div>
     </div>
 
+    <div class="particles" id="particles"></div>
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
     <script>
+        // FAQ Toggle Functionality
         document.querySelectorAll('.faq-question').forEach(question => {
             question.addEventListener('click', () => {
                 const item = question.parentNode;
-                item.classList.toggle('active');
+                const wasActive = item.classList.contains('active');
                 
-             
+                // Close all other items
                 document.querySelectorAll('.faq-item').forEach(otherItem => {
-                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                    if (otherItem !== item) {
                         otherItem.classList.remove('active');
                     }
                 });
+                
+                // Toggle current item
+                if (!wasActive) {
+                    item.classList.add('active');
+                }
             });
         });
         
-  
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+        // Header Scroll Effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            // Back to top button
+            const backToTop = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        
+        // Back to top functionality
+        document.getElementById('backToTop').addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+        
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 15 : 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 5 + 2;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 10;
+                const opacity = Math.random() * 0.5 + 0.1;
+                
+                // Apply styles
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.opacity = opacity;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite alternate`;
+                
+                particlesContainer.appendChild(particle);
+            }
         }
-    });
-
+        
+        // Initialize particles when DOM is loaded
+        document.addEventListener('DOMContentLoaded', createParticles);
+        
+        // Add floating animation to CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% {
+                    transform: translateY(0) translateX(0);
+                }
+                50% {
+                    transform: translateY(-20px) translateX(10px);
+                }
+                100% {
+                    transform: translateY(0) translateX(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
