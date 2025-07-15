@@ -43,7 +43,7 @@
       padding-top: var(--header-height);
     }
 
-    /* Enhanced Header */
+
     header {
       position: fixed;
       top: 0;
@@ -140,7 +140,7 @@
       width: 100%;
     }
 
-    /* Profile Container */
+
     .profile-container {
       max-width: 500px;
       margin: 30px auto;
@@ -230,7 +230,7 @@
       z-index: 2;
     }
 
-    /* Animations */
+
     @keyframes fadeInUp {
       from { 
         opacity: 0; 
@@ -247,7 +247,7 @@
       50% { transform: translateY(-10px); }
     }
 
-    /* Loading Spinner */
+
     .loading-buffer {
       position: fixed;
       top: 50%;
@@ -277,7 +277,7 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Badges Section */
+
     .badge-box {
       background: rgba(255, 255, 255, 0.05);
       padding: 20px;
@@ -426,7 +426,7 @@
       font-size: 18px;
     }
 
-    /* Follow System */
+
     .follow-section {
       display: flex;
       justify-content: center;
@@ -506,7 +506,7 @@
       margin-top: 3px;
     }
 
-    /* Task Panel */
+
     .task-panel {
       position: fixed;
       top: 0;
@@ -560,7 +560,7 @@
       color: var(--text);
     }
 
-    /* Toggle Button */
+
     #taskToggleBtn {
       position: fixed;
       bottom: 30px;
@@ -587,7 +587,7 @@
       box-shadow: 0 8px 30px rgba(0,0,0,0.5);
     }
 
-    /* Follow Modals */
+
     .follow-modal {
       position: fixed;
       top: 0;
@@ -697,7 +697,7 @@
       margin-top: 3px;
     }
 
-    /* Themes */
+
     .theme-bg {
       background: linear-gradient(135deg, #1e1e2e, #2a2a3a);
       transition: background var(--transition-slow);
@@ -720,7 +720,7 @@
       background: linear-gradient(135deg, black, white);
     }
 
-    /* Username Effects */
+
     .username-rainbow {
       background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
       background-size: 200% auto;
@@ -750,7 +750,7 @@
       color: black !important;
     }
 
-    /* Responsive Adjustments */
+
     @media (max-width: 768px) {
       .profile-container {
         margin: 20px 15px;
@@ -800,27 +800,6 @@
         gap: 20px;
       }
     }
-    .back-btn {
-  background: var(--bg-dark);
-  color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 10px 25px;
-  border-radius: 25px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-medium);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  margin-left: 10px;
-}
-
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-}
   </style>
 </head>
 <body class="theme-bg">
@@ -850,14 +829,11 @@
     <div id="userId" class="profile-userid">ID: Loading...</div>
     <p id="userBio" class="profile-bio"></p>
     
-   <div class="follow-section">
-  <button id="followBtn" class="follow-btn" style="display: none;">
-    <i class="fas fa-user-plus"></i> Follow
-  </button>
-  <a href="profile" id="backToProfileBtn" class="follow-btn" style="display: none; text-decoration: none;">
-    <i class="fas fa-arrow-left"></i> Back to My Profile
-  </a>
-</div>
+    <div class="follow-section">
+      <button id="followBtn" class="follow-btn" style="display: none;">
+        <i class="fas fa-user-plus"></i> Follow
+      </button>
+    </div>
 
     <div class="follow-stats">
       <div class="follow-stat" id="followersStat">
@@ -878,7 +854,7 @@
     </div>
   </div>
 
-  <!-- Task Panel -->
+
   <div id="taskPanel" class="task-panel">
     <div class="task-panel-header">
       <h3><i class="fas fa-tasks"></i> Daily Tasks</h3>
@@ -889,7 +865,7 @@
 
   <button id="taskToggleBtn" onclick="toggleTaskPanel()"><i class="fas fa-tasks"></i></button>
   
-  <!-- Follow Modals -->
+
   <div class="follow-modal" id="followersModal">
     <div class="follow-modal-content">
       <div class="follow-modal-header">
@@ -921,7 +897,7 @@
     const discordId = new URLSearchParams(window.location.search).get("discord_id");
     const currentUserId = localStorage.getItem("loggedInDiscordId");
 
-    // Header scroll effect
+
     window.addEventListener('scroll', () => {
       const header = document.getElementById('header');
       if (window.scrollY > 50) {
@@ -953,10 +929,10 @@
       const myDiscordId = authData?.user?.user_metadata?.discord_id;
       const profileContainer = document.querySelector(".profile-container") || document.body;
 
-      // Remove existing theme classes
+
       profileContainer.classList.remove("theme-majestic", "theme-fractal", "theme-drags_featured", "theme-black_white");
 
-      // Add new theme
+
       if (user.profile_theme) {
         profileContainer.classList.add(`theme-${user.profile_theme}`);
       }
@@ -1009,7 +985,7 @@
         
         if (!currentUserId) return { isFollowing: false, followers: 0, following: 0 };
         
-        // Check if current user is following target
+
         const { data: isFollowing } = await supabase
           .from("follows")
           .select()
@@ -1017,13 +993,13 @@
           .eq("followed_id", targetId)
           .single();
 
-        // Get follower count
+
         const { count: followers } = await supabase
           .from("follows")
           .select("*", { count: "exact", head: true })
           .eq("followed_id", targetId);
 
-        // Get following count
+
         const { count: following } = await supabase
           .from("follows")
           .select("*", { count: "exact", head: true })
@@ -1057,7 +1033,7 @@
             .single();
 
           if (existingFollow) {
-            // Unfollow
+
             const { error } = await supabase
               .from("follows")
               .delete()
@@ -1066,14 +1042,14 @@
             if (!error) {
               followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
               followBtn.classList.remove("following");
-              // Update followers count
+
               const countElement = document.getElementById("followersCount");
               if (countElement) {
                 countElement.textContent = parseInt(countElement.textContent) - 1;
               }
             }
           } else {
-            // Follow
+
             const { error } = await supabase
               .from("follows")
               .insert([{
@@ -1085,7 +1061,7 @@
             if (!error) {
               followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
               followBtn.classList.add("following");
-              // Update followers count
+
               const countElement = document.getElementById("followersCount");
               if (countElement) {
                 countElement.textContent = parseInt(countElement.textContent) + 1;
@@ -1134,7 +1110,7 @@
         return following || [];
       }
       
-      // Click handlers for followers/following stats
+
       const followersStat = document.getElementById('followersStat');
       const followingStat = document.getElementById('followingStat');
       
@@ -1160,19 +1136,11 @@
         });
       }
 
-
-const backBtn = document.getElementById('backToProfileBtn');
-if (backBtn) {
-  backBtn.style.display = isOwner ? 'none' : 'flex';
-}
-
-
-const followBtn = document.getElementById("followBtn");
-if (followBtn) {
-  followBtn.style.display = isOwner ? "none" : "flex";
-}
+      const followBtn = document.getElementById("followBtn");
+      if (followBtn) {
+        followBtn.style.display = isOwner ? "none" : "flex";
         
-        // Load follow stats
+
         const { isFollowing, followers, following } = await checkFollowStatus(discordId);
         
         const followersCount = document.getElementById("followersCount");
@@ -1204,7 +1172,7 @@ if (followBtn) {
         }
       }
 
-      // Update profile information
+
       const profileAvatar = document.getElementById("profileAvatar");
       const username = document.getElementById("username");
       const displayName = document.getElementById("displayName");
@@ -1227,11 +1195,11 @@ if (followBtn) {
         if (profileCard) profileCard.classList.add("featured");
       }
 
-      // Fix for Fractal contrast
+
       if (user.profile_theme === "fractal") {
         usernameEl.classList.add("username-fractal");
       }
-    
+    }
 
     if (discordId) {
       loadProfile(discordId);
@@ -1277,21 +1245,21 @@ if (followBtn) {
       "1359405784915509232": ["staff"]
     };
 
-    // Follow modal functions
+
     function showFollowModal(modalId, listId, items, title) {
       const modal = document.getElementById(modalId);
       const list = document.getElementById(listId);
       
       if (!modal || !list) return;
       
-      // Update title if needed
+
       const titleElement = modal.querySelector('h3');
       if (titleElement) titleElement.textContent = title;
       
-      // Clear existing items
+
       list.innerHTML = '';
       
-      // Add new items
+
       if (items.length === 0) {
         list.innerHTML = '<li style="padding: 20px; text-align: center; color: #aaa;">No items to display</li>';
       } else {
@@ -1313,16 +1281,16 @@ if (followBtn) {
         });
       }
       
-      // Show modal
+
       modal.classList.add('active');
       
-      // Close button handler
+
       const closeBtn = modal.querySelector('.follow-modal-close');
       if (closeBtn) {
         closeBtn.onclick = () => modal.classList.remove('active');
       }
       
-      // Close when clicking outside
+
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
           modal.classList.remove('active');
@@ -1330,7 +1298,7 @@ if (followBtn) {
       });
     }
 
-    // Initialize follow button if it exists
+
     const followBtn = document.getElementById('followBtn');
     if (followBtn) {
       followBtn.addEventListener('click', () => {
@@ -1388,7 +1356,7 @@ if (followBtn) {
     document.addEventListener("DOMContentLoaded", () => {
       loadTaskPanel();
       
-      // Add animation to profile card on load
+
       const profileCard = document.getElementById('profileCard');
       if (profileCard) {
         setTimeout(() => {
