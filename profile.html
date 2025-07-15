@@ -916,8 +916,8 @@ async function loadFollowers(targetId) {
   const { data: followers, error } = await supabase
     .from("follows")
     .select(`
-      follower_id, 
-      users:follows_follower_id_fkey(username, display_name, avatar_url)
+      follower_id,
+      profiles!follows_follower_id_fkey(username, display_name, avatar_url)
     `)
     .eq("followed_id", targetId)
     .order("created_at", { ascending: false });
@@ -933,8 +933,8 @@ async function loadFollowing(targetId) {
   const { data: following, error } = await supabase
     .from("follows")
     .select(`
-      followed_id, 
-      users:follows_followed_id_fkey(username, display_name, avatar_url)
+      followed_id,
+      profiles!follows_followed_id_fkey(username, display_name, avatar_url)
     `)
     .eq("follower_id", targetId)
     .order("created_at", { ascending: false });
@@ -970,15 +970,16 @@ function showFollowModal(modalId, listId, items, title) {
   const modal = document.getElementById(modalId);
   const list = document.getElementById(listId);
   
-  list.innerHTML = ''; // Clear previous content
+  list.innerHTML = '';
   
   items.forEach(item => {
-    const user = item.users || item;
+    // Handle both query structures
+    const user = item.profiles || item.users || item;
     const li = document.createElement('li');
     li.className = 'follow-modal-item';
     li.innerHTML = `
-      <img src="${user.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discord_id || user.follower_id || user.followed_id >> 22) % 5}.png`}" 
-           class="follow-modal-avatar" alt="${user.username}'s avatar">
+      <img src="${user.avatar_url || `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discord_id >> 22) % 5}.png`}" 
+           class="follow-modal-avatar">
       <div>
         <div class="follow-modal-username">${user.display_name || user.username}</div>
         <div class="follow-modal-displayname">@${user.username}</div>
@@ -987,7 +988,8 @@ function showFollowModal(modalId, listId, items, title) {
     list.appendChild(li);
   });
   
-  modal.classList.add('active'); // Show modal
+  modal.classList.add('active');
+}
   
   // Close button handler
   modal.querySelector('.follow-modal-close').onclick = () => {
