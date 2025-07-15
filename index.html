@@ -1267,10 +1267,6 @@ function showProfileLink() {
     profileLink.style.display = "inline-block";
   }
 }
-    const menu = document.getElementById("userMenu");
-
-document.getElementById("userDropdownBtn").src = localStorage.getItem("avatar_url");
-menu.style.display = "block";
 
 
 
@@ -1322,6 +1318,7 @@ menu.style.display = "block";
 
     document.getElementById("userDropdownBtn").src = data.avatar_url;
     menu.style.display = "block";
+     
   }
 
   loadUser();
