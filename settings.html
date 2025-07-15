@@ -219,6 +219,13 @@ input[type="text"], select {
 .toast.error {
   border-left-color: var(--accent);
 }
+.gradient.black-white {
+  background: linear-gradient(135deg, black, white);
+}
+
+.theme-black_white {
+  background: linear-gradient(135deg, black, white);
+}
 
   </style>
 </head>
@@ -256,6 +263,11 @@ input[type="text"], select {
         </div>
         <span>Drags Featured</span>
       </div>
+      <div class="theme-card" data-theme="black_white">
+  <div class="gradient black-white"></div>
+  <span>Black and White</span>
+</div>
+
     </div>
     <button onclick="closeThemeModal()" class="close-modal">Close</button>
   </div>
@@ -268,6 +280,8 @@ input[type="text"], select {
   <option value="rainbow">Rainbow Gradient</option>
   <option value="glow">Shiny</option>
 </select>
+<label>Glow Color (Only for Glow)</label>
+<input type="color" id="glowColorPicker" value="#ffffff" />
 
 
 <div id="toast" class="toast"></div>
@@ -324,6 +338,7 @@ window.onbeforeunload = () => {
     }
   }
 };
+document.getElementById("glowColorPicker").value = data.username_glow_color || "#ffffff";
 
     }
 
@@ -356,6 +371,15 @@ async function saveSettings() {
     showToast("❌ Failed to save settings.", true);
     console.error(error);
   }
+  const glowColor = document.getElementById("glowColorPicker").value;
+
+await supabase.from("users").update({
+  ...
+  username_effect: usernameEffect,
+  username_glow_color: glowColor
+})
+.eq("discord_id", discordId);
+
 }
 
 
