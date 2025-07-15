@@ -376,7 +376,6 @@ async function saveSettings() {
 await supabase.from("users").update({
   username_effect: usernameEffect,
   username_glow_color: glowColor
-  ...
 })
 .eq("discord_id", discordId);
 
