@@ -650,6 +650,24 @@
 .theme-drags_featured {
   background: linear-gradient(135deg, #1c2e6c, #000000);
 }
+.username-rainbow {
+  background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: rainbowMove 3s linear infinite;
+}
+
+@keyframes rainbowMove {
+  0% { background-position: 0% }
+  100% { background-position: 200% }
+}
+
+.username-glow {
+  color: white;
+  text-shadow: 0 0 8px white;
+}
 
   </style>
 </head>
@@ -912,6 +930,31 @@ async function toggleFollow(targetId) {
     followBtn.disabled = false;
   }
 }
+// Background image overrides
+if (user.page_bg_url) {
+  document.body.style.backgroundImage = `url(${user.page_bg_url})`;
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+} else {
+  // fallback to theme
+  document.body.classList.add(`theme-${user.profile_theme}`);
+}
+
+// Card background
+const card = document.querySelector(".profile-card");
+if (user.card_bg_url) {
+  card.style.backgroundImage = `url(${user.card_bg_url})`;
+  card.style.backgroundSize = "cover";
+  card.style.backgroundPosition = "center";
+}
+const usernameEl = document.getElementById("discordUsername");
+usernameEl.classList.remove("username-rainbow", "username-glow");
+
+if (user.username_effect === "rainbow") {
+  usernameEl.classList.add("username-rainbow");
+} else if (user.username_effect === "glow") {
+  usernameEl.classList.add("username-glow");
+}
 
 async function loadFollowers(targetId) {
   const { data: followers, error } = await supabase
@@ -946,7 +989,7 @@ async function loadFollowing(targetId) {
   }
   return following || [];
 }
-  // ===== ADD THIS CODE ===== //
+  
 // Click handlers for followers/following stats
 document.getElementById('followersStat').addEventListener('click', async () => {
   const discordId = new URLSearchParams(window.location.search).get("discord_id") || 
