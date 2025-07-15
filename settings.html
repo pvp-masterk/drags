@@ -284,15 +284,7 @@ async function saveSettings() {
   const displayName = document.getElementById("displayName").value;
   const bio = document.getElementById("bio").value;
 
-  const { error } = await supabase
-    .from("users")
-    .update({
-      display_name: displayName,
-      bio: bio,
-      badges: badgeOrder, // ✅ Save array
-      profile_theme: selectedTheme
-    })
-    .eq("discord_id", discordId);
+  
 
   const cardBg = document.getElementById("cardBgInput").value;
 const pageBg = document.getElementById("pageBgInput").value;
@@ -301,8 +293,8 @@ const usernameEffect = document.getElementById("usernameEffect").value;
 await supabase
   .from("users")
   .update({
-    display_name,
-    bio,
+    display_name: displayName,
+    bio: bio,
     badges: badgeOrder,
     profile_theme: selectedTheme,
     card_bg_url: cardBg,
