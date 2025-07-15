@@ -32,11 +32,6 @@
             background-color: var(--bg);
             color: var(--text);
             overflow-x: hidden;
-          background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
-    min-height: 100vh;
         }
 
 
@@ -656,49 +651,24 @@
   background: linear-gradient(135deg, #1c2e6c, #000000);
 }
 .username-rainbow {
-  background: linear-gradient(90deg, 
-    #ff0000, #ff8000, #ffff00, #00ff00, 
-    #0000ff, #4b0082, #9400d3, #ff0000);
-  background-size: 400% 400%;
+  background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 200% auto;
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
-  animation: rainbowMove 4s linear infinite;
-  display: inline-block;
-  padding: 0 2px;
+  animation: rainbowMove 3s linear infinite;
 }
 
 @keyframes rainbowMove {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+  0% { background-position: 0% }
+  100% { background-position: 200% }
 }
 
 .username-glow {
   color: white;
-  text-shadow: 
-    0 0 5px #fff,
-    0 0 10px #fff,
-    0 0 15px var(--primary),
-    0 0 20px var(--primary);
-  animation: glowPulse 2s infinite alternate;
+  text-shadow: 0 0 8px white;
 }
 
-@keyframes glowPulse {
-  from {
-    text-shadow: 
-      0 0 5px #fff,
-      0 0 10px #fff,
-      0 0 15px var(--primary),
-      0 0 20px var(--primary);
-  }
-  to {
-    text-shadow: 
-      0 0 10px #fff,
-      0 0 20px #fff,
-      0 0 30px var(--primary),
-      0 0 40px var(--primary);
-  }
-}
   </style>
 </head>
 <body>
@@ -1061,11 +1031,10 @@ async function loadProfile(discordId) {
   if (usernameEl) {
     usernameEl.classList.remove("username-rainbow", "username-glow");
 
-   if (user.username_effect === "rainbow") {
-  usernameEl.classList.add("username-rainbow");
-} else if (user.username_effect === "glow") {
-  usernameEl.classList.add("username-glow");
-}
+    if (user.username_effect === "rainbow") {
+      usernameEl.classList.add("username-rainbow");
+    } else if (user.username_effect === "glow") {
+      usernameEl.classList.add("username-glow");
     }
   }
 
@@ -1091,7 +1060,7 @@ async function loadProfile(discordId) {
     const profileCard = document.getElementById("profileCard");
     if (profileCard) profileCard.classList.add("featured");
   }
-
+}
 
 if (discordId) {
   loadProfile(discordId);
