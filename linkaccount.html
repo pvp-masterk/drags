@@ -1,37 +1,299 @@
 <html>
 <head>
-   <link rel="icon" href="drags.png" type="image/png">
+  <link rel="icon" href="drags.png" type="image/png">
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <style>
+    :root {
+      --primary-color: #5865F2;
+      --secondary-color: #404EED;
+      --dark-color: #23272A;
+      --light-color: #FFFFFF;
+      --accent-color: #00B0F4;
+    }
+    
+    body {
+      font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, var(--dark-color) 0%, #1a1d21 100%);
+      color: var(--light-color);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    
+    header {
+      background-color: rgba(35, 39, 42, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo img {
+      height: 40px;
+    }
+    
+    .logo h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 20px;
+    }
+    
+    .card {
+      background: rgba(47, 49, 54, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    h1 {
+      color: var(--light-color);
+      margin-bottom: 1.5rem;
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .tutorial-section {
+      margin-top: 3rem;
+    }
+    
+    .tutorial-card {
+      background: rgba(47, 49, 54, 0.6);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--accent-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .tutorial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .tutorial-card h3 {
+      color: var(--accent-color);
+      margin-top: 0;
+    }
+    
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .step-number {
+      background-color: var(--primary-color);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .feature {
+      background: rgba(47, 49, 54, 0.6);
+      padding: 1.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .feature:hover {
+      background: rgba(47, 49, 54, 0.8);
+      transform: translateY(-5px);
+    }
+    
+    .feature h3 {
+      color: var(--accent-color);
+    }
+    
+    .glow {
+      animation: glow 2s infinite alternate;
+    }
+    
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 5px rgba(88, 101, 242, 0.5);
+      }
+      to {
+        box-shadow: 0 0 20px rgba(88, 101, 242, 0.8);
+      }
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <div class="logo">
+      <img src="drags.png" alt="Drags Logo">
+      <h1>Drags Account Linking</h1>
+    </div>
+  </header>
 
   <div class="container">
-    <div class="card slide-up">
-      <h1>Login with Discord</h1>
+    <div class="card animate__animated animate__fadeInUp animate__faster">
+      <h1>Link Your Discord Account</h1>
+      <p>Connect your Discord account to access all features</p>
       <a href="https://discord.com/api/oauth2/authorize?client_id=1392907277463457792&redirect_uri=https%3A%2F%2Fdragswebapp.vercel.app%2Fapi%2Fauth&response_type=code&scope=identify">
-        <button>Login</button>
+        <button class="glow pulse">Login with Discord</button>
       </a>
     </div>
+
+    <div class="tutorial-section animate__animated animate__fadeIn">
+      <h2>How to Link Your Account</h2>
+      <div class="tutorial-card">
+        <h3>Simple Step-by-Step Guide</h3>
+        
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            Click the "Login with Discord" button above
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            You'll be redirected to Discord's authorization page
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            Log in to Discord if you're not already logged in
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            Review the permissions and click "Authorize"
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            You'll be redirected back and your account will be linked!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature animate__animated animate__fadeInLeft">
+        <h3>Why Link Your Account?</h3>
+        <p>Linking your Discord account allows for seamless authentication and personalized experience across our platform.</p>
+      </div>
+      
+      <div class="feature animate__animated animate__fadeInUp">
+        <h3>Data Security</h3>
+        <p>We only request basic profile information. Your data is always secure and never shared with third parties.</p>
+      </div>
+      
+      <div class="feature animate__animated animate__fadeInRight">
+        <h3>Easy Management</h3>
+        <p>You can unlink your account at any time through Discord's authorized apps settings.</p>
+      </div>
+    </div>
   </div>
- <script>
-   
-   const {
-  data: { user },
-} = await supabase.auth.getUser();
 
+  <script>
 
-await supabase.from("users").upsert({
-  id: user.id,  
-  discord_id: discordUser.id,
-  username: discordUser.username,
-  avatar_url: ..., 
-  ...
-   
-});
-   localStorage.setItem("loggedInDiscordId", discordUser.id);
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+          await supabase.from("users").upsert({
+            id: user.id,  
+            discord_id: discordUser.id,
+            username: discordUser.username,
+            avatar_url: discordUser.avatar 
+          });
+          
+          localStorage.setItem("loggedInDiscordId", discordUser.id);
+          
 
+          const button = document.querySelector('button');
+          button.classList.remove('pulse');
+          button.classList.add('animate__animated', 'animate__tada');
+          button.textContent = 'Success! Redirecting...';
+          
 
- </script>
-
+          setTimeout(() => {
+            window.location.href = '/index';
+          }, 1500);
+        }
+      } catch (error) {
+        console.error('Error during authentication:', error);
+      }
+    });
+  </script>
 </body>
 </html>
