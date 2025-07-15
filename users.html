@@ -534,8 +534,8 @@
 
     // Example badge data - you would replace this with actual data from your database
     const userBadges = {
-      "1303491410472865793": ["premium", "staff", "developer"],
-      "1392907277463457792": ["premium", "booster"],
+      "1303491410472865793": ["owner", "staff", "developer"],
+      "1392907277463457792": ["owner", "booster"],
       "1359405784915509292": ["staff", "booster"]
     };
 
@@ -616,12 +616,12 @@
               let badgeClass = 'badge';
               
               switch(badge) {
-                case 'premium':
+                case 'owner':
                   icon = '<i class="fas fa-crown"></i>';
                   badgeClass += ' badge-premium';
                   break;
                 case 'staff':
-                  icon = '<i class="https://cdn3.emoji.gg/emojis/1415-moderator.png"></i>';
+                  icon = '<i class="fas fa-shield-alt"></i>';
                   badgeClass += ' badge-staff';
                   break;
                 case 'booster':
