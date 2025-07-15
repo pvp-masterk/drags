@@ -193,6 +193,32 @@ input[type="text"], select {
   color: white;
   border: none;
 }
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #2e2e3e;
+  color: white;
+  padding: 12px 20px;
+  border-left: 6px solid var(--primary);
+  border-radius: 10px;
+  font-size: 14px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.toast.error {
+  border-left-color: var(--accent);
+}
 
   </style>
 </head>
@@ -244,6 +270,7 @@ input[type="text"], select {
 </select>
 
 
+<div id="toast" class="toast"></div>
 
 
     <button class="save-btn" onclick="saveSettings()">Save Settings</button>
@@ -258,6 +285,7 @@ input[type="text"], select {
 
     const discordId = localStorage.getItem("loggedInDiscordId");
 let badgeOrder = [];
+let originalSettings = {};
 
     async function loadSettings() {
       const { data, error } = await supabase
@@ -272,31 +300,64 @@ let badgeOrder = [];
 document.getElementById("usernameEffect").value = data.username_effect || "";
 
       }
+      originalSettings = {
+  displayName: data.display_name || "",
+  bio: data.bio || "",
+  effect: data.username_effect || "",
+  theme: data.profile_theme || "",
+  badges: JSON.stringify(data.badges || [])
+};
+window.onbeforeunload = () => {
+  const current = {
+    displayName: document.getElementById("displayName").value,
+    bio: document.getElementById("bio").value,
+    cardBg: document.getElementById("cardBgInput").value,
+    pageBg: document.getElementById("pageBgInput").value,
+    effect: document.getElementById("usernameEffect").value,
+    theme: selectedTheme,
+    badges: JSON.stringify(badgeOrder)
+  };
+
+  for (let key in current) {
+    if (current[key] !== originalSettings[key]) {
+      return "You have unsaved changes!";
+    }
+  }
+};
+
     }
 
 async function saveSettings() {
   const displayName = document.getElementById("displayName").value;
   const bio = document.getElementById("bio").value;
+  const usernameEffect = document.getElementById("usernameEffect").value;
 
-  
+  const { error } = await supabase
+    .from("users")
+    .update({
+      display_name: displayName,
+      bio,
+      badges: badgeOrder,
+      profile_theme: selectedTheme,
+      username_effect: usernameEffect
+    })
+    .eq("discord_id", discordId);
 
-  
-const usernameEffect = document.getElementById("usernameEffect").value;
-
-await supabase
-  .from("users")
-  .update({
-    display_name: displayName,
-    bio: bio,
-    badges: badgeOrder,
-    profile_theme: selectedTheme,
-    username_effect: usernameEffect
-  })
-  .eq("discord_id", discordId);
-
-
- 
+  if (!error) {
+    showToast("✅ Settings saved successfully.");
+    originalSettings = {
+      displayName, bio,
+      cardBg, pageBg,
+      effect: usernameEffect,
+      theme: selectedTheme,
+      badges: JSON.stringify(badgeOrder)
+    };
+  } else {
+    showToast("❌ Failed to save settings.", true);
+    console.error(error);
+  }
 }
+
 
 
 
@@ -374,6 +435,14 @@ function formatThemeName(id) {
   if (id === "fractal") return "Fractal";
   if (id === "drags_featured") return "Drags Featured";
   return id;
+}
+function showToast(message, isError = false) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = "toast show" + (isError ? " error" : "");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
 }
 
   </script>
