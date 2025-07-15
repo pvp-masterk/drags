@@ -238,6 +238,7 @@
     );
 
     const discordId = localStorage.getItem("loggedInDiscordId");
+let badgeOrder = [];
 
     async function loadSettings() {
       const { data, error } = await supabase
@@ -256,7 +257,7 @@
   const displayName = document.getElementById("displayName").value;
   const bio = document.getElementById("bio").value;
 
- const { error } = await supabase
+ await supabase
   .from("users")
   .update({
     display_name: displayName,
@@ -267,6 +268,8 @@
   .eq("discord_id", discordId);
 
 
+
+
   if (!error) {
     alert("✅ Settings saved!");
   } else {
@@ -275,10 +278,11 @@
   }
 }
 
-loadBadges();
+
 
     loadSettings();
-    let badgeOrder = [];
+   loadBadges();
+
 
 async function loadBadges() {
   const { data, error } = await supabase
@@ -288,13 +292,19 @@ async function loadBadges() {
     .single();
 
   badgeOrder = data?.badges || [];
-
   renderBadgeSection();
 }
+
+ 
 
 function renderBadgeSection() {
   const section = document.getElementById("badgeSection");
   section.innerHTML = "";
+
+  if (!badgeOrder || badgeOrder.length === 0) {
+    section.innerHTML = "<p style='color:gray;'>No badges selected.</p>";
+    return;
+  }
 
   badgeOrder.forEach((badge, index) => {
     const div = document.createElement("div");
@@ -309,10 +319,11 @@ function renderBadgeSection() {
 }
 
 function moveBadge(index, direction) {
-  const targetIndex = index + direction;
-  [badgeOrder[index], badgeOrder[targetIndex]] = [badgeOrder[targetIndex], badgeOrder[index]];
+  const newIndex = index + direction;
+  [badgeOrder[index], badgeOrder[newIndex]] = [badgeOrder[newIndex], badgeOrder[index]];
   renderBadgeSection();
 }
+
 let selectedTheme = "";
 
 function openThemeModal() {
