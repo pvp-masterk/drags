@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -748,76 +749,14 @@
   background: var(--primary-dark);
 }
 
-.global-notice {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: var(--accent);
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-  font-weight: bold;
-  z-index: 9999;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-  animation: slideDown 0.4s ease;
-}
 
-@keyframes slideDown {
-  from { transform: translateY(-100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.announcement-popup {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 320px;
-  background: var(--card-bg);
-  color: white;
-  padding: 16px;
-  border-radius: 16px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
-  z-index: 9999;
-  animation: popupFade 0.4s ease;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.announcement-popup img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-}
-
-.announcement-popup .popup-content {
-  flex: 1;
-}
-
-.announcement-popup .popup-content strong {
-  font-size: 14px;
-  display: block;
-}
-
-@keyframes popupFade {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
     </style>
 </head>
 <body>
   
 
-    <div id="globalNotice" class="global-notice" style="display: none;"></div>
-<div id="announcementPopup" class="announcement-popup" style="display: none;"></div>
-
+    
 
    
     <header id="header">
@@ -1330,7 +1269,8 @@ function showProfileLink() {
 }
     
 
-
+document.getElementById("userDropdownBtn").src = data.avatar_url;
+menu.style.display = "block";
 
 
 
@@ -1358,41 +1298,6 @@ function showProfileLink() {
       .single();
 
     console.log("Fetched user from Supabase:", data);
-      
-document.getElementById("userDropdownBtn").src = data.avatar_url;
-menu.style.display = "block";
-      
-    supabase
-  .channel('live-announcements')
-  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'announcements' }, payload => {
-    showLiveAnnouncement(payload.new);
-  })
-  .subscribe();
-
-async function showLiveAnnouncement(data) {
-  // 🔁 Fetch admin info from users table
-  const { data: adminUser } = await supabase
-    .from("users")
-    .select("username, avatar_url")
-    .eq("discord_id", data.by_user_id)
-    .single();
-
-  const popup = document.getElementById("announcementPopup");
-  popup.innerHTML = `
-    <img src="${adminUser?.avatar_url}" alt="Admin Avatar" />
-    <div class="popup-content">
-      <strong>${adminUser?.username || "Admin"}</strong>
-      <div>${data.message}</div>
-    </div>
-  `;
-  popup.style.display = "flex";
-
-  setTimeout(() => {
-    popup.style.display = "none";
-  }, 6000);
-}
-
-
 
     const menu = document.getElementById("userMenu");
     const dropdown = document.getElementById("dropdownMenu");
@@ -1417,9 +1322,13 @@ async function showLiveAnnouncement(data) {
 
     document.getElementById("userDropdownBtn").src = data.avatar_url;
     menu.style.display = "block";
+  }
 
-const avatarBtn = document.getElementById("userDropdownBtn");
+  loadUser();
+
   
+  const avatarBtn = document.getElementById("userDropdownBtn");
+  const dropdown = document.getElementById("dropdownMenu");
 
   avatarBtn?.addEventListener("click", () => {
     dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
@@ -1440,13 +1349,6 @@ async function logSiteVisit() {
   });
 }
 logSiteVisit();
-      
-  }
-
-  loadUser();
-
-  
-  
 
 
 </script>
