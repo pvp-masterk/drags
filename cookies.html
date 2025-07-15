@@ -5,79 +5,205 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cookie Policy - Drags</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Same styles as terms.html */
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --background: #1e1e2e;
+            --background-light: #2a2a3a;
+            --text: #f5f5f5;
+            --text-light: #d1d1d1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #1e1e2e;
-            color: #f5f5f5;
+            background-color: var(--background);
+            color: var(--text);
             line-height: 1.6;
-            padding: 0;
-            margin: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
         
-        .legal-container {
-            max-width: 800px;
-            margin: 100px auto;
-            padding: 0 20px;
+        /* Animated background elements */
+        .bg-blob {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(88,101,242,0.15) 0%, rgba(88,101,242,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 15s infinite ease-in-out;
         }
         
-        h1 {
-            color: #5865F2;
-            margin-bottom: 30px;
+        .bg-blob:nth-child(1) {
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
         }
         
-        h2 {
-            color: #5865F2;
-            margin-top: 40px;
-            margin-bottom: 15px;
+        .bg-blob:nth-child(2) {
+            bottom: -150px;
+            right: -100px;
+            animation-delay: 3s;
         }
         
-        p {
-            margin-bottom: 15px;
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(50px, 50px) rotate(5deg);
+            }
+            50% {
+                transform: translate(0, 100px) rotate(0deg);
+            }
+            75% {
+                transform: translate(-50px, 50px) rotate(-5deg);
+            }
         }
         
-        ul {
-            margin-bottom: 20px;
-            padding-left: 20px;
-        }
-        
-        li {
-            margin-bottom: 10px;
-        }
-        
+        /* Header styles */
         header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            padding: 20px 10%;
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: rgba(30, 30, 46, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(30, 30, 46, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            padding: 10px 5%;
+            background: rgba(30, 30, 46, 0.95);
         }
         
         .logo {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            color: #f5f5f5;
+            color: var(--text);
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 10px;
+            transition: all 0.3s ease;
         }
         
         .logo i {
-            color: #5865F2;
+            color: var(--primary);
+            transition: all 0.3s ease;
         }
         
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+        
+        .logo:hover i {
+            transform: rotate(15deg);
+        }
+        
+        /* Main content */
+        .legal-container {
+            max-width: 800px;
+            margin: 120px auto 60px;
+            padding: 0 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards 0.3s;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-top: 40px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        h2:hover {
+            transform: translateX(5px);
+        }
+        
+        p {
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+        
+        ul {
+            margin-bottom: 25px;
+            padding-left: 25px;
+            list-style-type: none;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 25px;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        
+        li::before {
+            content: '•';
+            color: var(--primary);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+        
+        li:hover {
+            transform: translateX(5px);
+            color: var(--text);
+        }
+        
+        /* Buttons */
         .back-button {
-            background: #5865F2;
+            background: var(--primary);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 30px;
             font-weight: 600;
             transition: all 0.3s ease;
@@ -85,55 +211,295 @@
             cursor: pointer;
             font-size: 16px;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
         }
         
         .back-button:hover {
-            background: #4752C4;
+            background: var(--primary-dark);
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+            box-shadow: 0 10px 25px rgba(88, 101, 242, 0.4);
+        }
+        
+        .back-button i {
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover i {
+            transform: translateX(-3px);
+        }
+        
+        /* Cookie consent banner */
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--background-light);
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .cookie-consent.active {
+            transform: translateY(0);
+        }
+        
+        .cookie-consent p {
+            margin: 0;
+            flex: 1;
+            min-width: 250px;
+            padding-right: 20px;
+        }
+        
+        .cookie-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .cookie-btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .accept-btn {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .accept-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .decline-btn {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--text-light);
+        }
+        
+        .decline-btn:hover {
+            color: var(--text);
+            border-color: var(--text);
+        }
+        
+        /* Progress indicator */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 101;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.1s ease;
+            border-radius: 0 2px 2px 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .legal-container {
+                margin: 100px auto 40px;
+                padding: 0 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .cookie-consent {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .cookie-consent p {
+                padding-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .cookie-buttons {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <a href="index.html" class="logo"><i class="fab fa-discord"></i> Drags</a>
+    <!-- Animated background elements -->
+    <div class="bg-blob"></div>
+    <div class="bg-blob"></div>
+    
+    <!-- Progress indicator -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <!-- Header -->
+    <header id="mainHeader">
+        <a href="index" class="logo"><i class="fab fa-discord"></i> Drags</a>
         <nav>
-            <a href="index.html" class="back-button">Back to Home</a>
+            <a href="index" class="back-button"><i class="fas fa-chevron-left"></i> Back to Home</a>
         </nav>
     </header>
 
+    <!-- Main content -->
     <div class="legal-container">
         <h1>Cookie Policy</h1>
         <p>Last Updated: July 10, 2025</p>
         
         <h2>1. What Are Cookies</h2>
-        <p>Cookies are small text files stored on your device when you visit websites...</p>
+        <p>Cookies are small text files stored on your device when you visit websites. They help websites remember information about your visit, which can make it easier to visit the site again and make the site more useful to you.</p>
         
         <h2>2. How We Use Cookies</h2>
         <p>Our website may use cookies to:</p>
         <ul>
-            <li>Remember your preferences</li>
-            <li>Analyze website traffic</li>
-            <li>Improve user experience</li>
+            <li>Remember your preferences and settings for future visits</li>
+            <li>Analyze website traffic and user behavior to improve our services</li>
+            <li>Provide personalized content and recommendations</li>
+            <li>Enable essential website functionality and security features</li>
+            <li>Measure the effectiveness of our marketing campaigns</li>
         </ul>
         
-        <h2>3. Types of Cookies</h2>
-        <p>We may use:</p>
+        <h2>3. Types of Cookies We Use</h2>
+        <p>We may use several types of cookies:</p>
         <ul>
-            <li>Essential cookies (necessary for website function)</li>
-            <li>Analytics cookies (to understand usage patterns)</li>
-            <li>Preference cookies (to remember your settings)</li>
+            <li><strong>Essential cookies:</strong> Necessary for the website to function properly (e.g., authentication, security)</li>
+            <li><strong>Performance cookies:</strong> Collect information about how visitors use our website</li>
+            <li><strong>Functional cookies:</strong> Remember your preferences and choices (e.g., language, region)</li>
+            <li><strong>Targeting cookies:</strong> Used to deliver content relevant to your interests</li>
+            <li><strong>Third-party cookies:</strong> Set by services we use (e.g., analytics, embedded content)</li>
         </ul>
         
         <h2>4. Managing Cookies</h2>
-        <p>You can control cookies through your browser settings...</p>
+        <p>You can control and/or delete cookies as you wish. Most web browsers allow some control of most cookies through the browser settings. You can:</p>
+        <ul>
+            <li>Delete all cookies from your browser settings</li>
+            <li>Block all cookies in your browser settings</li>
+            <li>Set your browser to prompt you before accepting cookies</li>
+            <li>Delete specific cookies that have already been set</li>
+        </ul>
+        <p>For more detailed control, you can manage cookies through your browser's developer tools.</p>
         
         <h2>5. Changes to This Policy</h2>
-        <p>We may update this policy as our practices change...</p>
+        <p>We may update this Cookie Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We will notify you of any material changes by posting the new policy on our website with a new "Last Updated" date.</p>
         
-        <a href="index.html" class="back-button">Back to Home</a>
+        <h2>6. Contact Us</h2>
+        <p>If you have any questions about our use of cookies or this Cookie Policy, please contact us at privacy@drags.example.com.</p>
+        
+        <a href="index.html" class="back-button"><i class="fas fa-chevron-left"></i> Back to Home</a>
     </div>
+    
+    <!-- Cookie consent banner -->
+    <div class="cookie-consent" id="cookieConsent">
+        <p>We use cookies to enhance your experience on our website. By continuing to browse, you agree to our use of cookies as described in our <a href="cookies.html" style="color: var(--primary);">Cookie Policy</a>.</p>
+        <div class="cookie-buttons">
+            <button class="cookie-btn accept-btn" id="acceptCookies">Accept All</button>
+            <button class="cookie-btn decline-btn" id="declineCookies">Decline</button>
+        </div>
+    </div>
+    
+    <script>
+        // Scroll progress indicator
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollProgress = (scrollTop / scrollHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollProgress + '%';
+        });
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Animate elements when they come into view
+        const animateOnScroll = function() {
+            const elements = document.querySelectorAll('h2, li');
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateX(0)';
+                }
+            });
+        };
+        
+        // Set initial state for animated elements
+        document.querySelectorAll('h2, li').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateX(-20px)';
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+        
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+        
+        // Cookie consent banner
+        document.addEventListener('DOMContentLoaded', function() {
+            const cookieConsent = document.getElementById('cookieConsent');
+            const acceptCookies = document.getElementById('acceptCookies');
+            const declineCookies = document.getElementById('declineCookies');
+            
+            // Check if consent has already been given
+            if (!localStorage.getItem('cookieConsent')) {
+                setTimeout(() => {
+                    cookieConsent.classList.add('active');
+                }, 2000);
+            }
+            
+            // Accept cookies
+            acceptCookies.addEventListener('click', function() {
+                localStorage.setItem('cookieConsent', 'accepted');
+                cookieConsent.classList.remove('active');
+            });
+            
+            // Decline cookies
+            declineCookies.addEventListener('click', function() {
+                localStorage.setItem('cookieConsent', 'declined');
+                cookieConsent.classList.remove('active');
+                // Here you would implement actual cookie blocking functionality
+            });
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
