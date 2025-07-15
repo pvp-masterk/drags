@@ -66,11 +66,13 @@
 
     async function submitAnnouncement() {
       const message = document.getElementById("announcementText").value;
+const discordId = localStorage.getItem("loggedInDiscordId"); // or fetch from Supabase
 
-      const { error } = await supabase
-        .from("announcements")
-        .insert({ message });
+await supabase
+  .from("announcements")
+  .insert({ message, by_user_id: discordId });
 
+    
       if (!error) {
         alert("✅ Announcement sent!");
         document.getElementById("announcementText").value = "";
