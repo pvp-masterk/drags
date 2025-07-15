@@ -668,6 +668,13 @@
   color: white;
   text-shadow: 0 0 8px white;
 }
+.username-glow {
+  text-shadow: 0 0 10px white;
+}
+
+.username-fractal {
+  color: black !important;
+}
 
   </style>
 </head>
@@ -1045,6 +1052,26 @@ async function loadProfile(discordId) {
     const profileCard = document.getElementById("profileCard");
     if (profileCard) profileCard.classList.add("featured");
   }
+  const usernameEl = document.getElementById("discordUsername");
+usernameEl.classList.remove("username-rainbow", "username-glow", "username-fractal");
+
+// Apply glow
+if (user.username_effect === "glow") {
+  usernameEl.classList.add("username-glow");
+  const glowColor = user.username_glow_color || "#ffffff";
+  usernameEl.style.textShadow = `0 0 8px ${glowColor}, 0 0 12px ${glowColor}`;
+}
+
+// Apply rainbow
+if (user.username_effect === "rainbow") {
+  usernameEl.classList.add("username-rainbow");
+}
+
+// Fix for Fractal contrast
+if (user.profile_theme === "fractal") {
+  usernameEl.classList.add("username-fractal");
+}
+
 }
 
 if (discordId) {
