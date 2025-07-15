@@ -767,6 +767,48 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
+.announcement-popup {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 320px;
+  background: var(--card-bg);
+  color: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  z-index: 9999;
+  animation: popupFade 0.4s ease;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.announcement-popup img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.announcement-popup .popup-content {
+  flex: 1;
+}
+
+.announcement-popup .popup-content strong {
+  font-size: 14px;
+  display: block;
+}
+
+@keyframes popupFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
     </style>
 </head>
@@ -774,6 +816,7 @@
   
 
     <div id="globalNotice" class="global-notice" style="display: none;"></div>
+<div id="announcementPopup" class="announcement-popup" style="display: none;"></div>
 
 
    
@@ -1317,21 +1360,36 @@ menu.style.display = "block";
 
     console.log("Fetched user from Supabase:", data);
 
-      async function loadGlobalAnnouncement() {
-  const { data, error } = await supabase
-    .from("announcements")
-    .select("message")
-    .order("updated_at", { ascending: false })
-    .limit(1)
+    supabase
+  .channel('live-announcements')
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'announcements' }, payload => {
+    showLiveAnnouncement(payload.new);
+  })
+  .subscribe();
+
+async function showLiveAnnouncement(data) {
+  // 🔁 Fetch admin info from users table
+  const { data: adminUser } = await supabase
+    .from("users")
+    .select("username, avatar_url")
+    .eq("discord_id", data.by_user_id)
     .single();
 
-  if (data?.message) {
-    const box = document.getElementById("globalNotice");
-    box.textContent = data.message;
-    box.style.display = "block";
-  }
+  const popup = document.getElementById("announcementPopup");
+  popup.innerHTML = `
+    <img src="${adminUser?.avatar_url}" alt="Admin Avatar" />
+    <div class="popup-content">
+      <strong>${adminUser?.username || "Admin"}</strong>
+      <div>${data.message}</div>
+    </div>
+  `;
+  popup.style.display = "flex";
+
+  setTimeout(() => {
+    popup.style.display = "none";
+  }, 6000);
 }
-loadGlobalAnnouncement();
+
 
 
     const menu = document.getElementById("userMenu");
