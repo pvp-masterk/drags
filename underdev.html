@@ -333,7 +333,7 @@
             }
         }
         
-        /* Responsive adjustments */
+      
         @media (max-width: 768px) {
             header {
                 padding: 1rem;
@@ -374,7 +374,7 @@
     <div class="main-content">
         <div class="container">
             <div class="floating-elements">
-                <!-- Floating elements will be added by JavaScript -->
+              
             </div>
             
             <div class="construction-icon">
@@ -401,7 +401,7 @@
     </div>
 
     <script>
-        // Create floating elements
+    
         document.addEventListener('DOMContentLoaded', function() {
             const floatingContainer = document.querySelector('.floating-elements');
             const colors = ['rgba(88, 101, 242, 0.1)', 'rgba(87, 242, 135, 0.1)', 'rgba(255, 115, 105, 0.1)'];
@@ -410,7 +410,7 @@
                 const element = document.createElement('div');
                 element.classList.add('floating-element');
                 
-                // Random properties
+             
                 const size = Math.random() * 30 + 10;
                 const posX = Math.random() * 100;
                 const delay = Math.random() * 15;
@@ -428,7 +428,7 @@
                 floatingContainer.appendChild(element);
             }
             
-            // Add a subtle cursor follower effect
+          
             const container = document.querySelector('.container');
             container.addEventListener('mousemove', (e) => {
                 const rect = container.getBoundingClientRect();
