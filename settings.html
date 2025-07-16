@@ -6,7 +6,6 @@
   <link rel="icon" href="drags.png" type="image/png">
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #5865F2;
@@ -20,168 +19,40 @@
       --toast-success: #57F287;
       --toast-error: #ED4245;
       --toast-warning: #FEE75C;
-      --header-height: 180px;
     }
 
     * {
       box-sizing: border-box;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     body {
       font-family: 'Poppins', sans-serif;
       background: var(--bg);
       color: var(--text);
-      padding: 0;
-      margin: 0;
+      padding: 40px;
+      animation: fadeIn 0.8s ease;
       min-height: 100vh;
       overflow-x: hidden;
-      animation: fadeIn 1s ease;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Enhanced Header */
-    .settings-header {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      height: var(--header-height);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-      animation: slideDown 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-
-    @keyframes slideDown {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(0); }
-    }
-
-    .settings-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, 
-        rgba(255,255,255,0.1) 0%, 
-        rgba(255,255,255,0) 50%, 
-        rgba(255,255,255,0.1) 100%);
-      animation: shimmer 8s infinite linear;
-      opacity: 0.3;
-    }
-
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-
-    .settings-header h1 {
-      font-size: 2.5rem;
-      margin: 0;
-      color: white;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      position: relative;
-      z-index: 2;
-      animation: fadeInUp 0.8s ease both 0.3s;
-    }
-
-    .settings-header p {
-      font-size: 1rem;
-      margin: 10px 0 0;
-      color: rgba(255,255,255,0.9);
-      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
-      position: relative;
-      z-index: 2;
-      animation: fadeInUp 0.8s ease both 0.4s;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .header-decoration {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      opacity: 0.1;
-    }
-
-    .header-circle {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.8), transparent 70%);
-      animation: float 15s infinite ease-in-out;
-    }
-
-    .circle-1 {
-      width: 150px;
-      height: 150px;
-      top: -50px;
-      left: -50px;
-      animation-delay: 0s;
-    }
-
-    .circle-2 {
-      width: 200px;
-      height: 200px;
-      bottom: -80px;
-      right: -80px;
-      animation-delay: 2s;
-    }
-
-    .circle-3 {
-      width: 100px;
-      height: 100px;
-      top: 30%;
-      right: 20%;
-      animation-delay: 4s;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0); }
-      25% { transform: translate(10px, 10px); }
-      50% { transform: translate(-10px, 5px); }
-      75% { transform: translate(5px, -10px); }
-    }
-
-    /* Main Content */
-    .main-content {
-      padding: 30px;
-      margin-top: calc(var(--header-height) - 50px);
-      position: relative;
-      z-index: 3;
-    }
-
     .settings-container {
-      max-width: 700px;
-      margin: 0 auto 50px;
+      max-width: 600px;
+      margin: auto;
       background: var(--card-bg);
       padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       transform: translateY(20px);
       opacity: 0;
       animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.2s;
       position: relative;
       overflow: hidden;
-      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .settings-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.4);
     }
 
     .settings-container::before {
@@ -216,12 +87,6 @@
       position: relative;
       display: inline-block;
       width: 100%;
-      animation: textGlow 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes textGlow {
-      from { text-shadow: 0 0 5px rgba(88, 101, 242, 0.5); }
-      to { text-shadow: 0 0 15px rgba(88, 101, 242, 0.8); }
     }
 
     .settings-container h2::after {
@@ -234,12 +99,6 @@
       height: 3px;
       background: var(--primary);
       border-radius: 3px;
-      animation: linePulse 2s ease-in-out infinite;
-    }
-
-    @keyframes linePulse {
-      0%, 100% { width: 50px; }
-      50% { width: 70px; }
     }
 
     label {
@@ -249,16 +108,6 @@
       animation: fadeIn 0.6s ease forwards;
       color: #d1d1d1;
       font-size: 14px;
-      transform: translateX(-10px);
-      opacity: 0;
-      animation: slideInRight 0.5s ease forwards;
-    }
-
-    @keyframes slideInRight {
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
     }
 
     input, textarea, select {
@@ -272,16 +121,6 @@
       transition: all 0.3s ease;
       font-family: 'Poppins', sans-serif;
       font-size: 14px;
-      transform: translateY(5px);
-      opacity: 0;
-      animation: slideInUp 0.5s ease forwards;
-    }
-
-    @keyframes slideInUp {
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
     }
 
     input:focus, textarea:focus, select:focus {
@@ -316,14 +155,11 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transform: translateY(20px);
-      opacity: 0;
-      animation: slideInUp 0.5s ease forwards 0.3s;
     }
 
     .save-btn:hover {
       background: var(--primary-dark);
-      transform: translateY(-3px) scale(1.02);
+      transform: translateY(-3px);
       box-shadow: 0 8px 15px rgba(88, 101, 242, 0.3);
     }
 
@@ -371,12 +207,6 @@
       margin-top: 10px;
       animation: fadeIn 0.6s ease forwards;
       min-height: 60px;
-      transform: scale(0.98);
-      transition: transform 0.3s ease;
-    }
-
-    .badge-section:hover {
-      transform: scale(1);
     }
 
     .badge-item {
@@ -451,14 +281,11 @@
       gap: 8px;
       width: 100%;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      transform: translateY(5px);
-      opacity: 0;
-      animation: slideInUp 0.5s ease forwards 0.2s;
     }
 
     .select-theme-btn:hover {
       background: var(--primary-dark);
-      transform: translateY(-3px) scale(1.02);
+      transform: translateY(-3px);
       box-shadow: 0 8px 15px rgba(88, 101, 242, 0.3);
     }
 
@@ -524,7 +351,6 @@
       height: 3px;
       background: var(--primary);
       border-radius: 3px;
-      animation: linePulse 2s ease-in-out infinite;
     }
 
     .theme-options {
@@ -555,12 +381,6 @@
     .theme-card.selected {
       border-color: var(--secondary);
       box-shadow: 0 0 0 3px rgba(87, 242, 135, 0.3);
-      animation: pulseBorder 2s infinite;
-    }
-
-    @keyframes pulseBorder {
-      0%, 100% { box-shadow: 0 0 0 3px rgba(87, 242, 135, 0.3); }
-      50% { box-shadow: 0 0 0 6px rgba(87, 242, 135, 0.1); }
     }
 
     .gradient {
@@ -634,9 +454,6 @@
       border-radius: 10px;
       transition: all 0.3s ease;
       cursor: pointer;
-      transform: translateX(-10px);
-      opacity: 0;
-      animation: slideInRight 0.5s ease forwards;
     }
 
     .effect-option:hover {
@@ -662,13 +479,6 @@
 
     .effect-option input[type="checkbox"]:checked {
       background: var(--primary);
-      animation: pulseCheckbox 0.5s ease;
-    }
-
-    @keyframes pulseCheckbox {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
     }
 
     .effect-option input[type="checkbox"]:checked::after {
@@ -816,7 +626,7 @@
 
     .close-modal:hover {
       background: #c03939;
-      transform: translateY(-3px) scale(1.02);
+      transform: translateY(-3px);
       box-shadow: 0 8px 15px rgba(237, 66, 69, 0.3);
     }
 
@@ -857,11 +667,6 @@
       cursor: pointer;
       border-radius: 8px;
       border: 2px solid #3a3a4a;
-      transition: all 0.3s ease;
-    }
-
-    input[type="color"]:hover {
-      transform: scale(1.05);
     }
 
     input[type="color"]::-webkit-color-swatch {
@@ -883,18 +688,9 @@
     }
 
     /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .settings-header h1 {
-        font-size: 2rem;
-      }
-      
-      .settings-header p {
-        font-size: 0.9rem;
-      }
-      
-      .main-content {
+    @media (max-width: 600px) {
+      body {
         padding: 20px;
-        margin-top: calc(var(--header-height) - 30px);
       }
       
       .settings-container {
@@ -907,21 +703,6 @@
       
       .toast-container {
         width: 90%;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .settings-header h1 {
-        font-size: 1.8rem;
-      }
-      
-      .settings-header {
-        height: 160px;
-        padding: 15px;
-      }
-      
-      .main-content {
-        padding: 15px;
       }
     }
 
@@ -938,146 +719,92 @@
     ::-webkit-scrollbar-thumb {
       background: #5865F2;
       border-radius: 4px;
-      transition: all 0.3s ease;
     }
 
     ::-webkit-scrollbar-thumb:hover {
       background: #4752C4;
-      transform: scaleY(1.1);
-    }
-
-    /* Floating particles for background */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    .particle {
-      position: absolute;
-      background: rgba(88, 101, 242, 0.3);
-      border-radius: 50%;
-      animation: floatParticle 15s infinite linear;
-    }
-
-    @keyframes floatParticle {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      90% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100vh) rotate(360deg);
-        opacity: 0;
-      }
     }
   </style>
 </head>
 <body>
-  <!-- Enhanced Header -->
-  <header class="settings-header">
-    <div class="header-decoration">
-      <div class="header-circle circle-1"></div>
-      <div class="header-circle circle-2"></div>
-      <div class="header-circle circle-3"></div>
-    </div>
-    <h1>Profile Settings</h1>
-    <p>Customize your profile appearance and preferences</p>
-  </header>
+  <div class="settings-container">
+    <h2>⚙️ Profile Settings</h2>
 
-  <!-- Floating Particles -->
-  <div class="particles" id="particles"></div>
+    <label for="displayName">Display Name</label>
+    <input type="text" id="displayName" placeholder="Your display name" />
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <div class="settings-container">
-      <h2>Profile Customization</h2>
+    <label for="bio">Bio</label>
+    <textarea id="bio" placeholder="Write something about you..."></textarea>
+    
+    <label for="badgeSection">Badges to Show</label>
+    <div id="badgeSection" class="badge-section"></div>
+    
+    <label for="themeSelector">Profile Theme</label>
+    <button class="select-theme-btn" onclick="openThemeModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 8C13.6569 8 15 6.65685 15 5C15 3.34315 13.6569 2 12 2C10.3431 2 9 3.34315 9 5C9 6.65685 10.3431 8 12 8Z" fill="currentColor"/>
+        <path d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"/>
+        <path d="M19 15C20.6569 15 22 13.6569 22 12C22 10.3431 20.6569 9 19 9C17.3431 9 16 10.3431 16 12C16 13.6569 17.3431 15 19 15Z" fill="currentColor"/>
+        <path d="M5 15C6.65685 15 8 13.6569 8 12C8 10.3431 6.65685 9 5 9C3.34315 9 2 10.3431 2 12C2 13.6569 3.34315 15 5 15Z" fill="currentColor"/>
+      </svg>
+      Select Theme
+    </button>
+    <div id="selectedThemeLabel" style="margin-top: 10px; font-size: 14px; color: var(--secondary);"></div>
 
-      <label for="displayName">Display Name</label>
-      <input type="text" id="displayName" placeholder="Your display name" />
-
-      <label for="bio">Bio</label>
-      <textarea id="bio" placeholder="Write something about you..."></textarea>
-      
-      <label for="badgeSection">Badges to Show</label>
-      <div id="badgeSection" class="badge-section"></div>
-      
-      <label for="themeSelector">Profile Theme</label>
-      <button class="select-theme-btn" onclick="openThemeModal()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 8C13.6569 8 15 6.65685 15 5C15 3.34315 13.6569 2 12 2C10.3431 2 9 3.34315 9 5C9 6.65685 10.3431 8 12 8Z" fill="currentColor"/>
-          <path d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"/>
-          <path d="M19 15C20.6569 15 22 13.6569 22 12C22 10.3431 20.6569 9 19 9C17.3431 9 16 10.3431 16 12C16 13.6569 17.3431 15 19 15Z" fill="currentColor"/>
-          <path d="M5 15C6.65685 15 8 13.6569 8 12C8 10.3431 6.65685 9 5 9C3.34315 9 2 10.3431 2 12C2 13.6569 3.34315 15 5 15Z" fill="currentColor"/>
-        </svg>
-        Select Theme
-      </button>
-      <div id="selectedThemeLabel" style="margin-top: 10px; font-size: 14px; color: var(--secondary);"></div>
-
-      <!-- Theme Modal -->
-      <div id="themeModal" class="theme-modal">
-        <div class="theme-modal-content">
-          <h3>Select Your Theme</h3>
-          <div class="theme-options">
-            <div class="theme-card" data-theme="majestic">
-              <div class="gradient majestic"></div>
-              <span>Majestic</span>
-            </div>
-            <div class="theme-card" data-theme="fractal">
-              <div class="gradient fractal"></div>
-              <span>Fractal</span>
-            </div>
-            <div class="theme-card" data-theme="drags_featured">
-              <div class="gradient drags-featured">
-                <span class="featured-label">Featured</span>
-              </div>
-              <span>Drags Featured</span>
-            </div>
-            <div class="theme-card" data-theme="black_white">
-              <div class="gradient black-white"></div>
-              <span>Black and White</span>
-            </div>
+    <!-- Theme Modal -->
+    <div id="themeModal" class="theme-modal">
+      <div class="theme-modal-content">
+        <h3>Select Your Theme</h3>
+        <div class="theme-options">
+          <div class="theme-card" data-theme="majestic">
+            <div class="gradient majestic"></div>
+            <span>Majestic</span>
           </div>
-          <button onclick="closeThemeModal()" class="close-modal">Close</button>
+          <div class="theme-card" data-theme="fractal">
+            <div class="gradient fractal"></div>
+            <span>Fractal</span>
+          </div>
+          <div class="theme-card" data-theme="drags_featured">
+            <div class="gradient drags-featured">
+              <span class="featured-label">Featured</span>
+            </div>
+            <span>Drags Featured</span>
+          </div>
+          <div class="theme-card" data-theme="black_white">
+            <div class="gradient black-white"></div>
+            <span>Black and White</span>
+          </div>
         </div>
+        <button onclick="closeThemeModal()" class="close-modal">Close</button>
       </div>
-     
-      <label>Username Effects</label>
-      <div class="effect-options-container">
-        <div class="effect-option" onclick="document.getElementById('rainbowEffect').click()" style="animation-delay: 0.1s">
-          <input type="checkbox" id="rainbowEffect" onchange="toggleEffect('rainbow')">
-          <label for="rainbowEffect">Rainbow Gradient</label>
-        </div>
-        <div class="effect-option" onclick="document.getElementById('glowEffect').click()" style="animation-delay: 0.2s">
-          <input type="checkbox" id="glowEffect" onchange="toggleEffect('glow')">
-          <label for="glowEffect">Shiny Glow</label>
-        </div>
-      </div>
-
-      <div id="glowColorContainer" class="glow-color-container">
-        <label for="glowColorPicker">Glow Color</label>
-        <input type="color" id="glowColorPicker" value="#ffffff" />
-      </div>
-
-      <button class="save-btn" onclick="saveSettings()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16L21 8V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M7 3V8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Save Settings
-      </button>
     </div>
+   
+    <label>Username Effects</label>
+    <div class="effect-options-container">
+      <div class="effect-option" onclick="document.getElementById('rainbowEffect').click()">
+        <input type="checkbox" id="rainbowEffect" onchange="toggleEffect('rainbow')">
+        <label for="rainbowEffect">Rainbow Gradient</label>
+      </div>
+      <div class="effect-option" onclick="document.getElementById('glowEffect').click()">
+        <input type="checkbox" id="glowEffect" onchange="toggleEffect('glow')">
+        <label for="glowEffect">Shiny Glow</label>
+      </div>
+    </div>
+
+    <div id="glowColorContainer" class="glow-color-container">
+      <label for="glowColorPicker">Glow Color</label>
+      <input type="color" id="glowColorPicker" value="#ffffff" />
+    </div>
+
+    <button class="save-btn" onclick="saveSettings()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16L21 8V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7 3V8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Save Settings
+    </button>
   </div>
 
   <!-- Toast Container -->
@@ -1097,34 +824,6 @@
     let selectedEffects = [];
     let toastQueue = [];
     let isToastShowing = false;
-
-    // Create floating particles
-    function createParticles() {
-      const particlesContainer = document.getElementById('particles');
-      const particleCount = Math.floor(window.innerWidth / 10);
-      
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Random size between 2px and 6px
-        const size = Math.random() * 4 + 2;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        // Random position
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.bottom = `-${size}px`;
-        
-        // Random animation duration and delay
-        const duration = Math.random() * 20 + 10;
-        const delay = Math.random() * 10;
-        particle.style.animationDuration = `${duration}s`;
-        particle.style.animationDelay = `${delay}s`;
-        
-        particlesContainer.appendChild(particle);
-      }
-    }
 
     async function loadSettings() {
       showToast("Loading your settings...", "info");
@@ -1217,12 +916,6 @@
         if (!selectedEffects.includes(effect)) {
           selectedEffects.push(effect);
           showToast(`${effect.charAt(0).toUpperCase() + effect.slice(1)} effect enabled`, "success");
-          
-          // Add animation for checkbox
-          checkbox.parentElement.classList.add('effect-activated');
-          setTimeout(() => {
-            checkbox.parentElement.classList.remove('effect-activated');
-          }, 1000);
         }
       } else {
         selectedEffects = selectedEffects.filter(e => e !== effect);
@@ -1276,13 +969,6 @@
           badges: JSON.stringify(badgeOrder),
           glowColor
         };
-        
-        // Add save confirmation animation
-        const settingsContainer = document.querySelector('.settings-container');
-        settingsContainer.classList.add('save-confirmation');
-        setTimeout(() => {
-          settingsContainer.classList.remove('save-confirmation');
-        }, 1000);
       } catch (error) {
         console.error("Error saving settings:", error);
         showToast("Failed to save settings", "error");
@@ -1339,15 +1025,6 @@
       [badgeOrder[index], badgeOrder[newIndex]] = [badgeOrder[newIndex], badgeOrder[index]];
       renderBadgeSection();
       showToast("Badge order updated", "info");
-      
-      // Add animation to moved badge
-      const badgeSection = document.getElementById("badgeSection");
-      if (badgeSection.children[newIndex]) {
-        badgeSection.children[newIndex].classList.add('badge-moved');
-        setTimeout(() => {
-          badgeSection.children[newIndex].classList.remove('badge-moved');
-        }, 500);
-      }
     }
 
     function openThemeModal() {
@@ -1358,17 +1035,6 @@
         modal.querySelector('.theme-modal-content').style.opacity = "1";
       }, 10);
       highlightSelectedTheme();
-      
-      // Add modal open animation
-      document.querySelectorAll('.theme-card').forEach((card, i) => {
-        card.style.transform = 'translateY(20px)';
-        card.style.opacity = '0';
-        card.style.transitionDelay = `${i * 0.1}s`;
-        setTimeout(() => {
-          card.style.transform = 'translateY(0)';
-          card.style.opacity = '1';
-        }, 50);
-      });
     }
 
     function closeThemeModal() {
@@ -1386,13 +1052,6 @@
         document.getElementById("selectedThemeLabel").textContent = `Selected Theme: ${formatThemeName(selectedTheme)}`;
         showToast(`Theme set to ${formatThemeName(selectedTheme)}`, "success");
         highlightSelectedTheme();
-        
-        // Add selection animation
-        card.classList.add('theme-selected');
-        setTimeout(() => {
-          card.classList.remove('theme-selected');
-        }, 1000);
-        
         closeThemeModal();
       });
     });
@@ -1457,7 +1116,6 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-      createParticles();
       loadSettings();
       loadBadges();
       
@@ -1469,11 +1127,6 @@
         el.addEventListener('mouseleave', () => {
           el.style.transform = '';
         });
-      });
-      
-      // Stagger animations for form elements
-      document.querySelectorAll('label, input, textarea, .effect-option, .select-theme-btn, .save-btn').forEach((el, i) => {
-        el.style.animationDelay = `${i * 0.1}s`;
       });
     });
   </script>
