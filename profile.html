@@ -1279,7 +1279,8 @@ async function loadFollowing(targetId) {
           const li = document.createElement('li');
           li.className = 'follow-modal-item';
           
-          const profile = item.profiles || {};
+          const profile = item.users || {};
+
           li.innerHTML = `
             <img src="${profile.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png'}" 
                  class="follow-modal-avatar" 
