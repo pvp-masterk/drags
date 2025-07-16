@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,20 +6,24 @@
     <title>Drags WebApp</title>
     <link rel="icon" href="drags.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
         :root {
             --primary: #5865F2;
             --primary-dark: #4752C4;
+            --primary-light: rgba(88, 101, 242, 0.1);
             --secondary: #57F287;
             --text: #f5f5f5;
+            --text-light: rgba(245, 245, 245, 0.7);
             --bg: #1e1e2e;
             --card-bg: #2a2a3a;
             --accent: #ED4245;
+            --success: #57F287;
+            --warning: #FEE75C;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
         }
-        
-     
         
         * {
             margin: 0;
@@ -34,17 +36,16 @@
             background-color: var(--bg);
             color: var(--text);
             overflow-x: hidden;
+            line-height: 1.6;
         }
-        
-        
         
         html {
             scroll-behavior: smooth;
         }
         
-        
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 12px;
         }
         
         ::-webkit-scrollbar-track {
@@ -53,10 +54,15 @@
         
         ::-webkit-scrollbar-thumb {
             background: var(--primary);
-            border-radius: 5px;
+            border-radius: 6px;
+            border: 3px solid var(--bg);
         }
         
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
         
+        /* Header Styles */
         header {
             position: fixed;
             top: 0;
@@ -66,15 +72,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
             background: rgba(30, 30, 46, 0.9);
             backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            transform: translateY(0);
+        }
+        
+        header.hidden {
+            transform: translateY(-100%);
         }
         
         header.scrolled {
             padding: 15px 10%;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
         }
         
         .logo {
@@ -85,10 +97,20 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
         }
         
         .logo i {
             color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover i {
+            transform: rotate(15deg);
         }
         
         .nav-links {
@@ -103,6 +125,7 @@
             font-size: 16px;
             position: relative;
             transition: all 0.3s ease;
+            padding: 8px 0;
         }
         
         .nav-links a:hover {
@@ -112,59 +135,143 @@
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
             width: 0;
-            height: 2px;
+            height: 3px;
             background: var(--primary);
-            transition: width 0.3s ease;
+            transition: width 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 3px;
         }
         
         .nav-links a:hover::after {
             width: 100%;
         }
-        #toggleHeaderBtn {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: var(--card-bg);
-  color: var(--text);
-  border: 2px solid var(--primary);
-  padding: 8px 14px;
-  border-radius: 12px;
-  font-size: 13px;
-  cursor: pointer;
-  z-index: 99999;
-  transition: 0.2s ease;
-}
-
-
-
-      
-
-        :root {
-  
         
+        /* Floating Particles Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--primary-light);
+            border-radius: 50%;
+            animation: float-particle 15s infinite linear;
+        }
+        
+        @keyframes float-particle {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Floating Button */
+        .floating-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 999;
+        }
+        
+        .floating-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .floating-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.6);
+        }
+        
+        .floating-btn.secondary {
+            background: var(--secondary);
+            box-shadow: 0 5px 15px rgba(87, 242, 135, 0.4);
+        }
+        
+        .floating-btn.secondary:hover {
+            background: #4ad97c;
+            box-shadow: 0 8px 25px rgba(87, 242, 135, 0.6);
+        }
+        
+        /* CTA Button Styles */
         .cta-button {
             background: var(--primary);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 30px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: none;
             cursor: pointer;
             font-size: 16px;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
         }
         
         .cta-button:hover {
             background: var(--primary-dark);
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+            box-shadow: 0 10px 25px rgba(88, 101, 242, 0.4);
         }
         
+        .cta-button.outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
         
+        .cta-button.outline:hover {
+            background: var(--primary-light);
+            color: var(--text);
+        }
+        
+        .cta-button i {
+            transition: transform 0.3s ease;
+        }
+        
+        .cta-button:hover i {
+            transform: translateX(3px);
+        }
+        
+        /* Hero Section */
         .hero {
             height: 100vh;
             display: flex;
@@ -185,19 +292,23 @@
             z-index: -1;
             animation: pulse 15s infinite alternate;
         }
-         
         
         @keyframes pulse {
             0% {
                 transform: scale(1);
+                opacity: 0.5;
             }
             100% {
                 transform: scale(1.2);
+                opacity: 0.8;
             }
         }
         
         .hero-content {
             max-width: 600px;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.3s;
         }
         
         .hero-content h1 {
@@ -205,6 +316,10 @@
             font-weight: 700;
             margin-bottom: 20px;
             line-height: 1.2;
+            background: linear-gradient(to right, var(--text), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
         
         .hero-content h1 span {
@@ -216,6 +331,7 @@
             margin-bottom: 30px;
             opacity: 0.9;
             line-height: 1.6;
+            color: var(--text-light);
         }
         
         .hero-buttons {
@@ -232,6 +348,9 @@
             background-size: contain;
             animation: float 6s ease-in-out infinite;
             filter: drop-shadow(0 20px 30px rgba(88, 101, 242, 0.3));
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease forwards 0.6s;
         }
         
         @keyframes float {
@@ -246,7 +365,18 @@
             }
         }
         
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
         
+        /* Features Section */
         .features {
             padding: 100px 10%;
             background: var(--bg);
@@ -258,6 +388,9 @@
             font-size: 36px;
             margin-bottom: 60px;
             position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
         }
         
         .section-title::after {
@@ -282,11 +415,24 @@
             background: var(--card-bg);
             padding: 30px;
             border-radius: 15px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
             z-index: 1;
+            opacity: 0;
+            transform: translateY(20px);
         }
+        
+        .feature-card.animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .feature-card:nth-child(1).animate { animation-delay: 0.2s; }
+        .feature-card:nth-child(2).animate { animation-delay: 0.3s; }
+        .feature-card:nth-child(3).animate { animation-delay: 0.4s; }
+        .feature-card:nth-child(4).animate { animation-delay: 0.5s; }
+        .feature-card:nth-child(5).animate { animation-delay: 0.6s; }
+        .feature-card:nth-child(6).animate { animation-delay: 0.7s; }
         
         .feature-card::before {
             content: '';
@@ -302,8 +448,8 @@
         }
         
         .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
         
         .feature-card:hover::before {
@@ -314,19 +460,46 @@
             font-size: 40px;
             margin-bottom: 20px;
             color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2);
         }
         
         .feature-card h3 {
             font-size: 22px;
             margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .feature-card h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.4s ease;
+        }
+        
+        .feature-card:hover h3::after {
+            width: 100%;
         }
         
         .feature-card p {
             opacity: 0.8;
             line-height: 1.6;
+            transition: opacity 0.3s ease;
         }
         
+        .feature-card:hover p {
+            opacity: 1;
+        }
         
+        /* Community Section */
         .community {
             padding: 100px 10%;
             background: var(--card-bg);
@@ -361,6 +534,7 @@
             margin-bottom: 40px;
             font-size: 18px;
             line-height: 1.6;
+            color: var(--text-light);
         }
         
         .stats {
@@ -373,21 +547,49 @@
         
         .stat-item {
             text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
         }
+        
+        .stat-item.animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .stat-item:nth-child(1).animate { animation-delay: 0.2s; }
+        .stat-item:nth-child(2).animate { animation-delay: 0.4s; }
+        .stat-item:nth-child(3).animate { animation-delay: 0.6s; }
         
         .stat-number {
             font-size: 48px;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .stat-number::after {
+            content: '+';
+            position: absolute;
+            right: -15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .stat-item:hover .stat-number::after {
+            opacity: 1;
         }
         
         .stat-label {
             font-size: 18px;
             opacity: 0.8;
+            transition: opacity 0.3s ease;
         }
         
+        .stat-item:hover .stat-label {
+            opacity: 1;
+        }
         
+        /* Team Section */
         .team {
             padding: 100px 10%;
             background: var(--bg);
@@ -403,28 +605,51 @@
             background: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
         }
         
+        .team-card.animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .team-card:nth-child(1).animate { animation-delay: 0.2s; }
+        .team-card:nth-child(2).animate { animation-delay: 0.3s; }
+        .team-card:nth-child(3).animate { animation-delay: 0.4s; }
+        .team-card:nth-child(4).animate { animation-delay: 0.5s; }
+        
         .team-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
         
         .team-image {
             width: 100%;
             height: 250px;
             object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .team-card:hover .team-image {
+            transform: scale(1.1);
         }
         
         .team-info {
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
         
         .team-info h3 {
             font-size: 22px;
             margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+        
+        .team-card:hover .team-info h3 {
+            color: var(--primary);
         }
         
         .team-info p {
@@ -443,14 +668,128 @@
             color: var(--text);
             font-size: 18px;
             transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
         }
         
         .social-links a:hover {
             color: var(--primary);
             transform: translateY(-3px);
+            background: var(--primary-light);
         }
         
+        /* Command Section */
+        .command {
+            padding: 100px 10%;
+            background: var(--bg);
+        }
         
+        .command-structure {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .command-tier {
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .command-tier.animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .command-tier:nth-child(1).animate { animation-delay: 0.2s; }
+        .command-tier:nth-child(2).animate { animation-delay: 0.4s; }
+        .command-tier:nth-child(3).animate { animation-delay: 0.6s; }
+        .command-tier:nth-child(4).animate { animation-delay: 0.8s; }
+        
+        .command-tier h3 {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .command-tier h3 i {
+            margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .command-tier:hover h3 i {
+            transform: rotate(15deg);
+        }
+        
+        .command-tier ul {
+            list-style: none;
+        }
+        
+        .command-tier li {
+            background: var(--card-bg);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        
+        .command-tier li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Application CTA */
+        .application-cta {
+            padding: 80px 10%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .application-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://sdmntprnorthcentralus.oaiusercontent.com/files/00000000-cea0-622f-9ca0-296c472ea7ca/raw?se=2025-07-10T12%3A48%3A39Z&sp=r&sv=2024-08-04&sr=b&scid=9e9cd317-f66d-5413-b8bf-eb91e3c14db0&skoid=02b7f7b5-29f8-416a-aeb6-99464748559d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-07-09T20%3A28%3A49Z&ske=2025-07-10T20%3A28%3A49Z&sks=b&skv=2024-08-04&sig=7TBh29N1dFNpsk%2BGxFoGYIZ1JAX93SNFDKoYbIrBlvM%3D') no-repeat;
+            background-size: cover;
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .application-cta h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .application-cta p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Footer */
         footer {
             background: var(--card-bg);
             padding: 70px 10% 30px;
@@ -478,6 +817,11 @@
             width: 40px;
             height: 3px;
             background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .footer-column:hover h3::after {
+            width: 60px;
         }
         
         .footer-column ul {
@@ -493,12 +837,13 @@
             text-decoration: none;
             opacity: 0.8;
             transition: all 0.3s ease;
+            display: inline-block;
         }
         
         .footer-column ul li a:hover {
             opacity: 1;
             color: var(--primary);
-            padding-left: 5px;
+            transform: translateX(5px);
         }
         
         .footer-bottom {
@@ -507,19 +852,337 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        
-        .fade-in {
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
+            visibility: hidden;
+            z-index: 999;
         }
         
-        .fade-in.active {
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.6);
+        }
+        
+        /* Cookie Banner */
+        .cookie-banner {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 15px 5%;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        
+        .cookie-banner.show {
+            bottom: 0;
+        }
+        
+        .cookie-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .cookie-content p {
+            margin: 0;
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .cookie-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .cookie-btn {
+            padding: 8px 20px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .deny-btn {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--text);
+        }
+        
+        .deny-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .accept-btn {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .accept-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* User Menu */
+        .user-menu {
+            position: relative;
+        }
+        
+        .mini-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mini-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--primary-light);
+        }
+        
+        .dropdown {
+            position: absolute;
+            right: 0;
+            top: 120%;
+            width: 250px;
+            background: rgba(30, 30, 46, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 15px;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dropdown-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .dropdown-info img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+        
+        .dropdown-info p {
+            margin: 2px 0;
+            font-size: 13px;
+            color: #bbb;
+        }
+        
+        .user-id {
+            font-size: 12px;
+            color: #777;
+        }
+        
+        .dropdown a {
+            display: block;
+            padding: 8px;
+            text-decoration: none;
+            color: var(--text);
+            border-radius: 6px;
+            transition: 0.2s ease;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        
+        .dropdown a:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown hr {
+            border: none;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+        }
+        
+        /* Code Input */
+        #codeInput {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            background: var(--card-bg);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            width: 200px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        #codeInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+        
+        /* Profile Section */
+        #profile {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            max-width: 400px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+        
+        #profile.show {
             opacity: 1;
             transform: translateY(0);
         }
         
-        /* Responsive */
+        #profile p {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        #profile span {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .toast i {
+            font-size: 20px;
+        }
+        
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-logo {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .loader-logo i {
+            color: var(--primary);
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        .loader-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loader-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: var(--gradient);
+            animation: loading 2s ease-in-out forwards;
+        }
+        
+        @keyframes loading {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+        
+        /* Responsive Styles */
         @media (max-width: 1200px) {
             .hero-image {
                 width: 400px;
@@ -573,12 +1236,20 @@
                 display: none;
             }
             
-            .loading-logo {
-                font-size: 36px;
+            .stats {
+                flex-direction: column;
+                gap: 30px;
             }
             
-            .loading-logo i {
-                font-size: 40px;
+            .floating-buttons {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .floating-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
             }
         }
         
@@ -593,172 +1264,46 @@
                 text-align: center;
             }
             
-            .stats {
-                flex-direction: column;
-                gap: 30px;
+            .footer-content {
+                grid-template-columns: 1fr;
             }
             
-            .loading-logo {
-                font-size: 28px;
+            .cookie-content {
                 flex-direction: column;
-                gap: 10px;
                 text-align: center;
             }
+            
+            .cookie-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .hero-content h1 {
+                font-size: 32px;
+            }
+            
+            .hero-content p {
+                font-size: 16px;
+            }
         }
-
-           
-.cookie-banner {
-  position: fixed;
-  bottom: -100%;
-  left: 0;
-  right: 0;
-  background: var(--card-bg);
-  color: var(--text);
-  padding: 15px 5%;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 999;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  transition: bottom 0.5s ease;
-}
-
-.cookie-banner.show {
-  bottom: 0;
-}
-.cookie-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-}
-
-.cookie-content p {
-  margin: 0;
-  flex: 1;
-  min-width: 250px;
-}
-
-.cookie-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.cookie-btn {
-  padding: 8px 20px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.deny-btn {
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--text);
-}
-
-.deny-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.accept-btn {
-  background: var(--primary);
-  color: white;
-}
-
-.accept-btn:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-}
-
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-      .user-menu {
-  position: relative;
-}
-
-.mini-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid var(--primary);
-  cursor: pointer;
-}
-
-.dropdown {
-  position: absolute;
-  right: 0;
-  top: 120%;
-  width: 250px;
-  background: rgba(30, 30, 46, 0.85);
-  backdrop-filter: blur(12px);
-  border-radius: 12px;
-  padding: 15px;
-  z-index: 100;
-  display: none;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.dropdown-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.dropdown-info img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.dropdown-info p {
-  margin: 2px 0;
-  font-size: 13px;
-  color: #bbb;
-}
-
-.user-id {
-  font-size: 12px;
-  color: #777;
-}
-
-.dropdown a {
-  display: block;
-  padding: 8px;
-  text-decoration: none;
-  color: var(--text);
-  border-radius: 6px;
-  transition: 0.2s ease;
-  font-size: 14px;
-}
-
-.dropdown a:hover {
-  background: var(--primary-dark);
-}
-
-
-
     </style>
 </head>
 <body>
-  
+    <!-- Loading Screen -->
+    <div class="loader">
+        <div class="loader-logo">
+            <i class="fab fa-discord"></i>
+            <span>Drags</span>
+        </div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
 
-    
+    <!-- Floating Particles Background -->
+    <div class="particles" id="particles"></div>
 
-   
+    <!-- Header -->
     <header id="header">
         <a href="#" class="logo"><i class="fab fa-discord"></i> Drags</a>
         <nav class="nav-links">
@@ -766,91 +1311,88 @@
             <a href="#features">Features</a>
             <a href="#community">Community</a>
             <a href="#command">Chain of Command</a>
-            <li><a href="apply">Apply for Staff</a></li>
-            <div style="display: flex; align-items: center; gap: 20px;">
+            <a href="apply">Apply for Staff</a>
         </nav>
-       <div id="user-box">
- 
-</div>
-       <div class="user-menu" id="userMenu" style="display: none;">
-  <img id="userDropdownBtn" class="mini-avatar" src="" alt="User" />
-
-  <div class="dropdown" id="dropdownMenu">
-    <div id="userInfo" class="dropdown-info">
-      <img id="dropdownAvatar" src="" />
-      <div>
-        <strong id="dropdownDisplayName">Loading...</strong>
-        <p id="dropdownUsername">@username</p>
-        <p id="dropdownUserId" class="user-id">ID: 0000000000</p>
-      </div>
-    </div>
-    <hr />
-    <a href="#" id="viewProfileBtn">View Profile</a>
-    <a href="#" id="settingsBtn">Settings</a>
-    <a href="linkaccount" id="linkBtn">Link</a>
-  </div>
-</div>
-
-
+        <div id="user-box"></div>
+        <div class="user-menu" id="userMenu" style="display: none;">
+            <img id="userDropdownBtn" class="mini-avatar" src="" alt="User" />
+            <div class="dropdown" id="dropdownMenu">
+                <div id="userInfo" class="dropdown-info">
+                    <img id="dropdownAvatar" src="" />
+                    <div>
+                        <strong id="dropdownDisplayName">Loading...</strong>
+                        <p id="dropdownUsername">@username</p>
+                        <p id="dropdownUserId" class="user-id">ID: 0000000000</p>
+                    </div>
+                </div>
+                <hr />
+                <a href="#" id="viewProfileBtn">View Profile</a>
+                <a href="#" id="settingsBtn">Settings</a>
+                <a href="linkaccount" id="linkBtn">Link Account</a>
+            </div>
+        </div>
         <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
-
-
-        
     </header>
 
-  
-<input type="text" id="codeInput" placeholder="Enter your code" />
-<button onclick="verifyCode()">Link</button>
+    <!-- Code Input Section -->
+    <div style="position: fixed; bottom: 100px; left: 20px; z-index: 999; display: flex; align-items: center;">
+        <input type="text" id="codeInput" placeholder="Enter your code" />
+        <button class="cta-button" onclick="verifyCode()" style="padding: 12px 20px;">Link</button>
+    </div>
 
-<div id="profile" style="display:none;">
-  <p>Discord ID: <span id="discordId"></span></p>
-  <p>Username: <span id="username"></span></p>
-  <p>Points: <span id="points"></span></p>
-</div>
+    <div id="profile">
+        <p>Discord ID: <span id="discordId"></span></p>
+        <p>Username: <span id="username"></span></p>
+        <p>Points: <span id="points"></span></p>
+    </div>
 
-
+    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
             <h1>Welcome to <span>Drags</span> Official WebApp</h1>
             <p>Drag welcomes everyone who wanna take part in our great journey, So join drag now!</p>
             <div class="hero-buttons">
-                <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Now</a>
-                <a href="#features" class="cta-button" style="background: transparent; border: 2px solid var(--primary);">Learn More</a>
+                <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">
+                    Join Now <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="#features" class="cta-button outline">
+                    Learn More <i class="fas fa-book-open"></i>
+                </a>
             </div>
         </div>
         <div class="hero-image"></div>
     </section>
 
-
+    <!-- Features Section -->
     <section class="features" id="features">
         <h2 class="section-title">Why Join Drags?</h2>
         <div class="features-grid">
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-users"></i></div>
                 <h3>Engage with Community</h3>
                 <p>Chat with other members and have fun!</p>
             </div>
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-gamepad"></i></div>
                 <h3>Events</h3>
                 <p>We host many giveaways and events, don't miss out!</p>
             </div>
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-paint-brush"></i></div>
                 <h3>Showcase</h3>
                 <p>Showcase your developments, goals and other things in #showcase channel!</p>
             </div>
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-robot"></i></div>
                 <h3>Custom Bots</h3>
                 <p>Check out our custom bots in the discord server!</p>
             </div>
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-gem"></i></div>
                 <h3>Booster Perks</h3>
                 <p>Boosters are granted many perks, for more information check #booster-perks in our discord.</p>
             </div>
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
                 <h3>Our Moderation</h3>
                 <p>Our moderation is active 24/7 if you want help just ask them.</p>
@@ -858,135 +1400,146 @@
         </div>
     </section>
 
-
+    <!-- Community Section -->
     <section class="community" id="community">
         <h2 class="section-title">Our Growing Family</h2>
         <div class="community-content">
             <p>Drag started as a small hangout discord server, we value our every single member!</p>
             
             <div class="stats">
-                <div class="stat-item fade-in">
+                <div class="stat-item">
                     <div class="stat-number" id="member-count">32+</div>
                     <div class="stat-label">Members</div>
                 </div>
-               
-                <div class="stat-item fade-in">
+                <div class="stat-item">
                     <div class="stat-number">24/7</div>
                     <div class="stat-label">Active Support</div>
                 </div>
             </div>
             
-            <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Become Part of Drags</a>
+            <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">
+                Become Part of Drags <i class="fas fa-heart"></i>
+            </a>
         </div>
     </section>
 
-<section class="application-cta" style="padding: 80px 10%; background: linear-gradient(135deg, var(--primary-dark), var(--primary)); text-align: center;">
-    <div class="cta-container" style="max-width: 800px; margin: 0 auto;">
-        <h2 style="font-size: 36px; margin-bottom: 20px; color: white;">Join Our Team</h2>
-        <p style="font-size: 18px; margin-bottom: 30px; color: rgba(255,255,255,0.9);">
-            We're looking for passionate members to help grow our community. Apply for a staff position today!
-        </p>
-        <a href="apply" class="cta-button" style="background: white; color: var(--primary); font-size: 18px; padding: 15px 30px;">
-            Apply Now <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
-        </a>
-    </div>
-</section>
-
-<section class="command" id="command" style="padding: 100px 10%; background: var(--bg);">
-    <h2 class="section-title">Chain of Command</h2>
-    
-    <div class="command-structure" style="max-width: 800px; margin: 0 auto;">
-
-        <div class="command-tier fade-in" style="margin-bottom: 40px;">
-            <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
-                <i class="fas fa-crown" style="margin-right: 10px;"></i>Server Leadership
-            </h3>
-            <ul style="list-style: none;">
-                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">shortuserrr</span>
-                    <span style="color: var(--primary);">Founder & Admin</span>
-                </li>
-                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">urpsx</span>
-                    <span style="color: var(--primary);">Co-Owner</span>
- <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">re_corezz</span>
-                    <span style="color: var(--primary);">Co-Founder</span>
-      <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">bludaze</span>
-                    <span style="color: var(--primary);">Overseer</span>
-                </li>
-                </li>
-            </ul>
+    <!-- Application CTA -->
+    <section class="application-cta">
+        <div class="cta-container">
+            <h2>Join Our Team</h2>
+            <p>
+                We're looking for passionate members to help grow our community. Apply for a staff position today!
+            </p>
+            <a href="apply" class="cta-button">
+                Apply Now <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
+    </section>
+
+    <!-- Command Section -->
+    <section class="command" id="command">
+        <h2 class="section-title">Chain of Command</h2>
         
-
-        <div class="command-tier fade-in" style="margin-bottom: 40px;">
-            <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
-                <i class="fas fa-shield-alt" style="margin-right: 10px;"></i>Administration
-            </h3>
-            <ul style="list-style: none;">
-               
-                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">qa3v</span>
-                    <span style="color: var(--primary);">Senior Executive</span
-                </li>
-                 <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">sawyerlovesdonuts</span>
-                    <span style="color: var(--primary);">Supervisor</span>
-                </li>
-            </ul>
+        <div class="command-structure">
+            <div class="command-tier">
+                <h3><i class="fas fa-crown"></i>Server Leadership</h3>
+                <ul>
+                    <li>
+                        <span style="font-weight: 600;">shortuserrr</span>
+                        <span style="color: var(--primary);">Founder & Admin</span>
+                    </li>
+                    <li>
+                        <span style="font-weight: 600;">urpsx</span>
+                        <span style="color: var(--primary);">Co-Owner</span>
+                    </li>
+                    <li>
+                        <span style="font-weight: 600;">re_corezz</span>
+                        <span style="color: var(--primary);">Co-Founder</span>
+                    </li>
+                    <li>
+                        <span style="font-weight: 600;">bludaze</span>
+                        <span style="color: var(--primary);">Overseer</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="command-tier">
+                <h3><i class="fas fa-shield-alt"></i>Administration</h3>
+                <ul>
+                    <li>
+                        <span style="font-weight: 600;">qa3v</span>
+                        <span style="color: var(--primary);">Senior Executive</span>
+                    </li>
+                    <li>
+                        <span style="font-weight: 600;">sawyerlovesdonuts</span>
+                        <span style="color: var(--primary);">Supervisor</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="command-tier">
+                <h3><i class="fas fa-gavel"></i>Moderation Team</h3>
+                <ul>
+                    <li>
+                        <span style="font-weight: 600;">rip_naruto0196</span>
+                        <span style="color: var(--primary);">Server Moderator</span>
+                    </li>
+                    <li>
+                        <span style="font-weight: 600;">ekittenattractorkay</span>
+                        <span style="color: var(--primary);">Moderator</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="command-tier">
+                <h3><i class="fas fa-hands-helping"></i>Support Staff</h3>
+                <ul>
+                    <li>
+                        <span style="font-weight: 600;">To be hired</span>
+                        <span style="color: var(--primary);">Support Team</span>
+                    </li>
+                    <li>
+                        <span style="font-weight: 600;">To be hired</span>
+                        <span style="color: var(--primary);">Support Team</span>
+                    </li>
+                </ul>
+            </div>
         </div>
-        
+    </section>
 
-        <div class="command-tier fade-in" style="margin-bottom: 40px;">
-            <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
-                <i class="fas fa-gavel" style="margin-right: 10px;"></i>Moderation Team
-            </h3>
-            <ul style="list-style: none;">
-               
-                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">rip_naruto0196</span>
-                    <span style="color: var(--primary);">Server Moderator</span>
-                </li>
-                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">ekittenattractorkay</span>
-                    <span style="color: var(--primary);">Moderator</span>
-                </li>
-            </ul>
-        </div>
-        
-
-        <div class="command-tier fade-in">
-            <h3 style="color: var(--primary); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
-                <i class="fas fa-hands-helping" style="margin-right: 10px;"></i>Support Staff
-            </h3>
-            <ul style="list-style: none;">
-                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">To be hired</span>
-                    <span style="color: var(--primary);">Support Team</span>
-                </li>
-                <li style="background: var(--card-bg); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600;">To be hired</span>
-                    <span style="color: var(--primary);">Support Team</span>
-                </li>
-            </ul>
+    <!-- Cookie Banner -->
+    <div id="cookie-consent-banner" class="cookie-banner">
+        <div class="cookie-content">
+            <p>We use cookies to enhance your experience. By continuing to visit this site, you agree to our use of cookies.</p>
+            <div class="cookie-buttons">
+                <button id="deny-cookies" class="cookie-btn deny-btn">Deny All</button>
+                <button id="accept-cookies" class="cookie-btn accept-btn">Accept All</button>
+            </div>
         </div>
     </div>
-</section>
 
-<div id="cookie-consent-banner" class="cookie-banner">
-  <div class="cookie-content">
-    <p>We use cookies to enhance your experience. By continuing to visit this site, you agree to our use of cookies.</p>
-    <div class="cookie-buttons">
-      <button id="deny-cookies" class="cookie-btn deny-btn">Deny All</button>
-      <button id="accept-cookies" class="cookie-btn accept-btn">Accept All</button>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Successfully connected!</span>
     </div>
-  </div>
-</div>
 
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
 
+    <!-- Floating Buttons -->
+    <div class="floating-buttons">
+        <button class="floating-btn" id="themeToggle" title="Toggle Theme">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="floating-btn secondary" id="discordBtn" title="Join Discord">
+            <i class="fab fa-discord"></i>
+        </button>
+    </div>
 
+    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-column">
@@ -1013,9 +1566,9 @@
                 <h3>Resources</h3>
                 <ul>
                     <li><a href="rules">Rules</a></li>
-        <li><a href="faq">FAQ</a></li>
-        <li><a href="partnerships">Partnerships</a></li>
-        <li><a href="underdev">Support</a></li>
+                    <li><a href="faq">FAQ</a></li>
+                    <li><a href="partnerships">Partnerships</a></li>
+                    <li><a href="underdev">Support</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -1030,19 +1583,47 @@
         <div class="footer-bottom">
             <p>&copy; 2025 Drags. All rights reserved.</p>
         </div>
-
-        
-
-
-<button id="toggleHeaderBtn">🔻 Disable Header</button>
-
     </footer>
 
-        <script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelector('.loader').classList.add('hidden');
+            }, 1500);
+        });
 
-
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 10 + 5;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100 + 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
         
+        createParticles();
 
+        // Scroll header effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
             if (window.scrollY > 50) {
@@ -1050,35 +1631,60 @@
             } else {
                 header.classList.remove('scrolled');
             }
+            
+            // Back to top button
+            const backToTop = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
         });
         
-
-        const fadeElements = document.querySelectorAll('.fade-in');
+        // Back to top button
+        document.getElementById('backToTop').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
         
-        const appearOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px"
+        // Intersection Observer for animations
+        const animateOnScroll = function() {
+            const elements = document.querySelectorAll('.feature-card, .stat-item, .command-tier, .section-title');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            elements.forEach(element => {
+                observer.observe(element);
+            });
         };
         
-        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+        animateOnScroll();
+        
+        // Member count animation
+        const communitySection = document.querySelector('.community');
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    return;
-                } else {
-                    entry.target.classList.add('active');
-                    appearOnScroll.unobserve(entry.target);
+                if (entry.isIntersecting) {
+                    animateValue("member-count", 0, 32, 2000);
+                    observer.unobserve(entry.target);
                 }
             });
-        }, appearOptions);
+        }, {threshold: 0.5});
         
-        fadeElements.forEach(fadeElement => {
-            appearOnScroll.observe(fadeElement);
-        });
-
-     
-
+        observer.observe(communitySection);
         
-
         function animateValue(id, start, end, duration) {
             let obj = document.getElementById(id);
             let range = end - start;
@@ -1104,258 +1710,203 @@
             timer = setInterval(run, stepTime);
             run();
         }
-
         
-
-        const communitySection = document.querySelector('.community');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateValue("member-count", 0, 32, 31);
-                    observer.unobserve(entry.target);
+        // Cookie consent
+        document.addEventListener('DOMContentLoaded', function() {
+            const cookieBanner = document.getElementById('cookie-consent-banner');
+            const acceptBtn = document.getElementById('accept-cookies');
+            const denyBtn = document.getElementById('deny-cookies');
+            
+            function hasCookieConsent() {
+                return localStorage.getItem('cookiesAccepted') !== null;
+            }
+            
+            function showBanner() {
+                setTimeout(() => {
+                    cookieBanner.classList.add('show');
+                }, 2000);
+            }
+            
+            function hideBanner() {
+                cookieBanner.classList.remove('show');
+                setTimeout(() => {
+                    cookieBanner.style.display = 'none';
+                }, 500);
+            }
+            
+            if (!hasCookieConsent()) {
+                showBanner();
+            } else {
+                cookieBanner.style.display = 'none';
+            }
+            
+            acceptBtn.addEventListener('click', function() {
+                localStorage.setItem('cookiesAccepted', 'true');
+                hideBanner();
+                showToast('Cookie preferences saved!');
+            });
+            
+            denyBtn.addEventListener('click', function() {
+                localStorage.setItem('cookiesAccepted', 'false');
+                hideBanner();
+                showToast('Cookie preferences saved!');
+                
+                // Clear existing cookies
+                document.cookie.split(";").forEach(function(c) {
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                });
+            });
+        });
+        
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Theme toggle
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('light-theme');
+            const icon = this.querySelector('i');
+            
+            if (document.body.classList.contains('light-theme')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                showToast('Light theme activated');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                showToast('Dark theme activated');
+            }
+        });
+        
+        // Discord button
+        document.getElementById('discordBtn').addEventListener('click', function() {
+            window.open('https://discord.gg/dUWFNqYfPX', '_blank');
+        });
+        
+        // Supabase integration
+        const supabase = window.supabase.createClient(
+            "https://akektlyhqzbatuedgnuq.supabase.co",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
+        );
+        
+        const discordId = localStorage.getItem("loggedInDiscordId");
+        
+        async function loadUser() {
+            if (!discordId) return; 
+        
+            const { data, error } = await supabase
+                .from("users")
+                .select("*")
+                .eq("discord_id", discordId)
+                .single();
+        
+            console.log("Fetched user from Supabase:", data);
+        
+            const menu = document.getElementById("userMenu");
+            const dropdown = document.getElementById("dropdownMenu");
+        
+            if (!data || error) {
+                document.getElementById("linkBtn").style.display = "block";
+                document.getElementById("viewProfileBtn").style.display = "none";
+                document.getElementById("settingsBtn").style.display = "none";
+                menu.style.display = "block";
+                return;
+            }
+        
+            // Set dropdown UI
+            document.getElementById("dropdownAvatar").src = data.avatar_url;
+            document.getElementById("dropdownDisplayName").textContent = data.display_name || data.username;
+            document.getElementById("dropdownUsername").textContent = "@" + data.username;
+            document.getElementById("dropdownUserId").textContent = "ID: " + data.discord_id;
+        
+            document.getElementById("viewProfileBtn").href = `profile?discord_id=${data.discord_id}`;
+            document.getElementById("settingsBtn").href = "settings";
+            document.getElementById("linkBtn").style.display = "none";
+        
+            document.getElementById("userDropdownBtn").src = data.avatar_url;
+            menu.style.display = "block";
+        }
+        
+        loadUser();
+        
+        // User dropdown toggle
+        const avatarBtn = document.getElementById("userDropdownBtn");
+        const dropdown = document.getElementById("dropdownMenu");
+        
+        avatarBtn?.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        });
+        
+        document.addEventListener("click", () => {
+            dropdown.style.display = "none";
+        });
+        
+        dropdown.addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
+        
+        // Verify code function
+        async function verifyCode() {
+            const code = document.getElementById("codeInput").value;
+            if (!code) {
+                showToast('Please enter a code');
+                return;
+            }
+            
+            const res = await fetch("/api/verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code })
+            });
+        
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById("discordId").innerText = data.discord_id;
+                document.getElementById("username").innerText = data.profile_data.username;
+                document.getElementById("points").innerText = data.profile_data.points;
+                document.getElementById("profile").classList.add('show');
+                showToast('Account linked successfully!');
+            } else {
+                showToast('Invalid or expired code');
+            }
+        }
+        
+        // Log site visit
+        async function logSiteVisit() {
+            await supabase.from("site_visits").insert({
+                ip: null, // optional: skip IP for privacy
+                user_agent: navigator.userAgent
+            });
+        }
+        logSiteVisit();
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
                 }
             });
-        }, {threshold: 0.5});
-
-        
-
-
-document.addEventListener('DOMContentLoaded', function() {
-  const cookieBanner = document.getElementById('cookie-consent-banner');
-  const acceptBtn = document.getElementById('accept-cookies');
-  const denyBtn = document.getElementById('deny-cookies');
-  
-
-  console.log('Cookie consent script loaded');
-  console.log('Banner element:', cookieBanner);
-  
-
-  function hasCookieConsent() {
-    return localStorage.getItem('cookiesAccepted') !== null;
-  }
-  
-
-  function showBanner() {
-    console.log('Showing cookie banner');
-    cookieBanner.classList.add('show');
-  }
-  
-
-  function hideBanner() {
-    cookieBanner.classList.remove('show');
-
-    setTimeout(() => {
-      cookieBanner.style.display = 'none';
-    }, 500);
-  }
-  
-
-  if (!hasCookieConsent()) {
-    console.log('No consent found - showing banner');
-    showBanner();
-  } else {
-    console.log('Consent already given/denied - hiding banner');
-    cookieBanner.style.display = 'none';
-  }
-  
-
-  acceptBtn.addEventListener('click', function() {
-    console.log('Accepted cookies');
-    localStorage.setItem('cookiesAccepted', 'true');
-    hideBanner();
-
-  });
-  
-  denyBtn.addEventListener('click', function() {
-    console.log('Denied cookies');
-    localStorage.setItem('cookiesAccepted', 'false');
-    hideBanner();
-
-    document.cookie.split(";").forEach(function(c) {
-      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-    });
-  });
-  
-
-  console.log('Current cookiesAccepted value:', localStorage.getItem('cookiesAccepted'));
-});
-
-        
-        observer.observe(communitySection);
+        });
     </script>
-<script>
-  fetch("http://localhost:3000/user", {
-    credentials: "include"
-  })
-  .then(res => res.json())
-  .then(user => {
-    if (user && user.username) {
-      const userBox = document.getElementById("user-box");
-      userBox.innerHTML = `
-        <div style="display:flex; align-items:center; gap:10px;">
-          <img src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png" style="width:35px;height:35px;border-radius:50%;">
-          <span>${user.username}</span>
-          <a href="http://localhost:3000/logout" class="cta-button" style="background:#ED4245;">Logout</a>
-        </div>
-      `;
-    }
-  });
-
-async function verifyCode() {
-    const code = document.getElementById("codeInput").value;
-    const res = await fetch("/api/verify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code })
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      document.getElementById("discordId").innerText = data.discord_id;
-      document.getElementById("username").innerText = data.profile_data.username;
-      document.getElementById("points").innerText = data.profile_data.points;
-      document.getElementById("profile").style.display = "block";
-    } else {
-      alert("Invalid or expired code");
-    }
-  }
-
-  fetch("mainheader.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("header-placeholder").innerHTML = html;
-      applyHeaderPreference();
-      loadUserInfo();
-      
-    });
-
-
-  const toggleBtn = document.getElementById("toggleHeaderBtn");
-
-  toggleBtn.addEventListener("click", () => {
-    const header = document.getElementById("header-placeholder");
-    const hidden = header.classList.toggle("hidden-header");
-    localStorage.setItem("hideHeader", hidden ? "1" : "0");
-    toggleBtn.textContent = hidden ? "🔼 Enable Header" : "🔻 Disable Header";
-  });
-
-  function applyHeaderPreference() {
-    const shouldHide = localStorage.getItem("hideHeader") === "1";
-    const header = document.getElementById("header-placeholder");
-    if (shouldHide) {
-      header.classList.add("hidden-header");
-      toggleBtn.textContent = "🔼 Enable Header";
-    } else {
-      header.classList.remove("hidden-header");
-      toggleBtn.textContent = "🔻 Disable Header";
-    }
-  }
-
-  
-
- 
-function showProfileLink() {
-  const discordId = localStorage.getItem("discord_id");
-  const avatarUrl = localStorage.getItem("avatar_url");
-
-  const profileLink = document.getElementById("profileLink");
-  const profileAvatar = document.getElementById("profileAvatar");
-
-  if (discordId && avatarUrl && profileLink && profileAvatar) {
-    profileLink.href = `profile?discord_id=${discordId}`;
-    profileAvatar.src = avatarUrl;
-    profileLink.style.display = "inline-block";
-  }
-}
-
-
-
-
-   
-
-</script>
-
-   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script>
-  const supabase = window.supabase.createClient(
-    "https://akektlyhqzbatuedgnuq.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
-  );
-
-  const discordId = localStorage.getItem("loggedInDiscordId");
-
-  async function loadUser() {
-    if (!discordId) return; 
-
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("discord_id", discordId)
-      .single();
-
-    console.log("Fetched user from Supabase:", data);
-
-    const menu = document.getElementById("userMenu");
-    const dropdown = document.getElementById("dropdownMenu");
-
-    if (!data || error) {
-      document.getElementById("linkBtn").style.display = "block";
-      document.getElementById("viewProfileBtn").style.display = "none";
-      document.getElementById("settingsBtn").style.display = "none";
-      menu.style.display = "block";
-      return;
-    }
-
-    // Set dropdown UI
-    document.getElementById("dropdownAvatar").src = data.avatar_url;
-    document.getElementById("dropdownDisplayName").textContent = data.display_name || data.username;
-    document.getElementById("dropdownUsername").textContent = "@" + data.username;
-    document.getElementById("dropdownUserId").textContent = "ID: " + data.discord_id;
-
-    document.getElementById("viewProfileBtn").href = `profile?discord_id=${data.discord_id}`;
-    document.getElementById("settingsBtn").href = "settings";
-    document.getElementById("linkBtn").style.display = "none";
-
-    document.getElementById("userDropdownBtn").src = data.avatar_url;
-    menu.style.display = "block";
-     
-  }
-
-  loadUser();
-
-  
-  const avatarBtn = document.getElementById("userDropdownBtn");
-  const dropdown = document.getElementById("dropdownMenu");
-
-  avatarBtn?.addEventListener("click", () => {
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.style.display = "none";
-    }
-  });
-    const menu = document.getElementById("userMenu");
-    document.getElementById("userDropdownBtn").src = localStorage.getItem("avatar_url");
-menu.style.display = "block";
-
-async function logSiteVisit() {
-  await supabase.from("site_visits").insert({
-    ip: null, // optional: skip IP for privacy
-    user_agent: navigator.userAgent
-  });
-}
-logSiteVisit();
-
-
-</script>
-
-
-
-
-
-
-    
 </body>
 </html>
