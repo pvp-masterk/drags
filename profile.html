@@ -1104,7 +1104,7 @@
           .from("follows")
           .select(`
             followed_id,
-            profiles!follows_followed_id_fkey(username, display_name, avatar_url)
+            profiles!user_follower_counts_followed_id_fkey(username, display_name, avatar_url)
           `)
           .eq("follower_id", targetId)
           .order("created_at", { ascending: false });
