@@ -1023,7 +1023,13 @@
         if (!followBtn) return;
         
         followBtn.disabled = true;
-        
+          const followBtn = document.getElementById('followBtn');
+    if (followBtn) {
+      followBtn.addEventListener('click', () => {
+        const targetId = new URLSearchParams(window.location.search).get('discord_id');
+        if (targetId) toggleFollow(targetId);
+      });
+    }
         try {
           const { data: existingFollow } = await supabase
             .from("follows")
@@ -1299,13 +1305,7 @@
           modal.classList.remove('active');
         }
       });
-       const followBtn = document.getElementById('followBtn');
-    if (followBtn) {
-      followBtn.addEventListener('click', () => {
-        const targetId = new URLSearchParams(window.location.search).get('discord_id');
-        if (targetId) toggleFollow(targetId);
-      });
-    }
+       
     }
 
 
