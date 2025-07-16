@@ -1196,7 +1196,12 @@ async function loadFollowing(targetId) {
       if (username) username.textContent = `@${user.username}`;
       if (displayName) displayName.innerHTML = `${user.display_name || user.username}`;
       if (userId) userId.textContent = `ID: ${user.discord_id}`;
-      if (userBio) userBio.textContent = user.bio || "";
+      if (userBio) {
+  const rawBio = user.bio || "";
+  const formattedBio = rawBio.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  userBio.innerHTML = formattedBio;
+}
+
       if (dragcoins) dragcoins.innerHTML = `💰 ${user.dragcoins}`;
 
       if (loadingBuffer) loadingBuffer.style.display = "none";
