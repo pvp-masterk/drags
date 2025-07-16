@@ -1122,61 +1122,9 @@
         }
         
      
-        .loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
-}
-        
-        .loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-         /*.loader-logo {
-            font-size: 40px;
-            font-weight: 700;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        } */
-        
        
         
-        .loader-bar {
-            width: 200px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
         
-        .loader-progress {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 0;
-            background: var(--gradient);
-            animation: loading 2s ease-in-out forwards;
-        }
-        
-        @keyframes loading {
-            0% { width: 0; }
-            100% { width: 100%; }
-        }
         
        
         @media (max-width: 1200px) {
@@ -1282,34 +1230,90 @@
                 font-size: 16px;
             }
         }
-        .loader-tips {
-        margin-top: 30px;
-        max-width: 400px;
-        text-align: center;
-        opacity: 0.8;
-        font-size: 14px;
-    }
-    
-    .loader-tips .tip {
-        display: none;
-    }
-    
-    .loader-tips .tip.active {
-        display: block;
-        animation: fadeInOut 5s ease infinite;
-    }
-    
-    @keyframes fadeInOut {
-        0%, 100% { opacity: 0; }
-        20%, 80% { opacity: 1; }
-    }
-    
-    .loader-logo img {
-        width: 120px;
-        height: 120px; 
-        object-fit: contain;
-        
-    }
+        .loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-logo {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.loader-logo img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+   
+}
+
+.loader-bar {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loader-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: var(--gradient);
+    animation: loading 2s ease-in-out forwards;
+}
+
+.loader-tips {
+    margin-top: 30px;
+    max-width: 400px;
+    text-align: center;
+    opacity: 0.8;
+    font-size: 14px;
+    color: var(--text-light);
+    min-height: 60px; 
+}
+
+.loader-tips .tip {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding: 0 20px;
+}
+
+.loader-tips .tip.active {
+    display: block;
+    animation: fadeInOut 5s ease infinite;
+}
+
+/* animations  bruh*/
+@keyframes loading {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; transform: translateY(10px); }
+    20%, 80% { opacity: 1; transform: translateY(0); }
+}
     </style>
 </head>
 <body>
