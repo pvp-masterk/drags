@@ -1285,19 +1285,53 @@
                 font-size: 16px;
             }
         }
+        .loader-tips {
+        margin-top: 30px;
+        max-width: 400px;
+        text-align: center;
+        opacity: 0.8;
+        font-size: 14px;
+    }
+    
+    .loader-tips .tip {
+        display: none;
+    }
+    
+    .loader-tips .tip.active {
+        display: block;
+        animation: fadeInOut 5s ease infinite;
+    }
+    
+    @keyframes fadeInOut {
+        0%, 100% { opacity: 0; }
+        20%, 80% { opacity: 1; }
+    }
+    
+    .loader-logo img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        animation: pulse 1.5s infinite ease-in-out;
+    }
     </style>
 </head>
 <body>
   
-    <div class="loader">
-        <div class="loader-logo">
-            <i class="fab fa-discord"></i>
-            <span>Drags</span>
-        </div>
-        <div class="loader-bar">
-            <div class="loader-progress"></div>
-        </div>
+   <div class="loader">
+    <div class="loader-logo">
+        <img src="dragstransparent.png" alt="Drags Logo">
+        <span>Drags</span>
     </div>
+    <div class="loader-bar">
+        <div class="loader-progress"></div>
+    </div>
+    <div class="loader-tips">
+        <div class="tip active">Did you know? You can customize your profile in the settings tab</div>
+        <div class="tip">Tip: You can apply for staff in the website</div>
+        <div class="tip">Fun Fact: Drags is the best server!</div>
+        <div class="tip">Remember to check #development for important updates!</div>
+    </div>
+</div>
 
     
     <div class="particles" id="particles"></div>
@@ -1878,5 +1912,22 @@
             });
         });
     </script>
+    <script>
+   
+    const tips = document.querySelectorAll('.loader-tips .tip');
+    let currentTip = 0;
+    
+    function rotateTips() {
+        tips.forEach(tip => tip.classList.remove('active'));
+        currentTip = (currentTip + 1) % tips.length;
+        tips[currentTip].classList.add('active');
+    }
+    
+   
+    setInterval(rotateTips, 5000);
+    
+   
+    tips[0].classList.add('active');
+</script>
 </body>
 </html>
