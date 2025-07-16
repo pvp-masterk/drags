@@ -1314,6 +1314,46 @@
     0%, 100% { opacity: 0; transform: translateY(10px); }
     20%, 80% { opacity: 1; transform: translateY(0); }
 }
+        /* Staff Button Styles */
+.staff-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.staff-button:hover {
+    transform: translateX(10px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    background: var(--primary-light);
+    border-color: var(--primary);
+}
+
+.staff-name {
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.staff-button:hover .staff-name {
+    color: var(--primary);
+}
+
+.staff-role {
+    color: var(--primary);
+    font-size: 0.9em;
+    transition: color 0.3s ease;
+}
+
+.staff-button:hover .staff-role {
+    color: var(--text);
+}
     </style>
 </head>
 <body>
@@ -1943,6 +1983,14 @@
             }
         }, 1500);
     });
+    document.querySelectorAll('.staff-button').forEach(button => {
+    button.addEventListener('mouseenter', function() {
+        this.style.transitionDelay = '0.1s';
+    });
+    button.addEventListener('mouseleave', function() {
+        this.style.transitionDelay = '0s';
+    });
+});
 </script>
 </body>
 </html>
