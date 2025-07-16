@@ -776,12 +776,12 @@
     
     <!-- Header -->
     <header id="header">
-        <a href="https://discord.gg/dUWFNqYfPX" class="logo"><i class="fab fa-discord"></i> Drags</a>
+        <a href="index.html" class="logo"><i class="fab fa-discord"></i> Drags</a>
         <nav class="nav-links">
-            <a href="index">Home</a>
-            <a href="rules">Rules</a>
-            <a href="privacy">Privacy Policy</a>
-            <a href="cookies">Cookie Policy</a>
+            <a href="index.html#home">Home</a>
+            <a href="index.html#features">Features</a>
+            <a href="index.html#community">Community</a>
+            <a href="index.html#command">Command</a>
         </nav>
         <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
     </header>
@@ -888,10 +888,10 @@
             <div class="footer-column">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="index#home">Home</a></li>
-                    <li><a href="index#features">Features</a></li>
-                    <li><a href="index#community">Community</a></li>
-                    <li><a href="index#command">Command</a></li>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#features">Features</a></li>
+                    <li><a href="index.html#community">Community</a></li>
+                    <li><a href="index.html#command">Command</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -1065,90 +1065,73 @@
                 // Replace with your actual webhook URL
                 const webhookURL = 'https://discord.com/api/webhooks/1392885637119611010/p0iQabCSfD6vgn0ubTJAXNPuBOttY5ZGG3ojL1ks9PKacW2eMY54qysS72lf9HVTpLHs';
                 
-                                // Create Discord embed
+                // Create Discord embed
                 const embed = {
-                    title: "New Staff Application",
+                    title: 'New Application Submission',
                     color: 0x5865F2,
                     fields: [
-                        {
-                            name: "Discord Username",
-                            value: formData.username,
-                            inline: true
-                        },
-                        {
-                            name: "Age",
-                            value: formData.age,
-                            inline: true
-                        },
-                        {
-                            name: "Position",
-                            value: formData.position,
-                            inline: true
-                        },
-                        {
-                            name: "Previous Experience",
-                            value: formData.experience.substring(0, 1000) + (formData.experience.length > 1000 ? "..." : ""),
-                            inline: false
-                        },
-                        {
-                            name: "Why Join Our Team?",
-                            value: formData.whyJoin.substring(0, 1000) + (formData.whyJoin.length > 1000 ? "..." : ""),
-                            inline: false
-                        },
-                        {
-                            name: "Submitted At",
-                            value: new Date(formData.timestamp).toLocaleString(),
-                            inline: true
-                        }
+                        { name: 'Discord Username', value: formData.username, inline: true },
+                        { name: 'Age', value: formData.age, inline: true },
+                        { name: 'Position', value: formData.position, inline: true },
+                        { name: 'Experience', value: formData.experience || 'Not provided' },
+                        { name: 'Why Join', value: formData.whyJoin || 'Not provided' },
+                        { name: 'Submitted At', value: new Date(formData.timestamp).toLocaleString() }
                     ],
-                    footer: {
-                        text: "Drags Staff Applications"
-                    }
+                    footer: { text: 'Drags Application System' }
                 };
-
-                // Send to Discord webhook
+                
+                // Send to Discord
                 const response = await fetch(webhookURL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         embeds: [embed],
-                        content: `New staff application for **${formData.position}** received!`
-                    }),
+                        content: `New application from ${formData.username} for ${formData.position}`
+                    })
                 });
-
-                if (!response.ok) {
-                    throw new Error('Failed to submit application. Please try again later.');
-                }
-
-                // Show success
-                statusElement.textContent = 'Application submitted successfully! We will review your application soon.';
+                
+                if (!response.ok) throw new Error('Failed to submit application');
+                
+                // Success message
+                statusElement.textContent = 'Application submitted successfully! Staff will review your application soon.';
                 statusElement.classList.add('show', 'success');
+                form.reset();
+                
+                // Add celebration effects
                 formContainer.classList.add('celebrate');
                 createConfetti();
                 
-                // Reset form
-                form.reset();
+                // Reset active position card
                 document.querySelectorAll('.position-card').forEach(card => {
                     card.classList.remove('active');
                 });
-
+                
+                setTimeout(() => {
+                    formContainer.classList.remove('celebrate');
+                }, 2000);
+                
             } catch (error) {
-                // Show error
-                statusElement.textContent = error.message;
+                // Error message
+                statusElement.textContent = error.message || 'An error occurred while submitting your application. Please try again.';
                 statusElement.classList.add('show', 'error');
-                console.error('Error submitting application:', error);
             } finally {
                 // Reset loading state
                 submitText.style.display = 'inline';
                 loadingSpinner.style.display = 'none';
-                
-                // Remove celebrate class after animation
-                setTimeout(() => {
-                    formContainer.classList.remove('celebrate');
-                }, 1000);
             }
+        });
+        
+        // Animate form elements on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.form-group, .position-cards').forEach(element => {
+            observer.observe(element);
         });
     </script>
 </body>
