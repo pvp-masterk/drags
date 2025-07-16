@@ -1013,108 +1013,109 @@
       }
 
       async function toggleFollow(targetId) {
-        const currentUserId = localStorage.getItem("loggedInDiscordId");
-        if (!currentUserId) {
-          alert("Please log in to follow users");
-          return;
-        }
+  const currentUserId = localStorage.getItem("loggedInDiscordId");
+  if (!currentUserId) {
+    alert("Please log in to follow users");
+    return;
+  }
 
-        const followBtn = document.getElementById("followBtn");
-        if (!followBtn) return;
-        
-        followBtn.disabled = true;
-         
-    if (followBtn) {
-      followBtn.addEventListener('click', () => {
-        const targetId = new URLSearchParams(window.location.search).get('discord_id');
-        if (targetId) toggleFollow(targetId);
-      });
+  const followBtn = document.getElementById("followBtn");
+  if (!followBtn) return;
+  
+  followBtn.disabled = true;
+  
+  try {
+    const { data: existingFollow } = await supabase
+      .from("follows")
+      .select()
+      .eq("follower_id", currentUserId)
+      .eq("followed_id", targetId)
+      .single();
+
+    if (existingFollow) {
+      const { error } = await supabase
+        .from("follows")
+        .delete()
+        .eq("id", existingFollow.id);
+      
+      if (!error) {
+        followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+        followBtn.classList.remove("following");
+
+        const countElement = document.getElementById("followersCount");
+        if (countElement) {
+          countElement.textContent = parseInt(countElement.textContent) - 1;
+        }
+      }
+    } else {
+      const { error } = await supabase
+        .from("follows")
+        .insert([{
+          follower_id: currentUserId,
+          followed_id: targetId,
+          created_at: new Date().toISOString()
+        }]);
+      
+      if (!error) {
+        followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
+        followBtn.classList.add("following");
+
+        const countElement = document.getElementById("followersCount");
+        if (countElement) {
+          countElement.textContent = parseInt(countElement.textContent) + 1;
+        }
+      }
     }
-        try {
-          const { data: existingFollow } = await supabase
-            .from("follows")
-            .select()
-            .eq("follower_id", currentUserId)
-            .eq("followed_id", targetId)
-            .single();
+  } catch (error) {
+    console.error("Follow error:", error);
+    alert("An error occurred. Please try again.");
+  } finally {
+    followBtn.disabled = false;
+  }
+}
 
-          if (existingFollow) {
 
-            const { error } = await supabase
-              .from("follows")
-              .delete()
-              .eq("id", existingFollow.id);
-            
-            if (!error) {
-              followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
-              followBtn.classList.remove("following");
+const followBtn = document.getElementById("followBtn");
+if (followBtn) {
+  followBtn.addEventListener('click', () => {
+    const targetId = new URLSearchParams(window.location.search).get('discord_id');
+    if (targetId) toggleFollow(targetId);
+  });
+}
 
-              const countElement = document.getElementById("followersCount");
-              if (countElement) {
-                countElement.textContent = parseInt(countElement.textContent) - 1;
-              }
-            }
-          } else {
+     async function loadFollowers(targetId) {
+  const { data: followers, error } = await supabase
+    .from("follows")
+    .select(`
+      follower_id,
+      profiles:profiles!follower_id(username, display_name, avatar_url)
+    `)
+    .eq("followed_id", targetId)
+    .order("created_at", { ascending: false });
 
-            const { error } = await supabase
-              .from("follows")
-              .insert([{
-                follower_id: currentUserId,
-                followed_id: targetId,
-                created_at: new Date().toISOString()
-              }]);
-            
-            if (!error) {
-              followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
-              followBtn.classList.add("following");
+  if (error) {
+    console.error("Error loading followers:", error);
+    return [];
+  }
+  return followers || [];
+}
 
-              const countElement = document.getElementById("followersCount");
-              if (countElement) {
-                countElement.textContent = parseInt(countElement.textContent) + 1;
-              }
-            }
-          }
-        } catch (error) {
-          console.error("Follow error:", error);
-          alert("An error occurred. Please try again.");
-        } finally {
-          followBtn.disabled = false;
-        }
-      }
+async function loadFollowing(targetId) {
+  const { data: following, error } = await supabase
+    .from("follows")
+    .select(`
+      followed_id,
+      profiles:profiles!followed_id(username, display_name, avatar_url)
+    `)
+    .eq("follower_id", targetId)
+    .order("created_at", { ascending: false });
 
-      async function loadFollowers(targetId) {
-        const { data: followers, error } = await supabase
-          .from("follows")
-          .select(`
-            follower_id,
-            profiles!user_follower_counts_follower_id_fkey(username, display_name, avatar_url)
-          `)
-          .eq("followed_id", targetId)
-          .order("created_at", { ascending: false });
-
-        if (error) {
-          console.error("Error loading followers:", error);
-          return [];
-        }
-        return followers || [];
-      }
-
-      async function loadFollowing(targetId) {
-        const { data: following, error } = await supabase
-          .from("follows")
-          .select(`
-            followed_id,
-            profiles!user_follower_counts_followed_id_fkey(username, display_name, avatar_url)
-          `)
-          .eq("follower_id", targetId)
-          .order("created_at", { ascending: false });
-
-        if (error) {
-          console.error("Error loading following:", error);
-          return [];
-        }
-        return following || [];
-      }
+  if (error) {
+    console.error("Error loading following:", error);
+    return [];
+  }
+  return following || [];
+}
       
 
       const followersStat = document.getElementById('followersStat');
