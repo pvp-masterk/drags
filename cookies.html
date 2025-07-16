@@ -31,7 +31,7 @@
             scroll-behavior: smooth;
         }
         
-        /* Animated background elements */
+
         .bg-blob {
             position: fixed;
             width: 500px;
@@ -69,7 +69,7 @@
             }
         }
         
-        /* Header styles */
+
         header {
             position: fixed;
             top: 0;
@@ -117,7 +117,7 @@
             transform: rotate(15deg);
         }
         
-        /* Main content */
+
         .legal-container {
             max-width: 800px;
             margin: 120px auto 60px;
@@ -199,7 +199,6 @@
             color: var(--text);
         }
         
-        /* Buttons */
         .back-button {
             background: var(--primary);
             color: white;
@@ -232,7 +231,7 @@
             transform: translateX(-3px);
         }
         
-        /* Cookie consent banner */
+
         .cookie-consent {
             position: fixed;
             bottom: 0;
@@ -296,7 +295,7 @@
             border-color: var(--text);
         }
         
-        /* Progress indicator */
+
         .progress-container {
             position: fixed;
             top: 0;
@@ -315,7 +314,7 @@
             border-radius: 0 2px 2px 0;
         }
         
-        /* Responsive */
+
         @media (max-width: 768px) {
             .legal-container {
                 margin: 100px auto 40px;
@@ -348,16 +347,16 @@
     </style>
 </head>
 <body>
-    <!-- Animated background elements -->
+  
     <div class="bg-blob"></div>
     <div class="bg-blob"></div>
     
-    <!-- Progress indicator -->
+
     <div class="progress-container">
         <div class="progress-bar" id="progressBar"></div>
     </div>
     
-    <!-- Header -->
+
     <header id="mainHeader">
         <a href="index" class="logo"><i class="fab fa-discord"></i> Drags</a>
         <nav>
@@ -365,7 +364,7 @@
         </nav>
     </header>
 
-    <!-- Main content -->
+
     <div class="legal-container">
         <h1>Cookie Policy</h1>
         <p>Last Updated: July 10, 2025</p>
@@ -412,7 +411,7 @@
         <a href="index.html" class="back-button"><i class="fas fa-chevron-left"></i> Back to Home</a>
     </div>
     
-    <!-- Cookie consent banner -->
+
     <div class="cookie-consent" id="cookieConsent">
         <p>We use cookies to enhance your experience on our website. By continuing to browse, you agree to our use of cookies as described in our <a href="cookies.html" style="color: var(--primary);">Cookie Policy</a>.</p>
         <div class="cookie-buttons">
@@ -422,7 +421,7 @@
     </div>
     
     <script>
-        // Scroll progress indicator
+
         window.addEventListener('scroll', function() {
             const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -430,7 +429,7 @@
             document.getElementById('progressBar').style.width = scrollProgress + '%';
         });
         
-        // Header scroll effect
+     
         window.addEventListener('scroll', function() {
             const header = document.getElementById('mainHeader');
             if (window.scrollY > 50) {
@@ -440,7 +439,7 @@
             }
         });
         
-        // Animate elements when they come into view
+
         const animateOnScroll = function() {
             const elements = document.querySelectorAll('h2, li');
             elements.forEach(element => {
@@ -454,7 +453,7 @@
             });
         };
         
-        // Set initial state for animated elements
+  
         document.querySelectorAll('h2, li').forEach(element => {
             element.style.opacity = '0';
             element.style.transform = 'translateX(-20px)';
@@ -464,34 +463,34 @@
         window.addEventListener('scroll', animateOnScroll);
         window.addEventListener('load', animateOnScroll);
         
-        // Cookie consent banner
+
         document.addEventListener('DOMContentLoaded', function() {
             const cookieConsent = document.getElementById('cookieConsent');
             const acceptCookies = document.getElementById('acceptCookies');
             const declineCookies = document.getElementById('declineCookies');
             
-            // Check if consent has already been given
+
             if (!localStorage.getItem('cookieConsent')) {
                 setTimeout(() => {
                     cookieConsent.classList.add('active');
                 }, 2000);
             }
             
-            // Accept cookies
+
             acceptCookies.addEventListener('click', function() {
                 localStorage.setItem('cookieConsent', 'accepted');
                 cookieConsent.classList.remove('active');
             });
             
-            // Decline cookies
+
             declineCookies.addEventListener('click', function() {
                 localStorage.setItem('cookieConsent', 'declined');
                 cookieConsent.classList.remove('active');
-                // Here you would implement actual cookie blocking functionality
+
             });
         });
         
-        // Smooth scroll for anchor links
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
