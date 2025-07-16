@@ -1327,9 +1327,9 @@
     </div>
     <div class="loader-tips">
         <div class="tip active">Did you know? Drags started as a small community in 2025!</div>
-        <div class="tip">Tip: You can check userlist page to view all the users!</div>
-        <div class="tip">Fun Fact: Our server is the best!</div>
-        <div class="tip">Remember to check #development for important updates!</div>
+        <div class="tip">Tip: You can customize your profile in the settings.</div>
+        <div class="tip">Fun Fact: Drags is the best!</div>
+        <div class="tip">Remember to check #development for updates!</div>
     </div>
 </div>
 
@@ -1909,57 +1909,15 @@
             });
         });
     </script>
-    <!-- In the head section, add this style -->
-<style>
-    .loader-tips {
-        margin-top: 30px;
-        max-width: 400px;
-        text-align: center;
-        opacity: 0.8;
-        font-size: 14px;
-    }
-    
-    .loader-tips .tip {
-        display: none;
-    }
-    
-    .loader-tips .tip.active {
-        display: block;
-        animation: fadeInOut 5s ease infinite;
-    }
-    
-    @keyframes fadeInOut {
-        0%, 100% { opacity: 0; }
-        20%, 80% { opacity: 1; }
-    }
-    
-    .loader-logo img {
-        width: 120px; /* Increased size */
-        height: 120px; /* Increased size */
-        object-fit: contain;
-        /* Removed animation */
-    }
-</style>
+   
 
-<!-- Updated loader div -->
-<div class="loader">
-    <div class="loader-logo">
-        <img src="drags.png" alt="Drags Logo"> <!-- Only the logo now -->
-    </div>
-    <div class="loader-bar">
-        <div class="loader-progress"></div>
-    </div>
-    <div class="loader-tips">
-        <div class="tip active">Did you know? Drags started as a small community in 2024!</div>
-        <div class="tip">Tip: You can click on staff names in the Chain of Command to view their profiles!</div>
-        <div class="tip">Fun Fact: Our server has hosted over 10 events this year!</div>
-        <div class="tip">Remember to check #announcements for important updates!</div>
-    </div>
-</div>
+
+
+
 
 
 <script>
-    
+   
     const tips = document.querySelectorAll('.loader-tips .tip');
     let currentTip = 0;
     
