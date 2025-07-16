@@ -1060,10 +1060,12 @@
         followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
         followBtn.classList.add("following");
 
-        const countElement = document.getElementById("followersCount");
-        if (countElement) {
-          countElement.textContent = parseInt(countElement.textContent) + 1;
-        }
+       const countElement = document.getElementById("followersCount");
+if (countElement) {
+  const currentCount = parseInt(countElement.textContent);
+  countElement.textContent = Math.max(0, currentCount - 1);
+}
+
       }
     }
   } catch (error) {
@@ -1088,7 +1090,7 @@ if (followBtn) {
     .from("follows")
     .select(`
       follower_id,
-      profiles:profiles!follower_id(username, display_name, avatar_url)
+    users:users!follower_id(username, display_name, avatar_url)
     `)
     .eq("followed_id", targetId)
     .order("created_at", { ascending: false });
@@ -1105,7 +1107,7 @@ async function loadFollowing(targetId) {
     .from("follows")
     .select(`
       followed_id,
-      profiles:profiles!followed_id(username, display_name, avatar_url)
+      users:users!followed_id(username, display_name, avatar_url)
     `)
     .eq("follower_id", targetId)
     .order("created_at", { ascending: false });
