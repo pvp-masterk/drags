@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join Our Team | Drags</title>
+    <title>Join Our Teams</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -36,12 +36,12 @@
             overflow-x: hidden;
         }
         
-        /* Smooth scroll */
+
         html {
             scroll-behavior: smooth;
         }
         
-        /* Particles Background */
+
         .particles {
             position: fixed;
             top: 0;
@@ -74,7 +74,7 @@
             }
         }
         
-        /* Header */
+     
         header {
             position: fixed;
             top: 0;
@@ -199,7 +199,7 @@
             transform: translateY(1px);
         }
         
-        /* Hero Section for Application Page */
+
         .application-hero {
             height: 70vh;
             display: flex;
@@ -296,7 +296,7 @@
             60% { transform: translateY(-7px) translateX(-50%); }
         }
         
-        /* Application Form Section */
+
         .application-form {
             padding: 100px 10%;
             background: var(--bg);
@@ -502,14 +502,14 @@
             border: 1px solid var(--accent);
         }
         
-        /* Floating Animation for Form Elements */
+
         .form-group:nth-child(1) { animation-delay: 0.1s; }
         .form-group:nth-child(2) { animation-delay: 0.2s; }
         .form-group:nth-child(3) { animation-delay: 0.3s; }
         .form-group:nth-child(4) { animation-delay: 0.4s; }
         .form-group:nth-child(5) { animation-delay: 0.5s; }
         
-        /* Position Cards */
+
         .position-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -554,7 +554,7 @@
             line-height: 1.5;
         }
         
-        /* Footer */
+
         footer {
             background: var(--card-bg);
             padding: 70px 10% 30px;
@@ -638,7 +638,7 @@
             z-index: 1;
         }
         
-        /* Confetti Effect */
+
         .confetti-container {
             position: fixed;
             top: 0;
@@ -670,7 +670,7 @@
             }
         }
         
-        /* Tooltip */
+
         .tooltip {
             position: relative;
             display: inline-block;
@@ -709,7 +709,7 @@
             opacity: 1;
         }
         
-        /* Responsive */
+
         @media (max-width: 768px) {
             header {
                 padding: 15px 5%;
@@ -771,10 +771,10 @@
     </style>
 </head>
 <body>
-    <!-- Particles Background -->
+
     <div class="particles" id="particles"></div>
     
-    <!-- Header -->
+
     <header id="header">
         <a href="index.html" class="logo"><i class="fab fa-discord"></i> Drags</a>
         <nav class="nav-links">
@@ -786,7 +786,7 @@
         <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">Join Server</a>
     </header>
 
-    <!-- Hero Section -->
+
     <section class="application-hero">
         <div class="application-hero-content">
             <h1>Join Our Team</h1>
@@ -798,7 +798,7 @@
         </div>
     </section>
 
-    <!-- Application Form Section -->
+
     <section class="application-form">
         <h2 class="section-title">Application Form</h2>
         
@@ -870,10 +870,10 @@
         </div>
     </section>
 
-    <!-- Confetti Container -->
+
     <div class="confetti-container" id="confetti-container"></div>
 
-    <!-- Footer -->
+
     <footer>
         <div class="footer-content">
             <div class="footer-column">
@@ -918,7 +918,7 @@
     </footer>
 
     <script>
-        // Create particles
+
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = 30;
@@ -927,27 +927,27 @@
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
-                // Random size between 2px and 6px
+
                 const size = Math.random() * 4 + 2;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
                 
-                // Random position
+
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
                 
-                // Random animation duration between 10s and 20s
+
                 const duration = Math.random() * 10 + 10;
                 particle.style.animationDuration = `${duration}s`;
                 
-                // Random delay
+
                 particle.style.animationDelay = `${Math.random() * 5}s`;
                 
                 particlesContainer.appendChild(particle);
             }
         }
         
-        // Header scroll effect
+
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
             if (window.scrollY > 50) {
@@ -957,7 +957,7 @@
             }
         });
         
-        // Form container animation
+
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
             
@@ -966,7 +966,7 @@
                 formContainer.classList.add('active');
             }, 300);
             
-            // Scroll down button
+
             document.getElementById('scroll-down').addEventListener('click', function() {
                 window.scrollTo({
                     top: document.querySelector('.application-form').offsetTop - 80,
@@ -974,14 +974,14 @@
                 });
             });
             
-            // Position cards interaction
+
             const positionCards = document.querySelectorAll('.position-card');
             positionCards.forEach(card => {
                 card.addEventListener('click', function() {
                     const position = this.getAttribute('data-position');
                     document.getElementById('position').value = position;
                     
-                    // Update active card
+
                     positionCards.forEach(c => c.classList.remove('active'));
                     this.classList.add('active');
                     
@@ -994,7 +994,7 @@
             });
         });
         
-        // Create confetti
+
         function createConfetti() {
             const container = document.getElementById('confetti-container');
             container.innerHTML = '';
@@ -1007,7 +1007,7 @@
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
                 
-                // Random properties
+
                 const size = Math.random() * 10 + 5;
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 const left = Math.random() * 100;
@@ -1024,13 +1024,13 @@
                 container.appendChild(confetti);
             }
             
-            // Hide after animation
+
             setTimeout(() => {
                 container.style.display = 'none';
             }, 5000);
         }
         
-        // Form submission
+
         document.getElementById('discord-application').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -1040,14 +1040,14 @@
             const statusElement = document.getElementById('form-status');
             const formContainer = document.getElementById('form-container');
             
-            // Show loading state
+
             submitText.style.display = 'none';
             loadingSpinner.style.display = 'inline-block';
             statusElement.className = 'form-status';
             statusElement.textContent = '';
             
             try {
-                // Get form data
+    
                 const formData = {
                     username: form['discord-username'].value,
                     age: form['age'].value,
@@ -1057,15 +1057,15 @@
                     timestamp: new Date().toISOString()
                 };
                 
-                // Validate age
+
                 if (parseInt(formData.age) < 13) {
                     throw new Error('You must be at least 13 years old to apply.');
                 }
                 
-                // Replace with your actual webhook URL
+
                 const webhookURL = 'https://discord.com/api/webhooks/1392885637119611010/p0iQabCSfD6vgn0ubTJAXNPuBOttY5ZGG3ojL1ks9PKacW2eMY54qysS72lf9HVTpLHs';
                 
-                // Create Discord embed
+
                 const embed = {
                     title: 'New Application Submission',
                     color: 0x5865F2,
@@ -1080,7 +1080,7 @@
                     footer: { text: 'Drags Application System' }
                 };
                 
-                // Send to Discord
+
                 const response = await fetch(webhookURL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1092,16 +1092,16 @@
                 
                 if (!response.ok) throw new Error('Failed to submit application');
                 
-                // Success message
+
                 statusElement.textContent = 'Application submitted successfully! Staff will review your application soon.';
                 statusElement.classList.add('show', 'success');
                 form.reset();
                 
-                // Add celebration effects
+
                 formContainer.classList.add('celebrate');
                 createConfetti();
                 
-                // Reset active position card
+
                 document.querySelectorAll('.position-card').forEach(card => {
                     card.classList.remove('active');
                 });
@@ -1111,17 +1111,17 @@
                 }, 2000);
                 
             } catch (error) {
-                // Error message
+
                 statusElement.textContent = error.message || 'An error occurred while submitting your application. Please try again.';
                 statusElement.classList.add('show', 'error');
             } finally {
-                // Reset loading state
+
                 submitText.style.display = 'inline';
                 loadingSpinner.style.display = 'none';
             }
         });
         
-        // Animate form elements on scroll
+ 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
