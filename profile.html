@@ -1287,7 +1287,7 @@ if (spinner) spinner.style.display = 'block';
         items.forEach(item => {
           const li = document.createElement('li');
           li.className = 'follow-modal-item';
-          if (spinner) spinner.style.display = 'none';
+          
 
           const profile = item.users || {};
 
@@ -1305,7 +1305,7 @@ if (spinner) spinner.style.display = 'block';
 
           list.appendChild(li);
         });
-
+if (spinner) spinner.style.display = 'none';
       }
       
 
