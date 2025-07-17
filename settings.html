@@ -1790,7 +1790,7 @@
 
   async function loadAvatar() {
   const { data: authData, error: authError } = await supabase.auth.getUser();
-  const discordId = authData?.user?.user_metadata?.discord_id;
+  const discordId = localStorage.getItem("loggedInDiscordId");
 
   if (!discordId) {
     console.warn('No Discord ID found for user');
