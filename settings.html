@@ -38,7 +38,7 @@
       overflow-x: hidden;
     }
 
-   .header {
+  .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,7 +47,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.header .logo {
+.header-left .logo {
   font-size: 24px;
   font-weight: bold;
   color: var(--text);
@@ -65,45 +65,6 @@
   transform: scale(1.05);
 }
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 110%;
-  right: 0;
-  background-color: var(--background);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  min-width: 160px;
-  padding: 10px 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: none;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 1000;
-}
-
-.dropdown-menu.show {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-item {
-  padding: 10px 20px;
-  color: var(--text);
-  text-decoration: none;
-  display: block;
-  transition: background 0.2s;
-}
-
-.dropdown-item:hover {
-  background-color: var(--background-alt);
-}
     .main-content {
       padding: 40px;
       padding-top: calc(var(--header-height) + 20px);
@@ -1194,21 +1155,18 @@
   </style>
 </head>
 <body>
- 
+
 <header class="header">
   <div class="header-left">
     <h1 class="logo">Drags</h1>
   </div>
   <div class="header-right">
-    <div class="dropdown">
-      <img id="profileAvatar" class="avatar" src="" alt="User Avatar">
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> View Profile</a>
-       
-      </div>
-    </div>
+    <a id="profileLink" href="#">
+      <img id="profileAvatar" class="avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
+    </a>
   </div>
 </header>
+
 
 
   <main class="main-content">
