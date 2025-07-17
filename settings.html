@@ -38,126 +38,72 @@
       overflow-x: hidden;
     }
 
-    /* New Header Styles */
-    .header {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      height: var(--header-height);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
-      position: relative;
-      overflow: hidden;
-      z-index: 10;
-    }
+   .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: var(--background-alt);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
 
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, 
-        rgba(88, 101, 242, 0.8), 
-        rgba(87, 242, 135, 0.8));
-      z-index: -1;
-    }
+.header .logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text);
+}
 
-    .header::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      transform-origin: left;
-      animation: headerUnderline 8s infinite alternate;
-    }
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
 
-    @keyframes headerUnderline {
-      0% { transform: scaleX(0.2); opacity: 0.5; }
-      100% { transform: scaleX(1); opacity: 1; }
-    }
+.avatar:hover {
+  transform: scale(1.05);
+}
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 24px;
-      color: white;
-      text-decoration: none;
-      animation: fadeInLeft 0.8s ease;
-    }
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
 
-    .logo img {
-      height: 36px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-    }
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 160px;
+  padding: 10px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
+}
 
-    .nav-links {
-      display: flex;
-      gap: 25px;
-    }
+.dropdown-menu.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
 
-    .nav-link {
-      color: rgba(255,255,255,0.9);
-      text-decoration: none;
-      font-weight: 500;
-      position: relative;
-      padding: 5px 0;
-      transition: all 0.3s ease;
-    }
+.dropdown-item {
+  padding: 10px 20px;
+  color: var(--text);
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s;
+}
 
-    .nav-link:hover {
-      color: white;
-      transform: translateY(-2px);
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: white;
-      transition: width 0.3s ease;
-    }
-
-    .nav-link:hover::after {
-      width: 100%;
-    }
-
-    .nav-link.active {
-      color: white;
-      font-weight: 600;
-    }
-
-    .nav-link.active::after {
-      width: 100%;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .user-avatar:hover {
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    }
-
-    /* Main Content */
+.dropdown-item:hover {
+  background-color: var(--background-alt);
+}
     .main-content {
       padding: 40px;
       padding-top: calc(var(--header-height) + 20px);
@@ -1243,23 +1189,27 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #4752C4;
     }
+    
+
   </style>
 </head>
 <body>
-  <!-- New Header -->
-  <header class="header animate__animated animate__fadeIn">
-    <a href="/" class="logo">
-      <img src="dragstransparent.png" alt="Drags Logo">
-      Drags
-    </a>
-    <nav class="nav-links">
-      <a href="index" class="nav-link">Home</a>
-      <a href="users" class="nav-link">Userlist</a>
-      <a href="settings" class="nav-link active">Settings</a>
-      <a href="rules" class="nav-link">Rules</a>
-    </nav>
-    <img src="https://cdn.discordapp.com/avatars/123456789012345678/abcdef1234567890abcdef1234567890.webp" alt="User Avatar" class="user-avatar" id="userAvatar">
-  </header>
+ 
+<header class="header">
+  <div class="header-left">
+    <h1 class="logo">Drags</h1>
+  </div>
+  <div class="header-right">
+    <div class="dropdown">
+      <img id="profileAvatar" class="avatar" src="" alt="User Avatar">
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> View Profile</a>
+       
+      </div>
+    </div>
+  </div>
+</header>
+
 
   <main class="main-content">
     <div class="settings-container">
@@ -1824,5 +1774,36 @@
       });
     });
   </script>
+  <script>
+  const avatar = document.getElementById('profileAvatar');
+  const dropdown = document.getElementById('dropdownMenu');
+
+  avatar.addEventListener('click', () => {
+    dropdown.classList.toggle('show');
+  });
+
+  window.addEventListener('click', (e) => {
+    if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove('show');
+    }
+  });
+
+  // Load avatar from Supabase
+  async function loadAvatar() {
+    const supabaseUrl = 'https://akektlyhqzbatuedgnuq.supabase.co'; // replace with your actual URL
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'; // use your key here
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    const user = supabase.auth.getUser();
+    const { data, error } = await supabase.from('users').select('avatar_url').eq('discord_id', user.user.id).single();
+
+    if (!error && data?.avatar_url) {
+      document.getElementById('profileAvatar').src = data.avatar_url;
+    }
+  }
+
+  loadAvatar();
+</script>
+
 </body>
 </html>
