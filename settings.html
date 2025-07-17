@@ -1746,7 +1746,7 @@
     }
   });
 
-  async function loadAvatar() {
+async function loadAvatar() {
   const { data: authData, error: authError } = await supabase.auth.getUser();
   const discordId = localStorage.getItem("loggedInDiscordId");
 
@@ -1768,8 +1768,14 @@
 
   const avatarUrl = userData?.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png';
   const avatarElement = document.getElementById('profileAvatar');
+  const profileLink = document.getElementById('profileLink');
+
   if (avatarElement) avatarElement.src = avatarUrl;
+  if (profileLink) profileLink.href = `profile.html?discord_id=${discordId}`;
 }
+
+loadAvatar();
+
 
 
   loadAvatar();
