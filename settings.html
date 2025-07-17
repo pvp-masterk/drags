@@ -1788,19 +1788,31 @@
     }
   });
 
-  // Load avatar from Supabase
   async function loadAvatar() {
-    const supabaseUrl = 'https://akektlyhqzbatuedgnuq.supabase.co'; // replace with your actual URL
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'; // use your key here
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  const discordId = authData?.user?.user_metadata?.discord_id;
 
-    const user = supabase.auth.getUser();
-    const { data, error } = await supabase.from('users').select('avatar_url').eq('discord_id', user.user.id).single();
-
-    if (!error && data?.avatar_url) {
-      document.getElementById('profileAvatar').src = data.avatar_url;
-    }
+  if (!discordId) {
+    console.warn('No Discord ID found for user');
+    return;
   }
+
+  const { data: userData, error } = await supabase
+    .from('users')
+    .select('avatar_url')
+    .eq('discord_id', discordId)
+    .single();
+
+  if (error) {
+    console.error('Failed to fetch avatar:', error);
+    return;
+  }
+
+  const avatarUrl = userData?.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png';
+  const avatarElement = document.getElementById('profileAvatar');
+  if (avatarElement) avatarElement.src = avatarUrl;
+}
+
 
   loadAvatar();
 </script>
