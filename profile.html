@@ -872,6 +872,7 @@
         <h3><i class="fas fa-users"></i> Followers</h3>
         <button class="follow-modal-close"><i class="fas fa-times"></i></button>
       </div>
+       <div class="spinner follow-loading-spinner" style="margin: 20px auto; display: none;"></div>
       <ul class="follow-modal-list" id="followersList"></ul>
     </div>
   </div>
@@ -1274,7 +1275,10 @@ async function loadFollowing(targetId) {
       if (titleElement) titleElement.textContent = title;
       
 
-      list.innerHTML = '';
+    list.innerHTML = '';
+const spinner = modal.querySelector('.follow-loading-spinner');
+if (spinner) spinner.style.display = 'block';
+
       
 
       if (items.length === 0) {
@@ -1283,7 +1287,8 @@ async function loadFollowing(targetId) {
         items.forEach(item => {
           const li = document.createElement('li');
           li.className = 'follow-modal-item';
-          
+          if (spinner) spinner.style.display = 'none';
+
           const profile = item.users || {};
 
           li.innerHTML = `
@@ -1297,6 +1302,7 @@ async function loadFollowing(targetId) {
           `;
           list.appendChild(li);
         });
+
       }
       
 
