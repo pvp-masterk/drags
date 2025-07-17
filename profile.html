@@ -1203,7 +1203,7 @@ async function loadFollowing(targetId) {
   userBio.innerHTML = formattedBio;
 }
 
-      if (dragcoins) dragcoins.innerHTML = `💰 ${user.dragcoins}`;
+      if (dragcoins) dragcoins.textContent = `💰 ${user.dragcoins}`;
 
       if (loadingBuffer) loadingBuffer.style.display = "none";
       if (profileCard) profileCard.style.display = "block";
