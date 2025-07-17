@@ -1292,14 +1292,17 @@ if (spinner) spinner.style.display = 'block';
           const profile = item.users || {};
 
           li.innerHTML = `
-            <img src="${profile.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png'}" 
-                 class="follow-modal-avatar" 
-                 alt="${profile.username || 'Unknown'}">
-            <div>
-              <div class="follow-modal-username">${profile.display_name || profile.username || 'Unknown'}</div>
-              <div class="follow-modal-displayname">@${profile.username || 'unknown'}</div>
-            </div>
-          `;
+  <a href="profile.html?discord_id=${item.follower_id || item.followed_id}" style="display: flex; align-items: center; text-decoration: none; color: inherit; width: 100%;">
+    <img src="${profile.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png'}" 
+         class="follow-modal-avatar" 
+         alt="${profile.username || 'Unknown'}">
+    <div>
+      <div class="follow-modal-username">${profile.display_name || profile.username || 'Unknown'}</div>
+      <div class="follow-modal-displayname">@${profile.username || 'unknown'}</div>
+    </div>
+  </a>
+`;
+
           list.appendChild(li);
         });
 
