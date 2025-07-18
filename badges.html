@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="drags.png" type="image/png">
+  <title>Badges & Ranks</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --primary-light: rgba(88, 101, 242, 0.1);
+      --secondary: #57F287;
+      --secondary-dark: #45d67d;
+      --text: #f5f5f5;
+      --text-light: rgba(245, 245, 245, 0.7);
+      --bg: #1e1e2e;
+      --bg-dark: #171722;
+      --card-bg: #2a2a3a;
+      --card-hover: #313145;
+      --accent: #ED4245;
+      --accent-hover: #ff5356;
+      --header-height: 80px;
+      --transition-fast: 0.2s ease;
+      --transition-medium: 0.3s ease;
+      --transition-slow: 0.5s ease;
+      --legendary: linear-gradient(135deg, #f8d347, #d4af37, #b8860b);
+      --epic: linear-gradient(135deg, #c77dff, #9c4dff, #7b2cbf);
+      --rare: linear-gradient(135deg, #70d6ff, #48cae4, #0096c7);
+      --uncommon: linear-gradient(135deg, #80ed99, #57cc99, #38a3a5);
+      --common: linear-gradient(135deg, #adb5bd, #6c757d, #495057);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      padding-top: var(--header-height);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--header-height);
+      padding: 0 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      background: rgba(30, 30, 46, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all var(--transition-medium);
+      box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    header.scrolled {
+      height: 70px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform var(--transition-fast);
+    }
+    
+    .logo:hover {
+      transform: translateX(3px);
+    }
+    
+    .logo i {
+      color: var(--primary);
+      font-size: 28px;
+      transition: transform var(--transition-medium);
+    }
+    
+    .logo:hover i {
+      transform: rotate(15deg);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 25px;
+      height: 100%;
+    }
+    
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      position: relative;
+      transition: all var(--transition-fast);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text);
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--primary);
+      transition: width var(--transition-medium);
+      border-radius: 3px 3px 0 0;
+    }
+    
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+      animation: fadeInUp 0.6s ease both;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .section-header h2 {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-header h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+
+    .sort-controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .sort-btn {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sort-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
+    .sort-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .sort-btn i {
+      font-size: 12px;
+    }
+
+    .badges-container, .ranks-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 60px;
+    }
+
+    .badge-card, .rank-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transition: all var(--transition-medium);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      will-change: transform;
+    }
+
+    .badge-card:hover, .rank-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    }
+
+    .badge-card::before, .rank-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity var(--transition-medium);
+      z-index: 0;
+    }
+
+    .badge-card:hover::before, .rank-card:hover::before {
+      opacity: 0.6;
+    }
+
+    .badge-header, .rank-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge-icon, .rank-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: contain;
+      transition: all var(--transition-medium);
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .badge-icon:hover, .rank-icon:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .badge-info, .rank-info {
+      flex: 1;
+    }
+
+    .badge-name, .rank-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    .badge-rarity, .rank-tier {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .rarity-legendary {
+      background: var(--legendary);
+      color: #000;
+    }
+
+    .rarity-epic {
+      background: var(--epic);
+      color: white;
+    }
+
+    .rarity-rare {
+      background: var(--rare);
+      color: white;
+    }
+
+    .rarity-uncommon {
+      background: var(--uncommon);
+      color: white;
+    }
+
+    .rarity-common {
+      background: var(--common);
+      color: white;
+    }
+
+    .badge-description, .rank-description {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.5;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge-requirements, .rank-requirements {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 15px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .requirements-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .requirements-title i {
+      font-size: 12px;
+    }
+
+    .requirements-list {
+      font-size: 13px;
+      color: var(--text-light);
+      line-height: 1.5;
+      padding-left: 20px;
+    }
+
+    .requirements-list li {
+      margin-bottom: 5px;
+    }
+
+    .badge-card.legendary {
+      border: 1px solid rgba(248, 211, 71, 0.3);
+    }
+
+    .badge-card.epic {
+      border: 1px solid rgba(156, 77, 255, 0.3);
+    }
+
+    .badge-card.rare {
+      border: 1px solid rgba(0, 150, 199, 0.3);
+    }
+
+    .badge-card.uncommon {
+      border: 1px solid rgba(87, 204, 153, 0.3);
+    }
+
+    .badge-card.common {
+      border: 1px solid rgba(108, 117, 125, 0.3);
+    }
+
+    .badge-card.legendary:hover {
+      box-shadow: 0 15px 40px rgba(248, 211, 71, 0.2);
+    }
+
+    .badge-card.epic:hover {
+      box-shadow: 0 15px 40px rgba(156, 77, 255, 0.2);
+    }
+
+    .badge-card.rare:hover {
+      box-shadow: 0 15px 40px rgba(0, 150, 199, 0.2);
+    }
+
+    .badge-card.uncommon:hover {
+      box-shadow: 0 15px 40px rgba(87, 204, 153, 0.2);
+    }
+
+    .badge-card.common:hover {
+      box-shadow: 0 15px 40px rgba(108, 117, 125, 0.2);
+    }
+
+    .glow {
+      animation: pulseGlow 2s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 5px currentColor; }
+      to { box-shadow: 0 0 15px currentColor; }
+    }
+
+    .rainbow-border {
+      animation: rainbowBorder 6s linear infinite;
+      border-width: 2px;
+      border-style: solid;
+    }
+
+    @keyframes rainbowBorder {
+      0% { border-color: #ff0000; }
+      16% { border-color: #ff9900; }
+      33% { border-color: #ffff00; }
+      50% { border-color: #33ff00; }
+      66% { border-color: #0066ff; }
+      83% { border-color: #9900ff; }
+      100% { border-color: #ff00aa; }
+    }
+
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .loading-buffer {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: var(--text);
+      z-index: 9999;
+      background: rgba(30, 30, 46, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      backdrop-filter: blur(5px);
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--primary);
+      border-top: 4px solid transparent;
+      border-radius: 50%;
+      margin: 0 auto 20px auto;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .badges-container, .ranks-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+      
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .sort-controls {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .badges-container, .ranks-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .badge-card, .rank-card {
+        padding: 20px;
+      }
+      
+      .badge-header, .rank-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .badge-icon, .rank-icon {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body class="theme-bg">
+  <header id="header">
+    <a href="#" class="logo"><i class="fab fa-discord"></i> Drags</a>
+    <nav class="nav-links">
+      <a href="index">Home</a>
+      <a href="users">User List</a>
+      <a href="badges" class="active">Badges & Ranks</a>
+      <a href="settings">Settings</a>
+      <a href="terms">Terms</a>
+    </nav>
+    <div id="user-box"></div>
+  </header>
+
+  <div id="loading-buffer" class="loading-buffer">
+    <div class="spinner"></div>
+    <p>Loading Badges & Ranks...</p>
+  </div>
+
+  <div class="main-container">
+    <div class="section-header">
+      <h2><i class="fas fa-certificate"></i> Badges Collection</h2>
+      <div class="sort-controls">
+        <button class="sort-btn active" data-sort="rarity">
+          <i class="fas fa-gem"></i> Sort by Rarity
+        </button>
+        <button class="sort-btn" data-sort="abc">
+          <i class="fas fa-sort-alpha-down"></i> Sort by ABC
+        </button>
+      </div>
+    </div>
+
+    <div class="badges-container" id="badgesContainer">
+      <!-- Badges will be dynamically inserted here -->
+    </div>
+
+    <div class="section-header">
+      <h2><i class="fas fa-chess-queen"></i> Rank System</h2>
+      <div class="sort-controls">
+        <button class="sort-btn active" data-sort="tier">
+          <i class="fas fa-trophy"></i> Sort by Tier
+        </button>
+        <button class="sort-btn" data-sort="abc">
+          <i class="fas fa-sort-alpha-down"></i> Sort by ABC
+        </button>
+      </div>
+    </div>
+
+    <div class="ranks-container" id="ranksContainer">
+      <!-- Ranks will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Simulate loading
+      setTimeout(() => {
+        document.getElementById('loading-buffer').style.display = 'none';
+        loadBadgesAndRanks();
+        setupSorting();
+      }, 1500);
+    });
+
+    function setupSorting() {
+      const sortButtons = document.querySelectorAll('.sort-btn');
+      
+      sortButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const container = this.closest('.section-header').nextElementSibling;
+          const sortType = this.dataset.sort;
+          
+          // Update active state
+          sortButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Sort the items
+          if (container.id === 'badgesContainer') {
+            sortBadges(sortType);
+          } else {
+            sortRanks(sortType);
+          }
+        });
+      });
+    }
+
+    function sortBadges(sortType) {
+      const container = document.getElementById('badgesContainer');
+      const badges = Array.from(container.children);
+      
+      badges.sort((a, b) => {
+        if (sortType === 'rarity') {
+          const rarityOrder = { legendary: 1, epic: 2, rare: 3, uncommon: 4, common: 5 };
+          const aRarity = a.classList.contains('legendary') ? 'legendary' : 
+                         a.classList.contains('epic') ? 'epic' : 
+                         a.classList.contains('rare') ? 'rare' : 
+                         a.classList.contains('uncommon') ? 'uncommon' : 'common';
+          const bRarity = b.classList.contains('legendary') ? 'legendary' : 
+                         b.classList.contains('epic') ? 'epic' : 
+                         b.classList.contains('rare') ? 'rare' : 
+                         b.classList.contains('uncommon') ? 'uncommon' : 'common';
+          return rarityOrder[aRarity] - rarityOrder[bRarity];
+        } else {
+          const aName = a.querySelector('.badge-name').textContent.toLowerCase();
+          const bName = b.querySelector('.badge-name').textContent.toLowerCase();
+          return aName.localeCompare(bName);
+        }
+      });
+      
+      // Re-append sorted badges
+      badges.forEach(badge => container.appendChild(badge));
+      
+      // Add animation
+      container.classList.add('sorting');
+      setTimeout(() => container.classList.remove('sorting'), 500);
+    }
+
+    function sortRanks(sortType) {
+      const container = document.getElementById('ranksContainer');
+      const ranks = Array.from(container.children);
+      
+      ranks.sort((a, b) => {
+        if (sortType === 'tier') {
+          const tierOrder = { legendary: 1, epic: 2, rare: 3, uncommon: 4, common: 5 };
+          const aTier = a.querySelector('.rank-tier').textContent.toLowerCase();
+          const bTier = b.querySelector('.rank-tier').textContent.toLowerCase();
+          return tierOrder[aTier] - tierOrder[bTier];
+        } else {
+          const aName = a.querySelector('.rank-name').textContent.toLowerCase();
+          const bName = b.querySelector('.rank-name').textContent.toLowerCase();
+          return aName.localeCompare(bName);
+        }
+      });
+      
+      // Re-append sorted ranks
+      ranks.forEach(rank => container.appendChild(rank));
+      
+      // Add animation
+      container.classList.add('sorting');
+      setTimeout(() => container.classList.remove('sorting'), 500);
+    }
+
+    function loadBadgesAndRanks() {
+      const badgesContainer = document.getElementById('badgesContainer');
+      const ranksContainer = document.getElementById('ranksContainer');
+      
+      // Badge data
+      const badges = [
+        {
+          name: "Founder",
+          icon: "https://cdn3.emoji.gg/emojis/8259-owner.png",
+          rarity: "legendary",
+          description: "Awarded to the original founders of Drags platform.",
+          requirements: [
+            "Be part of the founding team",
+            "Contribute significantly to platform launch"
+          ],
+          animation: "rainbow-border float-animation"
+        },
+        {
+          name: "Developer",
+          icon: "https://cdn3.emoji.gg/emojis/1166-partner.png",
+          rarity: "epic",
+          description: "Given to active developers contributing to the platform.",
+          requirements: [
+            "Contribute code to the platform",
+            "Have at least 5 pull requests merged"
+          ],
+          animation: "glow"
+        },
+        {
+          name: "Moderator",
+          icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png",
+          rarity: "epic",
+          description: "Official Drags moderators who maintain community standards.",
+          requirements: [
+            "Be selected as a moderator",
+            "Complete moderator training",
+            "Maintain good standing for 3 months"
+          ],
+          animation: ""
+        },
+        {
+          name: "Prime Member",
+          icon: "https://cdn3.emoji.gg/emojis/1445-level.png",
+          rarity: "rare",
+          description: "Premium members with special perks and features.",
+          requirements: [
+            "Subscribe to Prime membership",
+            "Maintain subscription for 1 month"
+          ],
+          animation: ""
+        },
+        {
+          name: "Early Adopter",
+          icon: "https://cdn3.emoji.gg/emojis/7549-member.png",
+          rarity: "rare",
+          description: "Users who joined Drags in the first month of launch.",
+          requirements: [
+            "Create account within first 30 days of launch",
+            "Be an active member"
+          ],
+          animation: ""
+        },
+        {
+          name: "Content Creator",
+          icon: "https://cdn3.emoji.gg/emojis/74424-partner.png",
+          rarity: "uncommon",
+          description: "Awarded to users who create valuable content for the community.",
+          requirements: [
+            "Create 10+ posts with 50+ upvotes",
+            "Maintain positive engagement"
+          ],
+          animation: ""
+        },
+        {
+          name: "Helper",
+          icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png",
+          rarity: "uncommon",
+          description: "Users who actively help others in the community.",
+          requirements: [
+            "Answer 50+ questions in help channels",
+            "Receive 20+ helper upvotes"
+          ],
+          animation: ""
+        },
+        {
+          name: "Active User",
+          icon: "https://cdn3.emoji.gg/emojis/7549-member.png",
+          rarity: "common",
+          description: "For users who are regularly active on the platform.",
+          requirements: [
+            "Log in for 30 consecutive days",
+            "Participate in discussions"
+          ],
+          animation: ""
+        }
+      ];
+
+      // Rank data
+      const ranks = [
+        {
+          name: "Dragon Lord",
+          icon: "https://cdn3.emoji.gg/emojis/1775-master.png",
+          tier: "legendary",
+          description: "The highest rank achievable, reserved for the most elite members.",
+          requirements: [
+            "10,000+ Dragcoins",
+            "All Legendary badges",
+            "Top 0.1% of users"
+          ],
+          animation: "rainbow-border float-animation"
+        },
+        {
+          name: "Elder Dragon",
+          icon: "https://cdn3.emoji.gg/emojis/1775-master.png",
+          tier: "epic",
+          description: "Highly respected members with extensive contributions.",
+          requirements: [
+            "5,000+ Dragcoins",
+            "3+ Epic badges",
+            "Top 1% of users"
+          ],
+          animation: "glow"
+        },
+        {
+          name: "Mythic Dragon",
+          icon: "https://cdn3.emoji.gg/emojis/1775-master.png",
+          tier: "rare",
+          description: "Experienced members with significant achievements.",
+          requirements: [
+            "2,500+ Dragcoins",
+            "5+ Rare badges",
+            "Top 5% of users"
+          ],
+          animation: ""
+        },
+        {
+          name: "Ancient Dragon",
+          icon: "https://cdn3.emoji.gg/emojis/1775-master.png",
+          tier: "rare",
+          description: "Long-standing members with consistent activity.",
+          requirements: [
+            "1,000+ Dragcoins",
+            "Account age 1+ year",
+            "Top 10% of users"
+          ],
+          animation: ""
+        },
+        {
+          name: "Noble Dragon",
+          icon: "https://cdn3.emoji.gg/emojis/1775-master.png",
+          tier: "uncommon",
+          description: "Dedicated members who actively participate.",
+          requirements: [
+            "500+ Dragcoins",
+            "3+ Uncommon badges",
+            "Top 25% of users"
+          ],
+          animation: ""
+        },
+        {
+          name: "Young Dragon",
+          icon: "https://cdn3.emoji.gg/emojis/1775-master.png",
+          tier: "uncommon",
+          description: "Growing members showing promise and activity.",
+          requirements: [
+            "100+ Dragcoins",
+            "Account age 3+ months",
+            "Complete onboarding"
+          ],
+          animation: ""
+        },
+        {
+          name: "Dragon Hatchling",
+          icon: "https://cdn3.emoji.gg/emojis/1775-master.png",
+          tier: "common",
+          description: "New members starting their journey.",
+          requirements: [
+            "Complete profile setup",
+            "Make first post",
+            "Verify account"
+          ],
+          animation: ""
+        }
+      ];
+
+      // Populate badges
+      badges.forEach(badge => {
+        const badgeCard = document.createElement('div');
+        badgeCard.className = `badge-card ${badge.rarity} ${badge.animation}`;
+        badgeCard.innerHTML = `
+          <div class="badge-header">
+            <img src="${badge.icon}" class="badge-icon" alt="${badge.name}">
+            <div class="badge-info">
+              <div class="badge-name">${badge.name}</div>
+              <div class="badge-rarity rarity-${badge.rarity}">
+                ${badge.rarity.charAt(0).toUpperCase() + badge.rarity.slice(1)}
+              </div>
+            </div>
+          </div>
+          <div class="badge-description">${badge.description}</div>
+          <div class="badge-requirements">
+            <div class="requirements-title">
+              <i class="fas fa-lock-open"></i> How to Obtain
+            </div>
+            <ul class="requirements-list">
+              ${badge.requirements.map(req => `<li>${req}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+        badgesContainer.appendChild(badgeCard);
+      });
+
+      // Populate ranks
+      ranks.forEach(rank => {
+        const rankCard = document.createElement('div');
+        rankCard.className = `rank-card ${rank.tier} ${rank.animation}`;
+        rankCard.innerHTML = `
+          <div class="rank-header">
+            <img src="${rank.icon}" class="rank-icon" alt="${rank.name}">
+            <div class="rank-info">
+              <div class="rank-name">${rank.name}</div>
+              <div class="rank-tier rarity-${rank.tier}">
+                ${rank.tier.charAt(0).toUpperCase() + rank.tier.slice(1)} Tier
+              </div>
+            </div>
+          </div>
+          <div class="rank-description">${rank.description}</div>
+          <div class="rank-requirements">
+            <div class="requirements-title">
+              <i class="fas fa-arrow-up"></i> Requirements
+            </div>
+            <ul class="requirements-list">
+              ${rank.requirements.map(req => `<li>${req}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+        ranksContainer.appendChild(rankCard);
+      });
+
+      // Add hover effects
+      document.querySelectorAll('.badge-card, .rank-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    }
+  </script>
+</body>
+</html>
