@@ -947,37 +947,39 @@
 
       const assigned = manualBadges[user.discord_id] || [];
 
-      if (assigned.length > 0 && badgeBox && badgeContainer) {
-        badgeBox.style.display = "flex";
+if (assigned.length > 0 && badgeBox && badgeContainer) {
+  badgeBox.style.display = "flex";
 
-        assigned.forEach(key => {
-          const badge = badgeMap[key];
-          if (badge) {
-            const wrapper = document.createElement("div");
-            wrapper.className = "badge-wrapper";
+  // Sort badges by the `order` value
+  assigned.sort((a, b) => a.order - b.order).forEach(badgeData => {
+    const badge = badgeMap[badgeData.key];
+    if (badge) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "badge-wrapper";
 
-            const img = document.createElement("img");
-            img.src = badge.icon;
-            img.alt = badge.name;
-            img.className = "badge-icon";
+      const img = document.createElement("img");
+      img.src = badge.icon;
+      img.alt = badge.name;
+      img.className = "badge-icon";
 
-            if (["owner", "dev"].includes(key)) {
-              img.classList.add("rainbow");
-            }
-
-            const tooltip = document.createElement("div");
-            tooltip.className = "badge-tooltip";
-            tooltip.innerHTML = `
-              <strong>${badge.name}</strong>
-              <span>${badge.description}</span>
-            `;
-
-            wrapper.appendChild(img);
-            wrapper.appendChild(tooltip);
-            badgeContainer.appendChild(wrapper);
-          }
-        });
+      if (["owner", "dev"].includes(badgeData.key)) {
+        img.classList.add("rainbow");
       }
+
+      const tooltip = document.createElement("div");
+      tooltip.className = "badge-tooltip";
+      tooltip.innerHTML = `
+        <strong>${badge.name}</strong>
+        <span>${badge.description}</span>
+      `;
+
+      wrapper.appendChild(img);
+      wrapper.appendChild(tooltip);
+      badgeContainer.appendChild(wrapper);
+    }
+  });
+}
+
 
       const isOwner = currentUserId === discordId;
 
