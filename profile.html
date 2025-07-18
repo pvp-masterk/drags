@@ -1258,10 +1258,23 @@ async function loadFollowing(targetId) {
     };
 
     const manualBadges = {
-      "1303491410472865793": ["early", "staff", "owner", "dev", "verified"], 
-      "1359405784915509292": ["owner", "early", "staff", "dev", "verified"],
-      "1359405784915509232": ["staff"]
-    };
+  "1303491410472865793": [
+    { key: "owner", order: 1 },
+    { key: "dev", order: 2 },
+    { key: "verified", order: 3 },
+    { key: "staff", order: 4 },
+    { key: "early", order: 5 }
+  ],
+  "1359405784915509292": [
+    { key: "owner", order: 1 },
+    { key: "early", order: 2 },
+    { key: "staff", order: 3 }
+  ],
+  "1359405784915509232": [
+    { key: "staff", order: 1 }
+  ]
+};
+
 
 
     function showFollowModal(modalId, listId, items, title) {
