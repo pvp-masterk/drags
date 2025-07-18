@@ -521,6 +521,72 @@
         height: 50px;
       }
     }
+    .user-menu {
+  position: relative;
+}
+
+.mini-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mini-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--primary-light);
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  width: 250px;
+  background: rgba(30, 30, 46, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 15px;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: fadeIn 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.dropdown-info img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+}
+
+.dropdown a {
+  display: block;
+  padding: 8px;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: 6px;
+  transition: 0.2s ease;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.dropdown a:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
   </style>
 </head>
 <body class="theme-bg">
@@ -534,6 +600,23 @@
       <a href="terms">Terms</a>
     </nav>
     <div id="user-box"></div>
+    <div class="user-menu" id="userMenu" style="display: none;">
+  <img id="userDropdownBtn" class="mini-avatar" src="" alt="User" />
+  <div class="dropdown" id="dropdownMenu">
+    <div id="userInfo" class="dropdown-info">
+      <img id="dropdownAvatar" src="" />
+      <div>
+        <strong id="dropdownDisplayName">Loading...</strong>
+        <p id="dropdownUsername">@username</p>
+        <p id="dropdownUserId" class="user-id">ID: 0000000000</p>
+      </div>
+    </div>
+    <hr />
+    <a href="#" id="viewProfileBtn">View Profile</a>
+    <a href="#" id="settingsBtn">Settings</a>
+    <a href="linkaccount" id="linkBtn">Link Account</a>
+  </div>
+</div>
   </header>
 
   <div id="loading-buffer" class="loading-buffer">
@@ -910,5 +993,85 @@
       });
     }
   </script>
+ 
+
+  <script>
+  
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const userDropdownBtn = document.getElementById("userDropdownBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+
+    userDropdownBtn?.addEventListener("click", () => {
+      dropdownMenu.style.display =
+        dropdownMenu.style.display === "block" ? "none" : "block";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (
+        !e.target.closest("#userMenu") &&
+        !e.target.closest("#dropdownMenu")
+      ) {
+        dropdownMenu.style.display = "none";
+      }
+    });
+
+    // Optionally add your logic to fetch and insert user data here
+    // Example:
+    // document.getElementById("userMenu").style.display = "block";
+    // document.getElementById("userDropdownBtn").src = 'AVATAR_URL';
+  });
+</script>
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+  const supabase = supabase.createClient(
+    'https://akektlyhqzbatuedgnuq.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'
+  );
+
+  async function loadUserDropdown() {
+    const discord_id = localStorage.getItem("loggedInDiscordId");
+
+
+    if (!discord_id) return;
+
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("discord_id", discord_id)
+      .single();
+
+    if (data) {
+      document.getElementById("userMenu").style.display = "block";
+      document.getElementById("userDropdownBtn").src = data.avatar_url;
+      document.getElementById("dropdownAvatar").src = data.avatar_url;
+      document.getElementById("dropdownDisplayName").textContent = data.display_name || "No Name";
+      document.getElementById("dropdownUsername").textContent = "@" + data.username;
+      document.getElementById("dropdownUserId").textContent = "ID: " + data.discord_id;
+
+      document.getElementById("viewProfileBtn").href = `profile?discord_id=${data.discord_id}`;
+      document.getElementById("settingsBtn").href = `settings`;
+    }
+  }
+
+  // Dropdown toggle logic
+  document.addEventListener("DOMContentLoaded", () => {
+    loadUserDropdown();
+
+    const btn = document.getElementById("userDropdownBtn");
+    const menu = document.getElementById("dropdownMenu");
+
+    btn?.addEventListener("click", () => {
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (!e.target.closest("#userMenu")) {
+        menu.style.display = "none";
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
