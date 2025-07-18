@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="drags.png" type="image/png">
+  <title>Tutorials & Guides</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --primary-light: rgba(88, 101, 242, 0.1);
+      --secondary: #57F287;
+      --secondary-dark: #45d67d;
+      --text: #f5f5f5;
+      --text-light: rgba(245, 245, 245, 0.7);
+      --bg: #1e1e2e;
+      --bg-dark: #171722;
+      --card-bg: #2a2a3a;
+      --card-hover: #313145;
+      --accent: #ED4245;
+      --accent-hover: #ff5356;
+      --header-height: 80px;
+      --transition-fast: 0.2s ease;
+      --transition-medium: 0.3s ease;
+      --transition-slow: 0.5s ease;
+      --legendary: linear-gradient(135deg, #f8d347, #d4af37, #b8860b);
+      --epic: linear-gradient(135deg, #c77dff, #9c4dff, #7b2cbf);
+      --rare: linear-gradient(135deg, #70d6ff, #48cae4, #0096c7);
+      --uncommon: linear-gradient(135deg, #80ed99, #57cc99, #38a3a5);
+      --common: linear-gradient(135deg, #adb5bd, #6c757d, #495057);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      padding-top: var(--header-height);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--header-height);
+      padding: 0 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      background: rgba(30, 30, 46, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all var(--transition-medium);
+      box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    header.scrolled {
+      height: 70px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform var(--transition-fast);
+    }
+    
+    .logo:hover {
+      transform: translateX(3px);
+    }
+    
+    .logo i {
+      color: var(--primary);
+      font-size: 28px;
+      transition: transform var(--transition-medium);
+    }
+    
+    .logo:hover i {
+      transform: rotate(15deg);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 25px;
+      height: 100%;
+    }
+    
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      position: relative;
+      transition: all var(--transition-fast);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text);
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--primary);
+      transition: width var(--transition-medium);
+      border-radius: 3px 3px 0 0;
+    }
+    
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+      animation: fadeInUp 0.6s ease both;
+    }
+
+    .hero-section {
+      text-align: center;
+      padding: 60px 0 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+      opacity: 0.3;
+      z-index: -1;
+      animation: rotateGradient 30s linear infinite;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+
+    .search-container {
+      max-width: 600px;
+      margin: 0 auto 40px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 30px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      color: var(--text);
+      font-size: 16px;
+      transition: all var(--transition-medium);
+      padding-right: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .search-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    .search-btn {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      font-size: 18px;
+      transition: color var(--transition-fast);
+    }
+
+    .search-btn:hover {
+      color: var(--primary);
+    }
+
+    .tutorial-categories {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .category-btn {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
+    .category-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 60px 0 30px;
+      position: relative;
+    }
+
+    .section-header h2 {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-header h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+
+    .tutorials-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+      margin-bottom: 60px;
+    }
+
+    .tutorial-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transition: all var(--transition-medium);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      will-change: transform;
+    }
+
+    .tutorial-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      border-color: var(--primary);
+    }
+
+    .tutorial-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity var(--transition-medium);
+      z-index: 0;
+    }
+
+    .tutorial-card:hover::before {
+      opacity: 0.6;
+    }
+
+    .tutorial-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tutorial-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      object-fit: contain;
+      transition: all var(--transition-medium);
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--primary);
+    }
+
+    .tutorial-info {
+      flex: 1;
+    }
+
+    .tutorial-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    .tutorial-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+
+    .tutorial-difficulty {
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .difficulty-beginner {
+      background: var(--uncommon);
+      color: white;
+    }
+
+    .difficulty-intermediate {
+      background: var(--rare);
+      color: white;
+    }
+
+    .difficulty-advanced {
+      background: var(--epic);
+      color: white;
+    }
+
+    .difficulty-expert {
+      background: var(--legendary);
+      color: #000;
+    }
+
+    .tutorial-description {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.5;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tutorial-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tutorial-time {
+      font-size: 13px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .tutorial-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tutorial-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .featured-tutorial {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, var(--primary-dark), var(--bg-dark));
+      border: 1px solid var(--primary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-tutorial::after {
+      content: 'FEATURED';
+      position: absolute;
+      top: 20px;
+      right: -30px;
+      background: var(--accent);
+      color: white;
+      padding: 5px 40px;
+      font-size: 12px;
+      font-weight: 600;
+      transform: rotate(45deg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .featured-tutorial .tutorial-header {
+      margin-bottom: 15px;
+    }
+
+    .featured-tutorial .tutorial-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .featured-tutorial .tutorial-description {
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+
+    .featured-tutorial .tutorial-btn {
+      padding: 10px 20px;
+      align-self: flex-start;
+    }
+
+    .step-by-step-section {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .step-container {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+    }
+
+    .step-container.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-content {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--primary);
+      transition: width var(--transition-medium);
+    }
+
+    .step-content:hover::before {
+      width: 6px;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .step-description {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .step-image {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: transform var(--transition-medium);
+    }
+
+    .step-image:hover {
+      transform: scale(1.02);
+    }
+
+    .step-tip {
+      background: rgba(88, 101, 242, 0.1);
+      border-left: 3px solid var(--primary);
+      padding: 12px 15px;
+      border-radius: 0 6px 6px 0;
+      margin-top: 15px;
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .step-tip strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .connector-line {
+      position: absolute;
+      left: 20px;
+      top: 40px;
+      bottom: -30px;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 1;
+    }
+
+    .loading-buffer {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: var(--text);
+      z-index: 9999;
+      background: rgba(30, 30, 46, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      backdrop-filter: blur(5px);
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--primary);
+      border-top: 4px solid transparent;
+      border-radius: 50%;
+      margin: 0 auto 20px auto;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes rotateGradient {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .tutorials-container {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+      
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .featured-tutorial .tutorial-title {
+        font-size: 20px;
+      }
+      
+      .step-container {
+        flex-direction: column;
+      }
+      
+      .connector-line {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tutorials-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .hero-title {
+        font-size: 32px;
+      }
+      
+      .hero-subtitle {
+        font-size: 16px;
+      }
+      
+      .tutorial-card {
+        padding: 20px;
+      }
+    }
+
+    .user-menu {
+      position: relative;
+    }
+
+    .mini-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .mini-avatar:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px var(--primary-light);
+    }
+
+    .dropdown {
+      position: absolute;
+      right: 0;
+      top: 120%;
+      width: 250px;
+      background: rgba(30, 30, 46, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 12px;
+      padding: 15px;
+      z-index: 100;
+      display: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      animation: fadeIn 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .dropdown-info img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 8px;
+      text-decoration: none;
+      color: var(--text);
+      border-radius: 6px;
+      transition: 0.2s ease;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+
+    .dropdown a:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body class="theme-bg">
+  <header id="header">
+    <a href="#" class="logo"><i class="fab fa-discord"></i> Drags</a>
+    <nav class="nav-links">
+      <a href="index">Home</a>
+      <a href="users">User List</a>
+      <a href="badges">Badges & Ranks</a>
+      <a href="tutorials" class="active">Tutorials</a>
+      <a href="settings">Settings</a>
+      <a href="terms">Terms</a>
+    </nav>
+    <div id="user-box"></div>
+    <div class="user-menu" id="userMenu" style="display: none;">
+      <img id="userDropdownBtn" class="mini-avatar" src="" alt="User" />
+      <div class="dropdown" id="dropdownMenu">
+        <div id="userInfo" class="dropdown-info">
+          <img id="dropdownAvatar" src="" />
+          <div>
+            <strong id="dropdownDisplayName">Loading...</strong>
+            <p id="dropdownUsername">@username</p>
+            <p id="dropdownUserId" class="user-id">ID: 0000000000</p>
+          </div>
+        </div>
+        <hr />
+        <a href="#" id="viewProfileBtn">View Profile</a>
+        <a href="#" id="settingsBtn">Settings</a>
+        <a href="linkaccount" id="linkBtn">Link Account</a>
+      </div>
+    </div>
+  </header>
+
+  <div id="loading-buffer" class="loading-buffer">
+    <div class="spinner"></div>
+    <p>Loading Tutorials...</p>
+  </div>
+
+  <div class="main-container">
+    <section class="hero-section">
+      <h1 class="hero-title">Drags Tutorials & Guides</h1>
+      <p class="hero-subtitle">Learn how to make the most of Drags with our comprehensive tutorials, guides, and step-by-step walkthroughs.</p>
+      
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search tutorials...">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      
+      <div class="tutorial-categories">
+        <button class="category-btn active"><i class="fas fa-star"></i> All Tutorials</button>
+        <button class="category-btn"><i class="fas fa-user-plus"></i> Getting Started</button>
+        <button class="category-btn"><i class="fas fa-cog"></i> Features</button>
+        <button class="category-btn"><i class="fas fa-trophy"></i> Advanced</button>
+        <button class="category-btn"><i class="fas fa-question-circle"></i> FAQs</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2><i class="fas fa-fire"></i> Featured Tutorials</h2>
+        <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 500;">View All</a>
+      </div>
+      
+      <div class="tutorials-container">
+        <div class="tutorial-card featured-tutorial">
+          <div class="tutorial-header">
+            <div class="tutorial-icon">
+              <i class="fas fa-rocket"></i>
+            </div>
+            <div class="tutorial-info">
+              <div class="tutorial-title">Getting Started with Drags</div>
+              <div class="tutorial-meta">
+                <span><i class="far fa-clock"></i> 15 min read</span>
+                <span class="tutorial-difficulty difficulty-beginner">Beginner</span>
+                <span><i class="far fa-eye"></i> 1.2k views</span>
+              </div>
+            </div>
+          </div>
+          <div class="tutorial-description">
+            A complete beginner's guide to setting up your Drags account, navigating the interface, and understanding the core features that make Drags unique.
+          </div>
+          <div class="tutorial-footer">
+            <span class="tutorial-time"><i class="far fa-calendar-alt"></i> Updated 2 days ago</span>
+            <button class="tutorial-btn">Start Tutorial <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+        
+        <div class="tutorial-card">
+          <div class="tutorial-header">
+            <div class="tutorial-icon">
+              <i class="fas fa-badge-check"></i>
+            </div>
+            <div class="tutorial-info">
+              <div class="tutorial-title">Earning Your First Badge</div>
+              <div class="tutorial-meta">
+                <span><i class="far fa-clock"></i> 8 min read</span>
+                <span class="tutorial-difficulty difficulty-beginner">Beginner</span>
+                <span><i class="far fa-eye"></i> 856 views</span>
+              </div>
+            </div>
+          </div>
+          <div class="tutorial-description">
+            Learn how to unlock your first Drags badge by completing simple tasks and engaging with the community.
+          </div>
+          <div class="tutorial-footer">
+            <span class="tutorial-time"><i class="far fa-calendar-alt"></i> Updated 1 week ago</span>
+            <button class="tutorial-btn">Read Guide <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+        
+        <div class="tutorial-card">
+          <div class="tutorial-header">
+            <div class="tutorial-icon">
+              <i class="fas fa-chess-queen"></i>
+            </div>
+            <div class="tutorial-info">
+              <div class="tutorial-title">Ranking Up Fast</div>
+              <div class="tutorial-meta">
+                <span><i class="far fa-clock"></i> 12 min read</span>
+                <span class="tutorial-difficulty difficulty-intermediate">Intermediate</span>
+                <span><i class="far fa-eye"></i> 1.5k views</span>
+              </div>
+            </div>
+          </div>
+          <div class="tutorial-description">
+            Advanced strategies to quickly increase your rank and unlock exclusive features on the Drags platform.
+          </div>
+          <div class="tutorial-footer">
+            <span class="tutorial-time"><i class="far fa-calendar-alt"></i> Updated 3 days ago</span>
+            <button class="tutorial-btn">Read Guide <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2><i class="fas fa-graduation-cap"></i> Step-by-Step Guides</h2>
+        <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 500;">View All</a>
+      </div>
+      
+      <div class="step-by-step-section">
+        <div class="step-container">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3 class="step-title">Creating Your Profile</h3>
+            <p class="step-description">
+              Your profile is your identity on Drags. Learn how to set up a compelling profile that stands out.
+            </p>
+            <div class="step-tip">
+              <strong>Pro Tip:</strong> Use a high-quality profile picture and write a bio that reflects your personality.
+            </div>
+          </div>
+          <div class="connector-line"></div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3 class="step-title">Connecting with Others</h3>
+            <p class="step-description">
+              Discover how to find and connect with other users who share your interests.
+            </p>
+            <div class="step-tip">
+              <strong>Pro Tip:</strong> Join community events to meet like-minded people faster.
+            </div>
+          </div>
+          <div class="connector-line"></div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3 class="step-title">Customizing Your Experience</h3>
+            <p class="step-description">
+              Personalize your Drags interface with themes, layouts, and notification preferences.
+            </p>
+            <img src="https://via.placeholder.com/600x300/2a2a3a/5865F2?text=Customization+Preview" alt="Customization options" class="step-image">
+          </div>
+          <div class="connector-line"></div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3 class="step-title">Advanced Features</h3>
+            <p class="step-description">
+              Unlock powerful tools like analytics, automation, and integration with other platforms.
+            </p>
+            <div class="step-tip">
+              <strong>Pro Tip:</strong> Explore the API for developers to create custom integrations.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2><i class="fas fa-lightbulb"></i> Tips & Tricks</h2>
+        <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 500;">View All</a>
+      </div>
+      
+      <div class="tutorials-container">
+        <div class="tutorial-card">
+          <div class="tutorial-header">
+            <div class="tutorial-icon">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div class="tutorial-info">
+              <div class="tutorial-title">Keyboard Shortcuts</div>
+              <div class="tutorial-meta">
+                <span><i class="far fa-clock"></i> 5 min read</span>
+                <span class="tutorial-difficulty difficulty-intermediate">Intermediate</span>
+                <span><i class="far fa-eye"></i> 2.1k views</span>
+              </div>
+            </div>
+          </div>
+          <div class="tutorial-description">
+            Master these keyboard shortcuts to navigate Drags like a pro and save time on your daily tasks.
+          </div>
+          <div class="tutorial-footer">
+            <span class="tutorial-time"><i class="far fa-calendar-alt"></i> Updated 2 weeks ago</span>
+            <button class="tutorial-btn">Learn Shortcuts <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+        
+        <div class="tutorial-card">
+          <div class="tutorial-header">
+            <div class="tutorial-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="tutorial-info">
+              <div class="tutorial-title">Security Best Practices</div>
+              <div class="tutorial-meta">
+                <span><i class="far fa-clock"></i> 10 min read</span>
+                <span class="tutorial-difficulty difficulty-beginner">Beginner</span>
+                <span><i class="far fa-eye"></i> 1.8k views</span>
+              </div>
+            </div>
+          </div>
+          <div class="tutorial-description">
+            Keep your account secure with these essential security tips and privacy settings.
+          </div>
+          <div class="tutorial-footer">
+            <span class="tutorial-time"><i class="far fa-calendar-alt"></i> Updated 1 month ago</span>
+            <button class="tutorial-btn">Read Guide <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+        
+        <div class="tutorial-card">
+          <div class="tutorial-header">
+            <div class="tutorial-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="tutorial-info">
+              <div class="tutorial-title">Maximizing Engagement</div>
+              <div class="tutorial-meta">
+                <span><i class="far fa-clock"></i> 15 min read</span>
+                <span class="tutorial-difficulty difficulty-advanced">Advanced</span>
+                <span><i class="far fa-eye"></i> 3.2k views</span>
+              </div>
+            </div>
+          </div>
+          <div class="tutorial-description">
+            Advanced techniques to increase your visibility and engagement within the Drags community.
+          </div>
+          <div class="tutorial-footer">
+            <span class="tutorial-time"><i class="far fa-calendar-alt"></i> Updated 5 days ago</span>
+            <button class="tutorial-btn">Read Guide <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://akektlyhqzbatuedgnuq.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'
+    );
+
+    async function loadUserDropdown() {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const discord_id = sessionData?.session?.user?.user_metadata?.discord_id;
+
+      if (!discord_id) return;
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("discord_id", discord_id)
+        .single();
+
+      if (data) {
+        document.getElementById("userMenu").style.display = "block";
+        document.getElementById("userDropdownBtn").src = data.avatar_url;
+        document.getElementById("dropdownAvatar").src = data.avatar_url;
+        document.getElementById("dropdownDisplayName").textContent = data.display_name || "No Name";
+        document.getElementById("dropdownUsername").textContent = "@" + data.username;
+        document.getElementById("dropdownUserId").textContent = "ID: " + data.discord_id;
+
+        document.getElementById("viewProfileBtn").href = `profile?discord_id=${data.discord_id}`;
+        document.getElementById("settingsBtn").href = `settings`;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadUserDropdown();
+
+      const btn = document.getElementById("userDropdownBtn");
+      const menu = document.getElementById("dropdownMenu");
+
+      btn?.addEventListener("click", () => {
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      });
+
+      window.addEventListener("click", (e) => {
+        if (!e.target.closest("#userMenu")) {
+          menu.style.display = "none";
+        }
+      });
+
+      // Simulate loading
+      setTimeout(() => {
+        document.getElementById('loading-buffer').style.display = 'none';
+        
+        // Animate step containers as they come into view
+        const stepContainers = document.querySelectorAll('.step-container');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        stepContainers.forEach(container => {
+          observer.observe(container);
+        });
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
