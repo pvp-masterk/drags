@@ -659,7 +659,7 @@
       <!-- Ranks will be dynamically inserted here -->
     </div>
   </div>
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
   const supabase = window.supabase.createClient(
     'https://akektlyhqzbatuedgnuq.supabase.co',
@@ -667,8 +667,7 @@
   );
 
   async function loadUserDropdown() {
-    const { data: sessionData } = await supabase.auth.getSession();
-    const discord_id = sessionData?.session?.user?.user_metadata?.discord_id;
+    const discord_id = localStorage.getItem("loggedInDiscordId"); // fallback if auth not used
 
     if (!discord_id) return;
 
@@ -678,6 +677,11 @@
       .eq("discord_id", discord_id)
       .single();
 
+    if (error) {
+      console.warn("Failed to load user:", error);
+      return;
+    }
+
     if (data) {
       document.getElementById("userMenu").style.display = "block";
       document.getElementById("userDropdownBtn").src = data.avatar_url;
@@ -685,7 +689,6 @@
       document.getElementById("dropdownDisplayName").textContent = data.display_name || "No Name";
       document.getElementById("dropdownUsername").textContent = "@" + data.username;
       document.getElementById("dropdownUserId").textContent = "ID: " + data.discord_id;
-
       document.getElementById("viewProfileBtn").href = `profile?discord_id=${data.discord_id}`;
       document.getElementById("settingsBtn").href = `settings`;
     }
@@ -697,12 +700,13 @@
     const btn = document.getElementById("userDropdownBtn");
     const menu = document.getElementById("dropdownMenu");
 
-    btn?.addEventListener("click", () => {
+    btn?.addEventListener("click", (e) => {
+      e.stopPropagation();
       menu.style.display = menu.style.display === "block" ? "none" : "block";
     });
 
-    window.addEventListener("click", (e) => {
-      if (!e.target.closest("#userMenu")) {
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".user-menu")) {
         menu.style.display = "none";
       }
     });
