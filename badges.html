@@ -681,6 +681,12 @@
       console.warn("Failed to load user:", error);
       return;
     }
+const linkBtn = document.getElementById("linkBtn");
+
+
+if (linkBtn && data) {
+  linkBtn.style.display = "none";
+}
 
     if (data) {
       document.getElementById("userMenu").style.display = "block";
@@ -712,12 +718,6 @@
     });
   });
  
-const linkBtn = document.getElementById("linkBtn");
-
-
-if (linkBtn && data) {
-  linkBtn.style.display = "none";
-}
 
 </script>
 
