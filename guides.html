@@ -636,6 +636,219 @@
       animation: spin 1s linear infinite;
     }
 
+    /* Tutorial Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-medium);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .tutorial-modal {
+      background: var(--card-bg);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 30px;
+      position: relative;
+      transform: translateY(50px);
+      opacity: 0;
+      transition: all var(--transition-medium);
+      border: 1px solid var(--primary);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-overlay.active .tutorial-modal {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .modal-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .modal-difficulty {
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      font-size: 24px;
+      cursor: pointer;
+      transition: color var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      color: var(--accent);
+    }
+
+    .modal-content {
+      padding: 15px 0;
+    }
+
+    .modal-description {
+      font-size: 16px;
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .modal-steps {
+      margin-top: 30px;
+    }
+
+    .modal-step {
+      margin-bottom: 25px;
+      padding-left: 20px;
+      border-left: 3px solid var(--primary);
+      position: relative;
+    }
+
+    .modal-step-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+      position: relative;
+      left: -23px;
+    }
+
+    .modal-step-title::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .modal-step-content {
+      font-size: 15px;
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .modal-image {
+      width: 100%;
+      border-radius: 8px;
+      margin: 15px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .modal-tip {
+      background: rgba(88, 101, 242, 0.1);
+      border-left: 3px solid var(--primary);
+      padding: 12px 15px;
+      border-radius: 0 6px 6px 0;
+      margin-top: 15px;
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .modal-tip strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-time {
+      font-size: 14px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-complete-btn {
+      background: var(--secondary);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-complete-btn:hover {
+      background: var(--secondary-dark);
+      transform: translateY(-2px);
+    }
+
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -678,6 +891,15 @@
       .connector-line {
         display: none;
       }
+
+      .modal-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .modal-title {
+        font-size: 20px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -695,6 +917,18 @@
       
       .tutorial-card {
         padding: 20px;
+      }
+
+      .tutorial-modal {
+        padding: 20px;
+      }
+
+      .modal-title {
+        font-size: 18px;
+      }
+
+      .modal-description {
+        font-size: 14px;
       }
     }
 
@@ -801,10 +1035,41 @@
     <p>Loading Tutorials...</p>
   </div>
 
+  <!-- Tutorial Modal Structure -->
+  <div class="modal-overlay" id="tutorialModal">
+    <div class="tutorial-modal">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon" id="modalIcon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <div>
+          <h2 class="modal-title" id="modalTitle">Tutorial Title</h2>
+          <div class="modal-meta">
+            <span><i class="far fa-clock"></i> <span id="modalTime">5 min read</span></span>
+            <span class="modal-difficulty" id="modalDifficulty">Beginner</span>
+            <span><i class="far fa-eye"></i> <span id="modalViews">1.2k views</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content">
+        <p class="modal-description" id="modalDescription">Tutorial description goes here.</p>
+        
+        <div class="modal-steps" id="modalSteps">
+          <!-- Steps will be inserted here dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span class="modal-time"><i class="far fa-calendar-alt"></i> Updated <span id="modalUpdated">2 days ago</span></span>
+        <button class="modal-complete-btn" id="modalCompleteBtn"><i class="fas fa-check"></i> Mark as Completed</button>
+      </div>
+    </div>
+  </div>
+
   <div class="main-container">
     <section class="hero-section">
       <h1 class="hero-title">Drags Tutorials & Guides</h1>
-      <p class="hero-subtitle">Learn how to make the most of Drags with our comprehensive tutorials, guides, and step-by-step walkthroughs.</p>
+      <p class="hero-subtitle">Learn how to use the drags webapp.</p>
       
       <div class="search-container">
         <input type="text" class="search-input" placeholder="Search tutorials...">
@@ -827,22 +1092,22 @@
       </div>
       
       <div class="tutorials-container">
-        <div class="tutorial-card featured-tutorial">
+        <div class="tutorial-card featured-tutorial" data-tutorial="getting-started">
           <div class="tutorial-header">
             <div class="tutorial-icon">
               <i class="fas fa-rocket"></i>
             </div>
             <div class="tutorial-info">
-              <div class="tutorial-title">Getting Started with Drags</div>
+              <div class="tutorial-title">Getting Started</div>
               <div class="tutorial-meta">
-                <span><i class="far fa-clock"></i> 15 min read</span>
+                <span><i class="far fa-clock"></i> Complete in less then 2 minutes!</span>
                 <span class="tutorial-difficulty difficulty-beginner">Beginner</span>
-                <span><i class="far fa-eye"></i> 1.2k views</span>
+                <span><i class="far fa-eye"></i> 3 views</span>
               </div>
             </div>
           </div>
           <div class="tutorial-description">
-            A complete beginner's guide to setting up your Drags account, navigating the interface, and understanding the core features that make Drags unique.
+            Complete guide to customize your profile to the next level!
           </div>
           <div class="tutorial-footer">
             <span class="tutorial-time"><i class="far fa-calendar-alt"></i> Updated 2 days ago</span>
@@ -850,7 +1115,7 @@
           </div>
         </div>
         
-        <div class="tutorial-card">
+        <div class="tutorial-card" data-tutorial="first-badge">
           <div class="tutorial-header">
             <div class="tutorial-icon">
               <i class="fas fa-badge-check"></i>
@@ -858,9 +1123,9 @@
             <div class="tutorial-info">
               <div class="tutorial-title">Earning Your First Badge</div>
               <div class="tutorial-meta">
-                <span><i class="far fa-clock"></i> 8 min read</span>
+                <span><i class="far fa-clock"></i> 1 min read</span>
                 <span class="tutorial-difficulty difficulty-beginner">Beginner</span>
-                <span><i class="far fa-eye"></i> 856 views</span>
+                <span><i class="far fa-eye"></i> 8 views</span>
               </div>
             </div>
           </div>
@@ -873,7 +1138,7 @@
           </div>
         </div>
         
-        <div class="tutorial-card">
+        <div class="tutorial-card" data-tutorial="ranking-up">
           <div class="tutorial-header">
             <div class="tutorial-icon">
               <i class="fas fa-chess-queen"></i>
@@ -967,7 +1232,7 @@
       </div>
       
       <div class="tutorials-container">
-        <div class="tutorial-card">
+        <div class="tutorial-card" data-tutorial="shortcuts">
           <div class="tutorial-header">
             <div class="tutorial-icon">
               <i class="fas fa-bolt"></i>
@@ -990,7 +1255,7 @@
           </div>
         </div>
         
-        <div class="tutorial-card">
+        <div class="tutorial-card" data-tutorial="security">
           <div class="tutorial-header">
             <div class="tutorial-icon">
               <i class="fas fa-shield-alt"></i>
@@ -1013,7 +1278,7 @@
           </div>
         </div>
         
-        <div class="tutorial-card">
+        <div class="tutorial-card" data-tutorial="engagement">
           <div class="tutorial-header">
             <div class="tutorial-icon">
               <i class="fas fa-chart-line"></i>
@@ -1046,6 +1311,169 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg'
     );
 
+    // Tutorial data
+    const tutorials = {
+      'getting-started': {
+        icon: 'fas fa-rocket',
+        title: 'Getting Started',
+        time: 'Complete in less than 2 minutes!',
+        difficulty: 'Beginner',
+        views: '3',
+        updated: '2 days ago',
+        description: 'Complete guide to customize your profile to the next level! This tutorial will walk you through all the essential steps to get started with Drags and make the most of your experience.',
+        steps: [
+          {
+            title: 'Account Setup',
+            content: 'Create your account by connecting with Discord. Make sure to verify your email address for full access to all features.',
+            image: 'https://via.placeholder.com/600x300/2a2a3a/5865F2?text=Account+Setup'
+          },
+          {
+            title: 'Profile Customization',
+            content: 'Upload a profile picture, write a bio, and customize your profile colors to make it uniquely yours.',
+            tip: 'Pro Tip: Use a high-quality image that represents you or your brand for the best results.'
+          },
+          {
+            title: 'Navigation Basics',
+            content: 'Learn how to navigate the Drags interface, access different sections, and find what you need quickly.',
+            image: 'https://via.placeholder.com/600x300/2a2a3a/5865F2?text=Navigation'
+          }
+        ]
+      },
+      'first-badge': {
+        icon: 'fas fa-badge-check',
+        title: 'Earning Your First Badge',
+        time: '1 min read',
+        difficulty: 'Beginner',
+        views: '8',
+        updated: '1 week ago',
+        description: 'Learn how to unlock your first Drags badge by completing simple tasks and engaging with the community. Badges showcase your achievements and participation.',
+        steps: [
+          {
+            title: 'Complete Your Profile',
+            content: 'Fill out all profile sections completely to earn the "Complete Profile" badge.'
+          },
+          {
+            title: 'Join a Community Event',
+            content: 'Participate in any community event to earn the "Community Participant" badge.',
+            tip: 'Pro Tip: Regular participation can earn you higher level badges over time.'
+          },
+          {
+            title: 'Invite Friends',
+            content: 'Share your referral link with friends to earn the "Community Builder" badge when they sign up.',
+            image: 'https://via.placeholder.com/600x300/2a2a3a/5865F2?text=Referral+System'
+          }
+        ]
+      },
+      'ranking-up': {
+        icon: 'fas fa-chess-queen',
+        title: 'Ranking Up Fast',
+        time: '12 min read',
+        difficulty: 'Intermediate',
+        views: '1.5k',
+        updated: '3 days ago',
+        description: 'Advanced strategies to quickly increase your rank and unlock exclusive features on the Drags platform. Higher ranks give you access to special privileges and recognition.',
+        steps: [
+          {
+            title: 'Daily Engagement',
+            content: 'Log in daily and interact with content to maintain your activity streak and earn bonus XP.'
+          },
+          {
+            title: 'Quality Contributions',
+            content: 'Create valuable content and engage in meaningful discussions to earn more XP per interaction.',
+            tip: 'Pro Tip: Longer, thoughtful posts earn significantly more XP than short comments.'
+          },
+          {
+            title: 'Complete Challenges',
+            content: 'Check the challenges section regularly and complete special tasks for large XP rewards.',
+            image: 'https://via.placeholder.com/600x300/2a2a3a/5865F2?text=Challenges'
+          },
+          {
+            title: 'Community Leadership',
+            content: 'Help other users, answer questions, and moderate content to earn special XP bonuses.'
+          }
+        ]
+      },
+      'shortcuts': {
+        icon: 'fas fa-bolt',
+        title: 'Keyboard Shortcuts',
+        time: '5 min read',
+        difficulty: 'Intermediate',
+        views: '2.1k',
+        updated: '2 weeks ago',
+        description: 'Master these keyboard shortcuts to navigate Drags like a pro and save time on your daily tasks. These shortcuts work across the entire platform.',
+        steps: [
+          {
+            title: 'Navigation Shortcuts',
+            content: 'Press "G" then "H" to go home, "G" then "P" for profile, "G" then "S" for settings.'
+          },
+          {
+            title: 'Quick Actions',
+            content: 'Press "N" to create a new post, "F" to search, "Esc" to close modals.',
+            tip: 'Pro Tip: Most shortcuts can be discovered by holding the "Alt" key.'
+          },
+          {
+            title: 'Text Formatting',
+            content: 'Use Markdown in your posts: **bold**, *italic*, `code`, for quick formatting.',
+            image: 'https://via.placeholder.com/600x300/2a2a3a/5865F2?text=Markdown+Cheatsheet'
+          }
+        ]
+      },
+      'security': {
+        icon: 'fas fa-shield-alt',
+        title: 'Security Best Practices',
+        time: '10 min read',
+        difficulty: 'Beginner',
+        views: '1.8k',
+        updated: '1 month ago',
+        description: 'Keep your account secure with these essential security tips and privacy settings. Protecting your account helps keep the entire community safe.',
+        steps: [
+          {
+            title: 'Strong Password',
+            content: 'Use a unique, complex password for your Discord account that links to Drags.'
+          },
+          {
+            title: 'Two-Factor Authentication',
+            content: 'Enable 2FA on your Discord account for an extra layer of security.',
+            image: 'https://via.placeholder.com/600x300/2a2a3a/5865F2?text=2FA+Setup'
+          },
+          {
+            title: 'Privacy Settings',
+            content: 'Review your privacy settings regularly to control what information is visible to others.',
+            tip: 'Pro Tip: Be cautious about sharing personal information, even in private messages.'
+          }
+        ]
+      },
+      'engagement': {
+        icon: 'fas fa-chart-line',
+        title: 'Maximizing Engagement',
+        time: '15 min read',
+        difficulty: 'Advanced',
+        views: '3.2k',
+        updated: '5 days ago',
+        description: 'Advanced techniques to increase your visibility and engagement within the Drags community. These strategies will help you build a stronger presence.',
+        steps: [
+          {
+            title: 'Optimal Posting Times',
+            content: 'Post during peak activity hours (6-9 PM local time) for maximum visibility.'
+          },
+          {
+            title: 'Content Strategy',
+            content: 'Mix different content types: questions, insights, tutorials, and media posts.',
+            image: 'https://via.placeholder.com/600x300/2a2a3a/5865F2?text=Content+Calendar'
+          },
+          {
+            title: 'Engagement Techniques',
+            content: 'Respond to comments quickly, ask follow-up questions, and participate in discussions.',
+            tip: 'Pro Tip: Tagging relevant users can increase engagement but use sparingly.'
+          },
+          {
+            title: 'Analytics Review',
+            content: 'Regularly check your post analytics to understand what content performs best.'
+          }
+        ]
+      }
+    };
+
     async function loadUserDropdown() {
       const { data: sessionData } = await supabase.auth.getSession();
       const discord_id = sessionData?.session?.user?.user_metadata?.discord_id;
@@ -1071,6 +1499,57 @@
       }
     }
 
+    function openTutorial(tutorialId) {
+      const tutorial = tutorials[tutorialId];
+      if (!tutorial) return;
+
+      // Set modal content
+      document.getElementById('modalIcon').innerHTML = `<i class="${tutorial.icon}"></i>`;
+      document.getElementById('modalTitle').textContent = tutorial.title;
+      document.getElementById('modalTime').textContent = tutorial.time;
+      document.getElementById('modalDifficulty').textContent = tutorial.difficulty;
+      document.getElementById('modalViews').textContent = tutorial.views;
+      document.getElementById('modalUpdated').textContent = tutorial.updated;
+      document.getElementById('modalDescription').textContent = tutorial.description;
+      
+      // Set difficulty class
+      const difficultyElement = document.getElementById('modalDifficulty');
+      difficultyElement.className = 'modal-difficulty';
+      difficultyElement.classList.add(`difficulty-${tutorial.difficulty.toLowerCase()}`);
+
+      // Add steps
+      const stepsContainer = document.getElementById('modalSteps');
+      stepsContainer.innerHTML = '';
+      
+      tutorial.steps.forEach(step => {
+        const stepElement = document.createElement('div');
+        stepElement.className = 'modal-step';
+        
+        let stepHTML = `<h3 class="modal-step-title">${step.title}</h3>`;
+        stepHTML += `<div class="modal-step-content">${step.content}</div>`;
+        
+        if (step.image) {
+          stepHTML += `<img src="${step.image}" alt="${step.title}" class="modal-image">`;
+        }
+        
+        if (step.tip) {
+          stepHTML += `<div class="modal-tip">${step.tip}</div>`;
+        }
+        
+        stepElement.innerHTML = stepHTML;
+        stepsContainer.appendChild(stepElement);
+      });
+
+      // Show modal
+      document.getElementById('tutorialModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeTutorial() {
+      document.getElementById('tutorialModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       loadUserDropdown();
 
@@ -1085,6 +1564,25 @@
         if (!e.target.closest("#userMenu")) {
           menu.style.display = "none";
         }
+      });
+
+      // Close modal when clicking close button or overlay
+      document.getElementById('modalClose').addEventListener('click', closeTutorial);
+      document.getElementById('tutorialModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('tutorialModal')) {
+          closeTutorial();
+        }
+      });
+
+      // Add click handlers to all tutorial buttons
+      document.querySelectorAll('.tutorial-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const tutorialCard = e.target.closest('.tutorial-card');
+          if (tutorialCard) {
+            const tutorialId = tutorialCard.getAttribute('data-tutorial');
+            openTutorial(tutorialId);
+          }
+        });
       });
 
       // Simulate loading
