@@ -800,6 +800,25 @@
         gap: 20px;
       }
     }
+
+.badge-icon.glow {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  animation: pulseGlow 2s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+  to { box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); }
+}
+
+.badge-tooltip span:last-child {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  margin-top: 5px;
+}
+    
   </style>
 </head>
 <body class="theme-bg">
@@ -908,6 +927,200 @@
       }
     });
 
+    const badgeMap = {
+  vsi: {
+    name: "VSI",
+    icon: "https://cdn3.emoji.gg/emojis/2139-level-5.png",
+    description: "VSI Rank - Basic membership level",
+    rarity: "Uncommon",
+    glow: false
+  },
+  vsn: {
+    name: "VSN",
+    icon: "https://cdn3.emoji.gg/emojis/7463-level-20.png",
+    description: "VSN Rank - Intermediate membership level",
+    rarity: "Uncommon",
+    glow: false
+  },
+  vsg: {
+    name: "VSG",
+    icon: "https://cdn3.emoji.gg/emojis/3731-level-40.png",
+    description: "VSG Rank - Advanced membership level", 
+    rarity: "Rare",
+    glow: true
+  },
+  vsultra: {
+    name: "VS Ultra",
+    icon: "https://cdn3.emoji.gg/emojis/6336-level-30.png",
+    description: "VS Ultra Rank - Elite membership level",
+    rarity: "Epic",
+    glow: true
+  },
+  vsplus: {
+    name: "VS+",
+    icon: "https://cdn3.emoji.gg/emojis/9034-member.png",
+    description: "VS+ Rank - Premium membership level",
+    rarity: "Epic",
+    glow: true
+  },
+  vsplusplus: {
+    name: "VS++",
+    icon: "https://cdn3.emoji.gg/emojis/5717-level-10.png",
+    description: "VS++ Rank - VIP membership level",
+    rarity: "Epic",
+    glow: true
+  },
+  vs: {
+    name: "VS",
+    icon: "https://cdn3.emoji.gg/emojis/4185-staff-team.png",
+    description: "VS Rank - Highest membership level",
+    rarity: "Legendary",
+    glow: true
+  },
+  early: {
+    name: "Early User",
+    icon: "https://cdn3.emoji.gg/emojis/7549-member.png",
+    description: "Joined in the first week of Drags",
+    rarity: "Rare",
+    glow: false
+  },
+  staff: {
+    name: "Staff",
+    icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png",
+    description: "Official Drags Staff Member",
+    rarity: "Epic",
+    glow: true
+  },
+  verified: {
+    name: "Verified",
+    icon: "https://cdn3.emoji.gg/emojis/74424-partner.png",
+    description: "Verified Drags User",
+    rarity: "Uncommon",
+    glow: false
+  },
+  dev: {
+    name: "Developer",
+    icon: "https://cdn3.emoji.gg/emojis/1166-partner.png",
+    description: "Drags Platform Developer",
+    rarity: "Epic",
+    glow: true
+  },
+  owner: {
+    name: "Founder & Owner",
+    icon: "https://cdn3.emoji.gg/emojis/8259-owner.png",
+    description: "The original founder of Drags",
+    rarity: "Legendary",
+    glow: true
+  }
+};
+
+// Manual badge assignments (update this as needed)
+const manualBadges = {
+  "1303491410472865793": [ // Drags Owner
+    { key: "owner", order: 1 },
+    { key: "dev", order: 2 },
+    { key: "vs", order: 3 },
+    { key: "staff", order: 4 },
+    { key: "early", order: 5 },
+    { key: "verified", order: 6 }
+  ],
+  "1359405784915509292": [ // Example User 1
+    { key: "vsplusplus", order: 1 },
+    { key: "early", order: 2 },
+    { key: "verified", order: 3 }
+  ],
+  "1359405784915509232": [ // Example User 2
+    { key: "staff", order: 1 },
+    { key: "vsplus", order: 2 }
+  ],
+  "1359405784915509233": [ // Example User 3
+    { key: "vsultra", order: 1 },
+    { key: "vsg", order: 2 },
+    { key: "vsn", order: 3 },
+    { key: "vsi", order: 4 }
+  ],
+  "1359405784915509234": [ // Example User 4
+    { key: "vsi", order: 1 },
+    { key: "verified", order: 2 }
+  ]
+};
+
+// Enhanced badge display function
+function displayUserBadges(userId) {
+  const badgeBox = document.getElementById("badgeBox");
+  const badgeContainer = document.getElementById("badgeContainer");
+  
+  if (!badgeBox || !badgeContainer) return;
+
+  // Clear existing badges
+  badgeContainer.innerHTML = "";
+  
+  // Get badges for this user
+  const userBadges = manualBadges[userId] || [];
+  
+  // Hide badge box if user has no badges
+  if (userBadges.length === 0) {
+    badgeBox.style.display = "none";
+    return;
+  }
+  
+  // Show badge box
+  badgeBox.style.display = "flex";
+  
+  // Sort badges by their order value
+  userBadges.sort((a, b) => a.order - b.order).forEach(badgeData => {
+    const badge = badgeMap[badgeData.key];
+    if (!badge) return; // Skip if badge definition not found
+    
+    // Create badge wrapper
+    const wrapper = document.createElement("div");
+    wrapper.className = "badge-wrapper";
+    
+    // Create badge image
+    const img = document.createElement("img");
+    img.src = badge.icon;
+    img.alt = badge.name;
+    img.className = "badge-icon";
+    
+    // Add special effects based on badge properties
+    if (badge.glow) {
+      img.classList.add("glow");
+    }
+    
+    // Special effects for legendary badges
+    if (badge.rarity === "Legendary") {
+      img.classList.add("rainbow");
+    }
+    
+    // Create tooltip
+    const tooltip = document.createElement("div");
+    tooltip.className = "badge-tooltip";
+    tooltip.innerHTML = `
+      <strong>${badge.name}</strong>
+      <span>${badge.description}</span>
+      <span style="margin-top: 5px; color: ${getRarityColor(badge.rarity)}">
+        ${badge.rarity} Badge
+      </span>
+    `;
+    
+    // Add elements to DOM
+    wrapper.appendChild(img);
+    wrapper.appendChild(tooltip);
+    badgeContainer.appendChild(wrapper);
+  });
+}
+
+// Helper function to get color based on rarity
+function getRarityColor(rarity) {
+  switch(rarity) {
+    case "Legendary": return "#ff8c00"; // Orange
+    case "Epic": return "#a335ee";     // Purple
+    case "Rare": return "#0070dd";     // Blue
+    case "Uncommon": return "#1eff00"; // Green
+    default: return "#ffffff";         // White
+  }
+}
+
     async function loadProfile(discordId) {
       const loadingBuffer = document.getElementById("loading-buffer");
       if (loadingBuffer) loadingBuffer.style.display = "block";
@@ -945,41 +1158,8 @@
         badgeContainer.innerHTML = "";
       }
 
-      const assigned = manualBadges[user.discord_id] || [];
-
-if (assigned.length > 0 && badgeBox && badgeContainer) {
-  badgeBox.style.display = "flex";
-
-  // Sort badges by the `order` value
-  assigned.sort((a, b) => a.order - b.order).forEach(badgeData => {
-    const badge = badgeMap[badgeData.key];
-    if (badge) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "badge-wrapper";
-
-      const img = document.createElement("img");
-      img.src = badge.icon;
-      img.alt = badge.name;
-      img.className = "badge-icon";
-
-      if (["owner", "dev"].includes(badgeData.key)) {
-        img.classList.add("rainbow");
-      }
-
-      const tooltip = document.createElement("div");
-      tooltip.className = "badge-tooltip";
-      tooltip.innerHTML = `
-        <strong>${badge.name}</strong>
-        <span>${badge.description}</span>
-      `;
-
-      wrapper.appendChild(img);
-      wrapper.appendChild(tooltip);
-      badgeContainer.appendChild(wrapper);
-    }
-  });
-}
-
+     
+displayUserBadges(discordId);
 
       const isOwner = currentUserId === discordId;
 
@@ -1170,6 +1350,8 @@ async function loadFollowing(targetId) {
         }
       }
 
+
+      
       const usernameEl = document.getElementById("username");
       if (usernameEl) {
         usernameEl.classList.remove("username-rainbow", "username-glow", "username-fractal");
@@ -1231,101 +1413,10 @@ async function loadFollowing(targetId) {
       "123456789012345678"   
     ];
 
-    const badgeMap = {
-  vsi: {
-    name: "VSI",
-    icon: "https://cdn3.emoji.gg/emojis/2139-level-5.png",
-    description: "VSI Rank",
-    rarity: "Uncommon"
-  },
- vsn: {
-    name: "VSN",
-    icon: "https://cdn3.emoji.gg/emojis/7463-level-20.png",
-    description: "VSN Rank",
-    rarity: "Uncommon"
-  },
-      vsg: {
-    name: "VSG",
-    icon: "https://cdn3.emoji.gg/emojis/3731-level-40.png",
-    description: "VSN Rank",
-    rarity: "Rare"
-  },
-      vsultra: {
-    name: "VS Ultra",
-    icon: "https://cdn3.emoji.gg/emojis/6336-level-30.png",
-    description: "VS Ultra Rank",
-    rarity: "Epic"
-  },
-      vsplus: {
-    name: "VS+",
-    icon: "https://cdn3.emoji.gg/emojis/9034-member.png",
-    description: "VS+ Rank",
-    rarity: "Epic"
-  },
-      vsplusplus: {
-    name: "VS++",
-    icon: "https://cdn3.emoji.gg/emojis/5717-level-10.png",
-    description: "VS++ Rank",
-    rarity: "Epic"
-  },
-      vs: {
-    name: "VS",
-    icon: "https://cdn3.emoji.gg/emojis/4185-staff-team.png",
-    description: "VS Rank",
-    rarity: "Legendary"
-  },
-  early: {
-    name: "Early User",
-    icon: "https://cdn3.emoji.gg/emojis/7549-member.png",
-    description: "Joined in the first week",
-    rarity: "Rare"
-  },
-  staff: {
-    name: "Staff",
-    icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png",
-    description: "Official Drags Staff",
-    rarity: "Epic"
-  },
-  verified: {
-    name: "Verified",
-    icon: "https://cdn3.emoji.gg/emojis/74424-partner.png",
-    description: "Verified identity",
-    rarity: "Uncommon"
-  },
-  dev: {
-    name: "Developer",
-    icon: "https://cdn3.emoji.gg/emojis/1166-partner.png",
-    description: "Platform Developer",
-    rarity: "Epic"
-  },
-  owner: {
-    name: "Founder & Owner",
-    icon: "https://cdn3.emoji.gg/emojis/8259-owner.png",
-    description: "The original founder of Drags",
-    rarity: "Legendary"
-  }
-};
+   
 
 
-    const manualBadges = {
-  "1303491410472865793": [
-    { key: "owner", order: 1 },
-    { key: "dev", order: 2 },
-    { key: "vs", order: 3 },
-    { key: "staff", order: 4 },
-    { key: "early", order: 5 },
-    { key: "verified", order: 6 }
-  ],
-  "1359405784915509292": [
-    { key: "owner", order: 1 },
-    { key: "early", order: 2 },
-    { key: "staff", order: 3 }
-  ],
-  "1359405784915509232": [
-    { key: "staff", order: 1 }
-  ]
-};
-
+  
 
 
     function showFollowModal(modalId, listId, items, title) {
