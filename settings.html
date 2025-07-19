@@ -1356,12 +1356,14 @@
           document.getElementById("displayName").value = data.display_name || "";
           document.getElementById("bio").value = data.bio || "";
           
-          // Set avatar if available
-          if (data.avatar_url) {
-            document.getElementById("userAvatar").src = data.avatar_url;
-          }
+      
+if (data.avatar_url) {
+  const avatarEl = document.getElementById("profileAvatar");
+  if (avatarEl) avatarEl.src = data.avatar_url;
+}
+
           
-          // Load effects
+     
           if (data.username_effect) {
             selectedEffects = data.username_effect.split(',');
             selectedEffects.forEach(effect => {
