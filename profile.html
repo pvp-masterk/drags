@@ -142,20 +142,24 @@
 
 
     .profile-container {
-      max-width: 500px;
-      margin: 30px auto;
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      text-align: center;
-      animation: fadeInUp 0.6s ease both;
-      transition: all var(--transition-medium);
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      will-change: transform;
-    }
+  max-width: 500px;
+  margin: 30px auto;
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
+  animation: fadeInUp 0.6s ease both;
+  transition: all var(--transition-medium);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* This ensures everything centers perfectly */
+}
+
 
     .profile-container::before {
       content: '';
@@ -179,18 +183,22 @@
       opacity: 0.6;
     }
 
-    .profile-avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 3px solid var(--primary);
-      object-fit: cover;
-      margin-bottom: 20px;
-      transition: all var(--transition-medium);
-      position: relative;
-      z-index: 2;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
+   .profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  object-fit: cover;
+  margin-bottom: 20px;
+  transition: all var(--transition-medium);
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  align-self: center; /* Explicitly center the avatar */
+  margin-left: auto;
+  margin-right: auto; /* Ensures horizontal centering */
+}
+
 
     .profile-avatar:hover {
       transform: scale(1.05);
@@ -740,8 +748,10 @@
 
 
 .username-wrapper {
-  display: inline-block;
-  padding: 0 5px; 
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 5px;
 }
 
 .username-glow {
