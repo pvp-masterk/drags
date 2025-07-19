@@ -203,7 +203,10 @@
       margin-bottom: 5px;
       position: relative;
       z-index: 2;
+       display: inline-block;
+       padding: 0 5px;
     }
+   
 
     .profile-displayname {
       font-size: 18px;
@@ -735,17 +738,28 @@
       100% { background-position: 200% }
     }
 
-    .username-glow {
-      color: white;
-      text-shadow: 0 0 10px currentColor;
-      animation: pulseGlow 2s infinite alternate;
-    }
 
-    @keyframes pulseGlow {
-      from { text-shadow: 0 0 8px currentColor; }
-      to { text-shadow: 0 0 15px currentColor; }
-    }
+.username-wrapper {
+  display: inline-block;
+  padding: 0 5px; 
+}
 
+.username-glow {
+  display: inline-block;
+  padding: 0 3px; 
+  border-radius: 4px;
+}
+
+  @keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 5px currentColor;
+    text-shadow: 0 0 5px currentColor;
+  }
+  100% {
+    box-shadow: 0 0 15px currentColor;
+    text-shadow: 0 0 15px currentColor;
+  }
+}
     .username-fractal {
       color: black !important;
     }
