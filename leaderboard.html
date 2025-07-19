@@ -722,303 +722,320 @@
   </div>
 
   <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    const supabase = createClient(
-      "https://akektlyhqzbatuedgnuq.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
-    );
+  const supabase = createClient(
+    "https://akektlyhqzbatuedgnuq.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
+  );
 
-    // Sample data for demonstration
-    const sampleUsers = [
-      {
-        id: "1303491410472865793",
-        username: "dragowner",
-        display_name: "Drags Owner",
-        avatar_url: "https://cdn.discordapp.com/avatars/1303491410472865793/a_12345678901234567890123456789012.webp",
-        dragcoins: 12500,
-        followers: 842,
-        activity: 95,
-        badges: 6,
-        rarity_score: 2450
-      },
-      {
-        id: "1359405784915509292",
-        username: "topuser",
-        display_name: "Top User",
-        avatar_url: "https://cdn.discordapp.com/avatars/1359405784915509292/a_12345678901234567890123456789012.webp",
-        dragcoins: 9875,
-        followers: 721,
-        activity: 87,
-        badges: 5,
-        rarity_score: 1980
-      },
-      {
-        id: "1359405784915509232",
-        username: "activeuser",
-        display_name: "Active Member",
-        avatar_url: "https://cdn.discordapp.com/avatars/1359405784915509232/a_12345678901234567890123456789012.webp",
-        dragcoins: 7650,
-        followers: 543,
-        activity: 92,
-        badges: 4,
-        rarity_score: 1560
-      },
-      {
-        id: "1359405784915509233",
-        username: "badgecollector",
-        display_name: "Badge Collector",
-        avatar_url: "https://cdn.discordapp.com/avatars/1359405784915509233/a_12345678901234567890123456789012.webp",
-        dragcoins: 6200,
-        followers: 432,
-        activity: 78,
-        badges: 7,
-        rarity_score: 2870
-      },
-      {
-        id: "1359405784915509234",
-        username: "newcomer",
-        display_name: "New Comer",
-        avatar_url: "https://cdn.discordapp.com/avatars/1359405784915509234/a_12345678901234567890123456789012.webp",
-        dragcoins: 3200,
-        followers: 210,
-        activity: 65,
-        badges: 2,
-        rarity_score: 850
-      }
-    ];
+  // Configuration
+  const ITEMS_PER_PAGE = 10;
+  let currentPage = 1;
+  let currentTab = 'dragcoins';
+  let currentTimeFilter = 'all';
 
-    // Badge data
-    const badgeMap = {
-      vsi: {
-        name: "VSI",
-        icon: "https://cdn3.emoji.gg/emojis/2139-level-5.png",
-        rarity: "Uncommon"
-      },
-      vsn: {
-        name: "VSN",
-        icon: "https://cdn3.emoji.gg/emojis/7463-level-20.png",
-        rarity: "Uncommon"
-      },
-      vsg: {
-        name: "VSG",
-        icon: "https://cdn3.emoji.gg/emojis/3731-level-40.png",
-        rarity: "Rare"
-      },
-      vsultra: {
-        name: "VS Ultra",
-        icon: "https://cdn3.emoji.gg/emojis/6336-level-30.png",
-        rarity: "Epic"
-      },
-      vsplus: {
-        name: "VS+",
-        icon: "https://cdn3.emoji.gg/emojis/9034-member.png",
-        rarity: "Epic"
-      },
-      vsplusplus: {
-        name: "VS++",
-        icon: "https://cdn3.emoji.gg/emojis/5717-level-10.png",
-        rarity: "Epic"
-      },
-      vs: {
-        name: "VS",
-        icon: "https://cdn3.emoji.gg/emojis/4185-staff-team.png",
-        rarity: "Legendary"
-      },
-      early: {
-        name: "Early User",
-        icon: "https://cdn3.emoji.gg/emojis/7549-member.png",
-        rarity: "Rare"
-      },
-      staff: {
-        name: "Staff",
-        icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png",
-        rarity: "Epic"
-      },
-      verified: {
-        name: "Verified",
-        icon: "https://cdn3.emoji.gg/emojis/74424-partner.png",
-        rarity: "Uncommon"
-      },
-      dev: {
-        name: "Developer",
-        icon: "https://cdn3.emoji.gg/emojis/1166-partner.png",
-        rarity: "Epic"
-      },
-      owner: {
-        name: "Founder & Owner",
-        icon: "https://cdn3.emoji.gg/emojis/8259-owner.png",
-        rarity: "Legendary"
-      }
-    };
-
-    const manualBadges = {
-      "1303491410472865793": [
-        { key: "owner", order: 1 },
-        { key: "dev", order: 2 },
-        { key: "vs", order: 3 },
-        { key: "staff", order: 4 },
-        { key: "early", order: 5 },
-        { key: "verified", order: 6 }
-      ],
-      "1359405784915509292": [
-        { key: "vsplusplus", order: 1 },
-        { key: "early", order: 2 },
-        { key: "verified", order: 3 }
-      ],
-      "1359405784915509232": [
-        { key: "staff", order: 1 },
-        { key: "vsplus", order: 2 }
-      ],
-      "1359405784915509233": [
-        { key: "vsultra", order: 1 },
-        { key: "vsg", order: 2 },
-        { key: "vsn", order: 3 },
-        { key: "vsi", order: 4 },
-        { key: "verified", order: 5 },
-        { key: "early", order: 6 },
-        { key: "staff", order: 7 }
-      ],
-      "1359405784915509234": [
-        { key: "vsi", order: 1 },
-        { key: "verified", order: 2 }
-      ]
-    };
-
-    // Rarity scores for badges
-    const badgeRarityScores = {
-      "Uncommon": 100,
-      "Rare": 250,
-      "Epic": 500,
-      "Legendary": 1000
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const loadingBuffer = document.getElementById('loading-buffer');
-      
-      // Tab switching functionality
-      const tabs = document.querySelectorAll('.leaderboard-tab');
-      const contents = document.querySelectorAll('.leaderboard-content');
-      
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          tabs.forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          
-          contents.forEach(c => c.classList.remove('active'));
-          const targetId = `${tab.dataset.tab}-leaderboard`;
-          document.getElementById(targetId).classList.add('active');
-        });
-      });
-      
-      // Time filter functionality
-      const timeFilters = document.querySelectorAll('.time-filter button');
-      
-      timeFilters.forEach(filter => {
-        filter.addEventListener('click', () => {
-          timeFilters.forEach(f => f.classList.remove('active'));
-          filter.classList.add('active');
-          // In a real app, you would reload data based on the time filter
-        });
-      });
-      
-      // Load sample data (in a real app, you would fetch from your database)
-      setTimeout(() => {
-        populateLeaderboards();
-        if (loadingBuffer) loadingBuffer.style.display = 'none';
-      }, 1000);
-      
-      // Scroll header effect
-      window.addEventListener('scroll', () => {
-        const header = document.getElementById('header');
-        if (window.scrollY > 50) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
-        }
+  document.addEventListener('DOMContentLoaded', async () => {
+    const loadingBuffer = document.getElementById('loading-buffer');
+    
+    // Tab switching functionality
+    const tabs = document.querySelectorAll('.leaderboard-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        currentTab = tab.dataset.tab;
+        currentPage = 1;
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        document.querySelectorAll('.leaderboard-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(`${currentTab}-leaderboard`).classList.add('active');
+        
+        loadLeaderboardData();
       });
     });
     
-    function populateLeaderboards() {
-      populateLeaderboard('dragcoins-leaderboard', 'dragcoins');
-      populateLeaderboard('followers-leaderboard', 'followers');
-      populateLeaderboard('activity-leaderboard', 'activity');
-      populateLeaderboard('badges-leaderboard', 'badges');
+    // Time filter functionality
+    const timeFilters = document.querySelectorAll('.time-filter button');
+    timeFilters.forEach(filter => {
+      filter.addEventListener('click', () => {
+        currentTimeFilter = filter.dataset.time;
+        currentPage = 1;
+        timeFilters.forEach(f => f.classList.remove('active'));
+        filter.classList.add('active');
+        loadLeaderboardData();
+      });
+    });
+    
+    // Pagination handlers
+    setupPagination('dragcoins');
+    setupPagination('followers');
+    setupPagination('activity');
+    setupPagination('badges');
+    
+    // Initial load
+    await loadLeaderboardData();
+    if (loadingBuffer) loadingBuffer.style.display = 'none';
+    
+    // Scroll header effect
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  });
+
+  function setupPagination(metric) {
+    const prevBtn = document.getElementById(`prevPage${metric === 'dragcoins' ? '' : metric.charAt(0).toUpperCase() + metric.slice(1)}`);
+    const nextBtn = document.getElementById(`nextPage${metric === 'dragcoins' ? '' : metric.charAt(0).toUpperCase() + metric.slice(1)}`);
+    
+    if (!prevBtn || !nextBtn) return;
+    
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        loadLeaderboardData();
+      }
+    });
+    
+    nextBtn.addEventListener('click', () => {
+      currentPage++;
+      loadLeaderboardData();
+    });
+  }
+
+  async function loadLeaderboardData() {
+    try {
+      const loadingBuffer = document.getElementById('loading-buffer');
+      if (loadingBuffer) loadingBuffer.style.display = 'flex';
+      
+      let data, error;
+      
+      switch(currentTab) {
+        case 'dragcoins':
+          ({ data, error } = await fetchDragcoinsData());
+          break;
+        case 'followers':
+          ({ data, error } = await fetchFollowersData());
+          break;
+        case 'activity':
+          ({ data, error } = await fetchActivityData());
+          break;
+        case 'badges':
+          ({ data, error } = await fetchBadgesData());
+          break;
+        default:
+          ({ data, error } = await fetchDragcoinsData());
+      }
+      
+      if (error) throw error;
+      
+      populateLeaderboard(`${currentTab}-leaderboard`, currentTab, data);
+      
+      updatePaginationUI(data.length);
+    } catch (error) {
+      console.error('Error loading leaderboard data:', error);
+      // Show error state
+      document.querySelector(`#${currentTab}-leaderboard tbody`).innerHTML = `
+        <tr>
+          <td colspan="4" class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Error Loading Data</h3>
+            <p>Failed to load leaderboard data. Please try again later.</p>
+          </td>
+        </tr>
+      `;
+    } finally {
+      const loadingBuffer = document.getElementById('loading-buffer');
+      if (loadingBuffer) loadingBuffer.style.display = 'none';
+    }
+  }
+
+  async function fetchDragcoinsData() {
+    // Adjust this query based on your actual Supabase table structure
+    const { data, error } = await supabase
+      .from('users')
+      .select('discord_id, username, display_name, avatar_url, dragcoins')
+      .order('dragcoins', { ascending: false })
+      .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
+      
+    return { data, error };
+  }
+
+  async function fetchFollowersData() {
+    // Adjust this query based on your actual Supabase table structure
+    const { data, error } = await supabase
+      .from('users')
+      .select('discord_id, username, display_name, avatar_url, followers')
+      .order('followers', { ascending: false })
+      .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
+      
+    return { data, error };
+  }
+
+  async function fetchActivityData() {
+    // Adjust this query based on your actual Supabase table structure
+    const { data, error } = await supabase
+      .from('users')
+      .select('discord_id, username, display_name, avatar_url, activity_score')
+      .order('activity_score', { ascending: false })
+      .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
+      
+    return { data, error };
+  }
+
+  async function fetchBadgesData() {
+    // This is more complex - you might need a separate badges table
+    // Here's a simplified approach:
+    const { data: users, error } = await supabase
+      .from('users')
+      .select('id, username, display_name, avatar_url, badges')
+      .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
+      
+    if (error) return { data: null, error };
+    
+    // Calculate badge counts and rarity scores
+    const processedData = users.map(user => {
+      const badgeCount = user.badges ? user.badges.length : 0;
+      const rarityScore = user.badges ? 
+        user.badges.reduce((score, badge) => {
+          // You'll need to implement your own rarity scoring logic
+          return score + (badge.rarity === 'legendary' ? 1000 : 
+                         badge.rarity === 'epic' ? 500 : 
+                         badge.rarity === 'rare' ? 250 : 100);
+        }, 0) : 0;
+      
+      return {
+        ...user,
+        badges: badgeCount,
+        rarity_score: rarityScore
+      };
+    }).sort((a, b) => b.rarity_score - a.rarity_score);
+    
+    return { data: processedData, error: null };
+  }
+
+  function populateLeaderboard(tableId, metric, users) {
+    const tableBody = document.querySelector(`#${tableId} tbody`);
+    if (!tableBody) return;
+    
+    tableBody.innerHTML = '';
+    
+    if (!users || users.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="4" class="empty-state">
+            <i class="fas fa-users-slash"></i>
+            <h3>No Data Available</h3>
+            <p>No users found for this leaderboard.</p>
+          </td>
+        </tr>
+      `;
+      return;
     }
     
-    function populateLeaderboard(tableId, metric) {
-      const tableBody = document.querySelector(`#${tableId} tbody`);
-      if (!tableBody) return;
+    // Find max value for progress bars
+    const maxValue = Math.max(...users.map(u => metric === 'badges' ? u.rarity_score : u[metric]));
+    
+    users.forEach((user, index) => {
+      const row = document.createElement('tr');
+      const globalRank = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
       
-      tableBody.innerHTML = '';
+      if (globalRank === 1) row.classList.add('rank-1');
+      else if (globalRank === 2) row.classList.add('rank-2');
+      else if (globalRank === 3) row.classList.add('rank-3');
       
-      // Sort users by the selected metric
-      const sortedUsers = [...sampleUsers].sort((a, b) => b[metric] - a[metric]);
+      // Get user's badges (you'll need to fetch this from your database)
+      // For now, using a simplified approach
+      const badgeElements = user.badges && Array.isArray(user.badges) ? 
+        user.badges.map(badge => {
+          return `<img src="${badge.icon || 'https://cdn3.emoji.gg/emojis/2139-level-5.png'}" 
+                  alt="${badge.name || 'Badge'}" 
+                  class="badge-preview-item" 
+                  title="${badge.name || 'Badge'} (${badge.rarity || 'common'})">`;
+        }).join('') : '';
       
-      // Find max value for progress bars
-      const maxValue = Math.max(...sortedUsers.map(u => u[metric]));
-      
-      sortedUsers.forEach((user, index) => {
-        const row = document.createElement('tr');
-        if (index === 0) row.classList.add('rank-1');
-        else if (index === 1) row.classList.add('rank-2');
-        else if (index === 2) row.classList.add('rank-3');
-        
-        // Get user's badges
-        const userBadges = manualBadges[user.id] || [];
-        const badgeElements = userBadges
-          .sort((a, b) => a.order - b.order)
-          .map(badge => {
-            const badgeData = badgeMap[badge.key];
-            if (!badgeData) return '';
-            return `<img src="${badgeData.icon}" alt="${badgeData.name}" class="badge-preview-item" title="${badgeData.name} (${badgeData.rarity})">`;
-          }).join('');
-        
-        row.innerHTML = `
-          <td class="rank-cell">${index + 1}</td>
-          <td>
-            <div class="user-cell">
-              <img src="${user.avatar_url}" alt="${user.display_name}" class="user-avatar">
-              <div class="user-info">
-                <div class="user-name">${user.display_name}</div>
-                <div class="user-username">@${user.username}</div>
-              </div>
+      row.innerHTML = `
+        <td class="rank-cell">${globalRank}</td>
+        <td>
+          <div class="user-cell">
+            <img src="${user.avatar_url}" alt="${user.display_name}" class="user-avatar" 
+                 onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+            <div class="user-info">
+              <div class="user-name">${user.display_name || user.username}</div>
+              <div class="user-username">@${user.username}</div>
             </div>
-          </td>
-          <td class="value-cell">
-            ${metric === 'badges' ? 
-              `<div class="badge-preview">${badgeElements}</div>` : 
-              metric === 'rarity_score' ? 
-              user.rarity_score.toLocaleString() : 
-              user[metric].toLocaleString()}
-          </td>
-          <td class="progress-cell">
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${(user[metric] / maxValue) * 100}%"></div>
-            </div>
-          </td>
-        `;
-        
-        // Add click event to navigate to user profile
-        row.addEventListener('click', () => {
-          window.location.href = `profile.html?discord_id=${user.id}`;
-        });
-        
-        tableBody.appendChild(row);
+          </div>
+        </td>
+        <td class="value-cell">
+          ${metric === 'badges' ? 
+            `<div class="badge-preview">${badgeElements}</div>` : 
+            metric === 'rarity_score' ? 
+            (user.rarity_score || 0).toLocaleString() : 
+            (user[metric] || 0).toLocaleString()}
+        </td>
+        <td class="progress-cell">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${((metric === 'badges' ? user.rarity_score : user[metric]) / maxValue) * 100}%"></div>
+          </div>
+        </td>
+      `;
+      
+      // Add click event to navigate to user profile
+      row.addEventListener('click', () => {
+        window.location.href = `profile.html?discord_id=${user.id}`;
       });
       
-      // Animate progress bars after they're added to the DOM
-      setTimeout(() => {
-        const progressBars = document.querySelectorAll('.progress-fill');
-        progressBars.forEach(bar => {
-          const currentWidth = bar.style.width;
-          bar.style.width = '0';
-          setTimeout(() => {
-            bar.style.width = currentWidth;
-          }, 100);
-        });
-      }, 100);
+      tableBody.appendChild(row);
+    });
+    
+    // Animate progress bars after they're added to the DOM
+    setTimeout(() => {
+      const progressBars = document.querySelectorAll('.progress-fill');
+      progressBars.forEach(bar => {
+        const currentWidth = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => {
+          bar.style.width = currentWidth;
+        }, 100);
+      });
+    }, 100);
+  }
+
+  function updatePaginationUI(totalItems) {
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    const paginationContainer = document.querySelector(`#${currentTab}-leaderboard .pagination`);
+    
+    if (!paginationContainer) return;
+    
+    // Clear existing page buttons (keep prev/next buttons)
+    const existingButtons = Array.from(paginationContainer.querySelectorAll('button'));
+    const prevButton = existingButtons.find(btn => btn.id.includes('prev'));
+    const nextButton = existingButtons.find(btn => btn.id.includes('next'));
+    
+    paginationContainer.innerHTML = '';
+    if (prevButton) paginationContainer.appendChild(prevButton);
+    
+    // Add page buttons
+    for (let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.createElement('button');
+      pageBtn.textContent = i;
+      if (i === currentPage) pageBtn.classList.add('active');
+      pageBtn.addEventListener('click', () => {
+        currentPage = i;
+        loadLeaderboardData();
+      });
+      paginationContainer.appendChild(pageBtn);
     }
-  </script>
+    
+    if (nextButton) paginationContainer.appendChild(nextButton);
+    
+    // Update prev/next button states
+    if (prevButton) prevButton.disabled = currentPage === 1;
+    if (nextButton) nextButton.disabled = currentPage === totalPages;
+  }
+</script>
 </body>
 </html>
