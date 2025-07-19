@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="drags.png" type="image/png">
+  <title>Leaderboards | Drags</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --primary-light: rgba(88, 101, 242, 0.1);
+      --secondary: #57F287;
+      --secondary-dark: #45d67d;
+      --text: #f5f5f5;
+      --text-light: rgba(245, 245, 245, 0.7);
+      --bg: #1e1e2e;
+      --bg-dark: #171722;
+      --card-bg: #2a2a3a;
+      --card-hover: #313145;
+      --accent: #ED4245;
+      --accent-hover: #ff5356;
+      --header-height: 80px;
+      --transition-fast: 0.2s ease;
+      --transition-medium: 0.3s ease;
+      --transition-slow: 0.5s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      padding-top: var(--header-height);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--header-height);
+      padding: 0 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      background: rgba(30, 30, 46, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all var(--transition-medium);
+      box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    header.scrolled {
+      height: 70px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform var(--transition-fast);
+    }
+    
+    .logo:hover {
+      transform: translateX(3px);
+    }
+    
+    .logo i {
+      color: var(--primary);
+      font-size: 28px;
+      transition: transform var(--transition-medium);
+    }
+    
+    .logo:hover i {
+      transform: rotate(15deg);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 25px;
+      height: 100%;
+    }
+    
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      position: relative;
+      transition: all var(--transition-fast);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text);
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--primary);
+      transition: width var(--transition-medium);
+      border-radius: 3px 3px 0 0;
+    }
+    
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .leaderboards-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      animation: fadeIn 0.6s ease both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .leaderboards-header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .leaderboards-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+      position: relative;
+    }
+
+    .leaderboards-header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 3px;
+    }
+
+    .leaderboards-header p {
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .leaderboard-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .leaderboard-tab {
+      padding: 10px 25px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .leaderboard-tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .leaderboard-tab.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+    }
+
+    .leaderboard-content {
+      display: none;
+      animation: fadeInUp 0.5s ease both;
+    }
+
+    .leaderboard-content.active {
+      display: block;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    .leaderboard-table thead th {
+      padding: 15px 20px;
+      text-align: left;
+      color: var(--text-light);
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .leaderboard-table tbody tr {
+      background: var(--card-bg);
+      transition: all var(--transition-medium);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .leaderboard-table tbody tr:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      background: var(--card-hover);
+    }
+
+    .leaderboard-table tbody td {
+      padding: 15px 20px;
+      vertical-align: middle;
+    }
+
+    .leaderboard-table tbody tr:first-child td:first-child {
+      border-top-left-radius: 10px;
+    }
+
+    .leaderboard-table tbody tr:first-child td:last-child {
+      border-top-right-radius: 10px;
+    }
+
+    .leaderboard-table tbody tr:last-child td:first-child {
+      border-bottom-left-radius: 10px;
+    }
+
+    .leaderboard-table tbody tr:last-child td:last-child {
+      border-bottom-right-radius: 10px;
+    }
+
+    .rank-cell {
+      font-weight: 700;
+      width: 60px;
+      text-align: center;
+    }
+
+    .rank-1 {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.2));
+    }
+
+    .rank-1 .rank-cell {
+      color: gold;
+      font-size: 1.2em;
+    }
+
+    .rank-2 {
+      background: linear-gradient(135deg, rgba(192, 192, 192, 0.1), rgba(192, 192, 192, 0.2));
+    }
+
+    .rank-2 .rank-cell {
+      color: silver;
+    }
+
+    .rank-3 {
+      background: linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(205, 127, 50, 0.2));
+    }
+
+    .rank-3 .rank-cell {
+      color: #cd7f32; /* bronze */
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+      transition: transform var(--transition-fast);
+    }
+
+    .leaderboard-table tbody tr:hover .user-avatar {
+      transform: scale(1.1);
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .user-username {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .value-cell {
+      font-weight: 600;
+      color: var(--secondary);
+    }
+
+    .progress-cell {
+      width: 30%;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 4px;
+      transition: width 1s ease-out;
+    }
+
+    .loading-buffer {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: var(--text);
+      z-index: 9999;
+      background: rgba(30, 30, 46, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      backdrop-filter: blur(5px);
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--primary);
+      border-top: 4px solid transparent;
+      border-radius: 50%;
+      margin: 0 auto 20px auto;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .pagination button {
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pagination button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .pagination button.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pagination button i {
+      font-size: 14px;
+    }
+
+    .time-filter {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .time-filter button {
+      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: var(--text-light);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-size: 14px;
+    }
+
+    .time-filter button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
+    .time-filter button.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--text-light);
+    }
+
+    .empty-state i {
+      font-size: 50px;
+      margin-bottom: 20px;
+      color: var(--primary-light);
+    }
+
+    .empty-state h3 {
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .badge-preview {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge-preview-item {
+      width: 25px;
+      height: 25px;
+      border-radius: 5px;
+      object-fit: contain;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform var(--transition-fast);
+    }
+
+    .badge-preview-item:hover {
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+      .leaderboards-container {
+        margin: 20px 0;
+        padding: 0 15px;
+      }
+
+      .leaderboard-tabs {
+        gap: 10px;
+      }
+
+      .leaderboard-tab {
+        padding: 8px 15px;
+        font-size: 14px;
+      }
+
+      .leaderboard-table thead th,
+      .leaderboard-table tbody td {
+        padding: 12px 10px;
+        font-size: 14px;
+      }
+
+      .user-cell {
+        gap: 10px;
+      }
+
+      .user-avatar {
+        width: 35px;
+        height: 35px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .leaderboards-header h1 {
+        font-size: 2rem;
+      }
+
+      .leaderboard-table thead {
+        display: none;
+      }
+
+      .leaderboard-table tbody tr {
+        display: block;
+        margin-bottom: 15px;
+      }
+
+      .leaderboard-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+      }
+
+      .leaderboard-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 500;
+        color: var(--text-light);
+        margin-right: 15px;
+      }
+
+      .rank-cell {
+        text-align: right;
+      }
+
+      .user-cell {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+
+      .user-info {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .user-username {
+        margin-top: 0;
+      }
+    }
+  </style>
+</head>
+<body class="theme-bg">
+  <header id="header">
+    <a href="#" class="logo"><i class="fab fa-discord"></i> Drags</a>
+    <nav class="nav-links">
+      <a href="index">Home</a>
+      <a href="users">User List</a>
+      <a href="leaderboards" class="active">Leaderboards</a>
+      <a href="settings">Settings</a>
+      <a href="badges">Badges & Ranks</a>
+    </nav>
+    <div id="user-box"></div>
+  </header>
+
+  <div id="loading-buffer" class="loading-buffer">
+    <div class="spinner"></div>
+    <p>Loading Leaderboards...</p>
+  </div>
+
+  <div class="leaderboards-container">
+    <div class="leaderboards-header">
+      <h1>Community Leaderboards</h1>
+      <p>See where you stand among the top Drags community members</p>
+    </div>
+
+    <div class="time-filter">
+      <button class="active" data-time="all">All Time</button>
+      <button data-time="monthly">This Month</button>
+      <button data-time="weekly">This Week</button>
+    </div>
+
+    <div class="leaderboard-tabs">
+      <div class="leaderboard-tab active" data-tab="dragcoins">Dragcoins</div>
+      <div class="leaderboard-tab" data-tab="followers">Followers</div>
+      <div class="leaderboard-tab" data-tab="activity">Activity</div>
+      <div class="leaderboard-tab" data-tab="badges">Badges</div>
+    </div>
+
+    <div class="leaderboard-content active" id="dragcoins-leaderboard">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Dragcoins</th>
+            <th>Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be loaded here -->
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button id="prevPage" disabled><i class="fas fa-chevron-left"></i></button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button id="nextPage"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div class="leaderboard-content" id="followers-leaderboard">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Followers</th>
+            <th>Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be loaded here -->
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button id="prevPageFollowers" disabled><i class="fas fa-chevron-left"></i></button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button id="nextPageFollowers"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div class="leaderboard-content" id="activity-leaderboard">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Activity</th>
+            <th>Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be loaded here -->
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button id="prevPageActivity" disabled><i class="fas fa-chevron-left"></i></button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button id="nextPageActivity"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div class="leaderboard-content" id="badges-leaderboard">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Badges</th>
+            <th>Rarity Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be loaded here -->
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button id="prevPageBadges" disabled><i class="fas fa-chevron-left"></i></button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button id="nextPageBadges"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabase = createClient(
+      "https://akektlyhqzbatuedgnuq.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
+    );
+
+    // Sample data for demonstration
+    const sampleUsers = [
+      {
+        id: "1303491410472865793",
+        username: "dragowner",
+        display_name: "Drags Owner",
+        avatar_url: "https://cdn.discordapp.com/avatars/1303491410472865793/a_12345678901234567890123456789012.webp",
+        dragcoins: 12500,
+        followers: 842,
+        activity: 95,
+        badges: 6,
+        rarity_score: 2450
+      },
+      {
+        id: "1359405784915509292",
+        username: "topuser",
+        display_name: "Top User",
+        avatar_url: "https://cdn.discordapp.com/avatars/1359405784915509292/a_12345678901234567890123456789012.webp",
+        dragcoins: 9875,
+        followers: 721,
+        activity: 87,
+        badges: 5,
+        rarity_score: 1980
+      },
+      {
+        id: "1359405784915509232",
+        username: "activeuser",
+        display_name: "Active Member",
+        avatar_url: "https://cdn.discordapp.com/avatars/1359405784915509232/a_12345678901234567890123456789012.webp",
+        dragcoins: 7650,
+        followers: 543,
+        activity: 92,
+        badges: 4,
+        rarity_score: 1560
+      },
+      {
+        id: "1359405784915509233",
+        username: "badgecollector",
+        display_name: "Badge Collector",
+        avatar_url: "https://cdn.discordapp.com/avatars/1359405784915509233/a_12345678901234567890123456789012.webp",
+        dragcoins: 6200,
+        followers: 432,
+        activity: 78,
+        badges: 7,
+        rarity_score: 2870
+      },
+      {
+        id: "1359405784915509234",
+        username: "newcomer",
+        display_name: "New Comer",
+        avatar_url: "https://cdn.discordapp.com/avatars/1359405784915509234/a_12345678901234567890123456789012.webp",
+        dragcoins: 3200,
+        followers: 210,
+        activity: 65,
+        badges: 2,
+        rarity_score: 850
+      }
+    ];
+
+    // Badge data
+    const badgeMap = {
+      vsi: {
+        name: "VSI",
+        icon: "https://cdn3.emoji.gg/emojis/2139-level-5.png",
+        rarity: "Uncommon"
+      },
+      vsn: {
+        name: "VSN",
+        icon: "https://cdn3.emoji.gg/emojis/7463-level-20.png",
+        rarity: "Uncommon"
+      },
+      vsg: {
+        name: "VSG",
+        icon: "https://cdn3.emoji.gg/emojis/3731-level-40.png",
+        rarity: "Rare"
+      },
+      vsultra: {
+        name: "VS Ultra",
+        icon: "https://cdn3.emoji.gg/emojis/6336-level-30.png",
+        rarity: "Epic"
+      },
+      vsplus: {
+        name: "VS+",
+        icon: "https://cdn3.emoji.gg/emojis/9034-member.png",
+        rarity: "Epic"
+      },
+      vsplusplus: {
+        name: "VS++",
+        icon: "https://cdn3.emoji.gg/emojis/5717-level-10.png",
+        rarity: "Epic"
+      },
+      vs: {
+        name: "VS",
+        icon: "https://cdn3.emoji.gg/emojis/4185-staff-team.png",
+        rarity: "Legendary"
+      },
+      early: {
+        name: "Early User",
+        icon: "https://cdn3.emoji.gg/emojis/7549-member.png",
+        rarity: "Rare"
+      },
+      staff: {
+        name: "Staff",
+        icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png",
+        rarity: "Epic"
+      },
+      verified: {
+        name: "Verified",
+        icon: "https://cdn3.emoji.gg/emojis/74424-partner.png",
+        rarity: "Uncommon"
+      },
+      dev: {
+        name: "Developer",
+        icon: "https://cdn3.emoji.gg/emojis/1166-partner.png",
+        rarity: "Epic"
+      },
+      owner: {
+        name: "Founder & Owner",
+        icon: "https://cdn3.emoji.gg/emojis/8259-owner.png",
+        rarity: "Legendary"
+      }
+    };
+
+    const manualBadges = {
+      "1303491410472865793": [
+        { key: "owner", order: 1 },
+        { key: "dev", order: 2 },
+        { key: "vs", order: 3 },
+        { key: "staff", order: 4 },
+        { key: "early", order: 5 },
+        { key: "verified", order: 6 }
+      ],
+      "1359405784915509292": [
+        { key: "vsplusplus", order: 1 },
+        { key: "early", order: 2 },
+        { key: "verified", order: 3 }
+      ],
+      "1359405784915509232": [
+        { key: "staff", order: 1 },
+        { key: "vsplus", order: 2 }
+      ],
+      "1359405784915509233": [
+        { key: "vsultra", order: 1 },
+        { key: "vsg", order: 2 },
+        { key: "vsn", order: 3 },
+        { key: "vsi", order: 4 },
+        { key: "verified", order: 5 },
+        { key: "early", order: 6 },
+        { key: "staff", order: 7 }
+      ],
+      "1359405784915509234": [
+        { key: "vsi", order: 1 },
+        { key: "verified", order: 2 }
+      ]
+    };
+
+    // Rarity scores for badges
+    const badgeRarityScores = {
+      "Uncommon": 100,
+      "Rare": 250,
+      "Epic": 500,
+      "Legendary": 1000
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const loadingBuffer = document.getElementById('loading-buffer');
+      
+      // Tab switching functionality
+      const tabs = document.querySelectorAll('.leaderboard-tab');
+      const contents = document.querySelectorAll('.leaderboard-content');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          contents.forEach(c => c.classList.remove('active'));
+          const targetId = `${tab.dataset.tab}-leaderboard`;
+          document.getElementById(targetId).classList.add('active');
+        });
+      });
+      
+      // Time filter functionality
+      const timeFilters = document.querySelectorAll('.time-filter button');
+      
+      timeFilters.forEach(filter => {
+        filter.addEventListener('click', () => {
+          timeFilters.forEach(f => f.classList.remove('active'));
+          filter.classList.add('active');
+          // In a real app, you would reload data based on the time filter
+        });
+      });
+      
+      // Load sample data (in a real app, you would fetch from your database)
+      setTimeout(() => {
+        populateLeaderboards();
+        if (loadingBuffer) loadingBuffer.style.display = 'none';
+      }, 1000);
+      
+      // Scroll header effect
+      window.addEventListener('scroll', () => {
+        const header = document.getElementById('header');
+        if (window.scrollY > 50) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+    });
+    
+    function populateLeaderboards() {
+      populateLeaderboard('dragcoins-leaderboard', 'dragcoins');
+      populateLeaderboard('followers-leaderboard', 'followers');
+      populateLeaderboard('activity-leaderboard', 'activity');
+      populateLeaderboard('badges-leaderboard', 'badges');
+    }
+    
+    function populateLeaderboard(tableId, metric) {
+      const tableBody = document.querySelector(`#${tableId} tbody`);
+      if (!tableBody) return;
+      
+      tableBody.innerHTML = '';
+      
+      // Sort users by the selected metric
+      const sortedUsers = [...sampleUsers].sort((a, b) => b[metric] - a[metric]);
+      
+      // Find max value for progress bars
+      const maxValue = Math.max(...sortedUsers.map(u => u[metric]));
+      
+      sortedUsers.forEach((user, index) => {
+        const row = document.createElement('tr');
+        if (index === 0) row.classList.add('rank-1');
+        else if (index === 1) row.classList.add('rank-2');
+        else if (index === 2) row.classList.add('rank-3');
+        
+        // Get user's badges
+        const userBadges = manualBadges[user.id] || [];
+        const badgeElements = userBadges
+          .sort((a, b) => a.order - b.order)
+          .map(badge => {
+            const badgeData = badgeMap[badge.key];
+            if (!badgeData) return '';
+            return `<img src="${badgeData.icon}" alt="${badgeData.name}" class="badge-preview-item" title="${badgeData.name} (${badgeData.rarity})">`;
+          }).join('');
+        
+        row.innerHTML = `
+          <td class="rank-cell">${index + 1}</td>
+          <td>
+            <div class="user-cell">
+              <img src="${user.avatar_url}" alt="${user.display_name}" class="user-avatar">
+              <div class="user-info">
+                <div class="user-name">${user.display_name}</div>
+                <div class="user-username">@${user.username}</div>
+              </div>
+            </div>
+          </td>
+          <td class="value-cell">
+            ${metric === 'badges' ? 
+              `<div class="badge-preview">${badgeElements}</div>` : 
+              metric === 'rarity_score' ? 
+              user.rarity_score.toLocaleString() : 
+              user[metric].toLocaleString()}
+          </td>
+          <td class="progress-cell">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${(user[metric] / maxValue) * 100}%"></div>
+            </div>
+          </td>
+        `;
+        
+        // Add click event to navigate to user profile
+        row.addEventListener('click', () => {
+          window.location.href = `profile.html?discord_id=${user.id}`;
+        });
+        
+        tableBody.appendChild(row);
+      });
+      
+      // Animate progress bars after they're added to the DOM
+      setTimeout(() => {
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach(bar => {
+          const currentWidth = bar.style.width;
+          bar.style.width = '0';
+          setTimeout(() => {
+            bar.style.width = currentWidth;
+          }, 100);
+        });
+      }, 100);
+    }
+  </script>
+</body>
+</html>
