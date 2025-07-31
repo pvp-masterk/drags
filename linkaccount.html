@@ -1,159 +1,180 @@
 <html>
 <head>
+  <title>Drags Account Linking</title>
   <link rel="icon" href="drags.png" type="image/png">
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
     :root {
-      --primary-color: #5865F2;
-      --secondary-color: #404EED;
-      --dark-color: #23272A;
-      --light-color: #FFFFFF;
-      --accent-color: #00B0F4;
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --primary-light: rgba(88, 101, 242, 0.1);
+      --secondary: #57F287;
+      --text: #f5f5f5;
+      --text-light: rgba(245, 245, 245, 0.7);
+      --bg: #1e1e2e;
+      --card-bg: #2a2a3a;
+      --accent: #ED4245;
+      --success: #57F287;
+      --warning: #FEE75C;
+      --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
     
     body {
-      font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background: linear-gradient(135deg, var(--dark-color) 0%, #1a1d21 100%);
-      color: var(--light-color);
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      margin: 0;
-      padding: 0;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    
+    html {
+      scroll-behavior: smooth;
     }
     
     header {
-      background-color: rgba(35, 39, 42, 0.8);
-      backdrop-filter: blur(10px);
-      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 10%;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      z-index: 1000;
+      background: rgba(30, 30, 46, 0.9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     
     .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
       display: flex;
       align-items: center;
       gap: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    
+    .logo i {
+      color: var(--primary);
+      transition: transform 0.3s ease;
+    }
+    
+    .logo:hover i {
+      transform: rotate(15deg);
     }
     
     .logo img {
       height: 40px;
     }
     
-    .logo h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
     .container {
       max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 20px;
+      margin: 0 auto;
+      padding: 120px 20px 40px;
     }
     
     .card {
       background: rgba(47, 49, 54, 0.8);
       backdrop-filter: blur(10px);
-      border-radius: 10px;
-      padding: 2rem;
+      border-radius: 15px;
+      padding: 2.5rem;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
       margin-bottom: 2rem;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
     }
     
     h1 {
-      color: var(--light-color);
+      font-size: 2.5rem;
       margin-bottom: 1.5rem;
+      background: linear-gradient(to right, var(--text), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     
-    button {
-      background-color: var(--primary-color);
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: var(--text);
+      position: relative;
+      display: inline-block;
+    }
+    
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+    
+    p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    
+    .cta-button {
+      background: var(--primary);
       color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 4px;
-      font-size: 1rem;
+      padding: 14px 28px;
+      border-radius: 30px;
       font-weight: 600;
+      font-size: 1rem;
+      border: none;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    button:hover {
-      background-color: var(--secondary-color);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    .tutorial-section {
-      margin-top: 3rem;
-    }
-    
-    .tutorial-card {
-      background: rgba(47, 49, 54, 0.6);
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      border-left: 4px solid var(--accent-color);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .tutorial-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-    
-    .tutorial-card h3 {
-      color: var(--accent-color);
-      margin-top: 0;
-    }
-    
-    .step {
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-    
-    .step-number {
-      background-color: var(--primary-color);
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      margin-right: 1rem;
-      flex-shrink: 0;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
+      text-decoration: none;
     }
     
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+    .cta-button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(88, 101, 242, 0.4);
     }
     
-    .feature {
-      background: rgba(47, 49, 54, 0.6);
-      padding: 1.5rem;
-      border-radius: 8px;
-      transition: all 0.3s ease;
+    .cta-button i {
+      transition: transform 0.3s ease;
     }
     
-    .feature:hover {
-      background: rgba(47, 49, 54, 0.8);
-      transform: translateY(-5px);
-    }
-    
-    .feature h3 {
-      color: var(--accent-color);
+    .cta-button:hover i {
+      transform: translateX(3px);
     }
     
     .glow {
@@ -184,28 +205,325 @@
         transform: scale(1);
       }
     }
+    
+    .tutorial-section {
+      margin-top: 4rem;
+    }
+    
+    .tutorial-card {
+      background: rgba(47, 49, 54, 0.6);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--primary);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .tutorial-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.1) 0%, rgba(87, 242, 135, 0.05) 100%);
+      z-index: -1;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .tutorial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .tutorial-card:hover::before {
+      opacity: 1;
+    }
+    
+    .tutorial-card h3 {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tutorial-card h3::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.4s ease;
+    }
+    
+    .tutorial-card:hover h3::after {
+      width: 100%;
+    }
+    
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .step:hover {
+      transform: translateX(5px);
+    }
+    
+    .step-number {
+      background-color: var(--primary);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1.5rem;
+      flex-shrink: 0;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .step:hover .step-number {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px var(--primary-light);
+    }
+    
+    .step-content {
+      flex: 1;
+      text-align: left;
+      font-size: 1.05rem;
+      color: var(--text-light);
+      transition: color 0.3s ease;
+    }
+    
+    .step:hover .step-content {
+      color: var(--text);
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    
+    .feature {
+      background: rgba(47, 49, 54, 0.6);
+      padding: 2rem;
+      border-radius: 12px;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .feature::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.1) 0%, rgba(87, 242, 135, 0.05) 100%);
+      z-index: -1;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .feature:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .feature:hover::before {
+      opacity: 1;
+    }
+    
+    .feature h3 {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    
+    .feature h3::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.4s ease;
+    }
+    
+    .feature:hover h3::after {
+      width: 100%;
+    }
+    
+    .feature p {
+      font-size: 1rem;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+    
+    .feature:hover p {
+      opacity: 1;
+    }
+    
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      background: var(--primary-light);
+      border-radius: 50%;
+      animation: float-particle 15s infinite linear;
+    }
+    
+    @keyframes float-particle {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    
+    .toast i {
+      font-size: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 5%;
+      }
+      
+      .container {
+        padding: 100px 5% 40px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    .animate-delay-1 {
+      animation-delay: 0.2s;
+    }
+    
+    .animate-delay-2 {
+      animation-delay: 0.4s;
+    }
+    
+    .animate-delay-3 {
+      animation-delay: 0.6s;
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">
+    <a href="index.html" class="logo">
       <img src="drags.png" alt="Drags Logo">
-      <h1>Drags Account Linking</h1>
-    </div>
+      <span>Drags</span>
+    </a>
+    <a href="https://discord.gg/dUWFNqYfPX" class="cta-button">
+      Join Server <i class="fas fa-arrow-right"></i>
+    </a>
   </header>
 
+  <div class="particles" id="particles"></div>
+
   <div class="container">
-    <div class="card animate__animated animate__fadeInUp animate__faster">
+    <div class="card animate__animated animate__fadeInUp">
       <h1>Link Your Discord Account</h1>
-      <p>Connect your Discord account to access all features</p>
+      <p>Connect your Discord account to access all features of the Drags community</p>
       <a href="https://discord.com/api/oauth2/authorize?client_id=1392907277463457792&redirect_uri=https%3A%2F%2Fdragswebapp.vercel.app%2Fapi%2Fauth&response_type=code&scope=identify">
-        <button class="glow pulse">Login with Discord</button>
+        <button class="cta-button glow pulse">
+          <i class="fab fa-discord"></i> Login with Discord
+        </button>
       </a>
     </div>
 
-    <div class="tutorial-section animate__animated animate__fadeIn">
-      <h2>How to Link Your Account</h2>
-      <div class="tutorial-card">
+    <div class="tutorial-section">
+      <h2 class="animate animate-delay-1">How to Link Your Account</h2>
+      <div class="tutorial-card animate animate-delay-1">
         <h3>Simple Step-by-Step Guide</h3>
         
         <div class="step">
@@ -246,54 +564,140 @@
     </div>
 
     <div class="features">
-      <div class="feature animate__animated animate__fadeInLeft">
+      <div class="feature animate animate-delay-1">
         <h3>Why Link Your Account?</h3>
         <p>Linking your Discord account allows for seamless authentication and personalized experience across our platform.</p>
       </div>
       
-      <div class="feature animate__animated animate__fadeInUp">
+      <div class="feature animate animate-delay-2">
         <h3>Data Security</h3>
         <p>We only request basic profile information. Your data is always secure and never shared with third parties.</p>
       </div>
       
-      <div class="feature animate__animated animate__fadeInRight">
+      <div class="feature animate animate-delay-3">
         <h3>Easy Management</h3>
         <p>You can unlink your account at any time through Discord's authorized apps settings.</p>
       </div>
     </div>
   </div>
 
-  <script>
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-message">Successfully connected!</span>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    // Create floating particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        const size = Math.random() * 10 + 5;
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100 + 100;
+        const delay = Math.random() * 15;
+        const duration = Math.random() * 10 + 10;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+        particle.style.animationDelay = `${delay}s`;
+        particle.style.animationDuration = `${duration}s`;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    createParticles();
+
+    // Initialize Supabase
+    const supabase = window.supabase.createClient(
+      "https://akektlyhqzbatuedgnuq.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrZWt0bHlocXpiYXR1ZWRnbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjUwNzUsImV4cCI6MjA2NzgwMTA3NX0.NqsB9Gj4_ZbZw9DgLiLxz2hwEyQvd7tCYy-drMbLGCg"
+    );
+
+    // Toast notification function
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      
+      toastMessage.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Check for authentication callback
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
         
-        if (user) {
-          await supabase.from("users").upsert({
-            id: user.id,  
-            discord_id: discordUser.id,
-            username: discordUser.username,
-            avatar_url: discordUser.avatar 
-          });
+        if (code) {
+          // Handle the OAuth callback
+          const { data: { user }, error } = await supabase.auth.getUser();
           
-          localStorage.setItem("loggedInDiscordId", discordUser.id);
-          
-
-          const button = document.querySelector('button');
-          button.classList.remove('pulse');
-          button.classList.add('animate__animated', 'animate__tada');
-          button.textContent = 'Success! Redirecting...';
-          
-
-          setTimeout(() => {
-            window.location.href = '/index';
-          }, 1500);
+          if (user) {
+            // Get Discord user info from your backend
+            const response = await fetch(`/api/auth?code=${code}`);
+            const discordUser = await response.json();
+            
+            // Upsert user data
+            await supabase.from("users").upsert({
+              id: user.id,
+              discord_id: discordUser.id,
+              username: discordUser.username,
+              avatar_url: discordUser.avatar,
+              display_name: discordUser.global_name || discordUser.username
+            });
+            
+            localStorage.setItem("loggedInDiscordId", discordUser.id);
+            
+            // Show success message
+            showToast("Account linked successfully!");
+            
+            // Redirect after delay
+            setTimeout(() => {
+              window.location.href = '/index.html';
+            }, 1500);
+          }
         }
       } catch (error) {
         console.error('Error during authentication:', error);
+        showToast("Error linking account. Please try again.");
       }
     });
+
+    // Animate elements on scroll
+    const animateOnScroll = function() {
+      const elements = document.querySelectorAll('.animate');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+      
+      elements.forEach(element => {
+        observer.observe(element);
+      });
+    };
+    
+    animateOnScroll();
   </script>
 </body>
 </html>
