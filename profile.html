@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+can you hardcore data in this like a fake profile add fields like name avatar url and badges for fake profile and make the badges show all by default make everything editable and must be the same as it was before: <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>/six - Profile (Demo)</title>
+<title>/six - Profile</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -80,6 +80,11 @@ header {
   border-bottom: 1px solid rgba(150, 80, 220, 0.1);
 }
 
+header.scrolled {
+  height: 70px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+}
+
 .logo {
   font-size: 24px;
   font-weight: 800;
@@ -88,17 +93,68 @@ header {
   display: flex;
   align-items: center;
   gap: 12px;
+  transition: transform var(--transition-fast);
+}
+
+.logo:hover {
+  transform: translateX(3px);
+}
+
+.logo i {
+  color: var(--primary);
+  font-size: 28px;
+  transition: transform var(--transition-medium);
+}
+
+.logo:hover i {
+  transform: rotate(15deg);
 }
 
 .nav-links {
   display: flex;
   gap: 25px;
+  height: 100%;
 }
 
 .nav-links a {
   color: var(--text-light);
   text-decoration: none;
   font-weight: 500;
+  font-size: 16px;
+  position: relative;
+  transition: all var(--transition-fast);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+}
+
+.nav-links a:hover {
+  color: var(--text);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--primary);
+  transition: width var(--transition-medium);
+  border-radius: 3px 3px 0 0;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-links a.active {
+  color: var(--text);
+}
+
+.nav-links a.active::after {
+  width: 100%;
 }
 
 /* Profile Card */
@@ -115,9 +171,32 @@ header {
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(150, 80, 220, 0.15);
+  will-change: transform;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.profile-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-medium);
+  z-index: 0;
+}
+
+.profile-container:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+}
+
+.profile-container:hover::before {
+  opacity: 0.6;
 }
 
 .profile-avatar {
@@ -127,26 +206,37 @@ header {
   border: 3px solid var(--primary);
   object-fit: cover;
   margin-bottom: 20px;
+  transition: all var(--transition-medium);
+  position: relative;
   z-index: 2;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(123, 44, 191, 0.4);
 }
 
 .profile-name {
   font-size: 24px;
   font-weight: 800;
   margin-bottom: 5px;
+  position: relative;
   z-index: 2;
+  display: inline-block;
+  padding: 0 5px;
   color: #e0aaff;
-  outline: none;
-  border-bottom: 1px dashed rgba(255,255,255,0.2);
 }
 
 .profile-id {
   font-size: 18px;
   color: var(--text-light);
   margin-bottom: 10px;
+  position: relative;
   z-index: 2;
-  outline: none;
 }
 
 /* Stats Section */
@@ -154,23 +244,39 @@ header {
   display: flex;
   justify-content: space-between;
   margin: 25px 0;
-  width: 100%;
+  position: relative;
   z-index: 2;
+  width: 100%;
 }
 
 .stat-item {
   text-align: center;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
   padding: 10px 15px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.03);
+}
+
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px);
 }
 
 .stat-value {
   font-weight: 700;
   font-size: 18px;
   color: var(--primary);
-  outline: none;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 3px;
 }
 
 /* Info sections */
@@ -180,6 +286,7 @@ header {
   border-top: 1px solid rgba(150,80,220,0.15);
   padding-top: 18px;
   width: 100%;
+  position: relative;
   z-index: 2;
 }
 
@@ -188,6 +295,9 @@ header {
   font-size: 1rem;
   color: #d0b4ff;
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .info-item {
@@ -197,8 +307,15 @@ header {
   font-size: 0.9rem;
 }
 
-.info-label { color: #b8a6ff; opacity: 0.8; }
-.info-value { color: #e0d5ff; font-weight: 500; outline: none; }
+.info-label {
+  color: #b8a6ff;
+  opacity: 0.8;
+}
+
+.info-value {
+  color: #e0d5ff;
+  font-weight: 500;
+}
 
 /* Badges Section */
 .badge-box {
@@ -206,8 +323,20 @@ header {
   padding: 20px;
   border-radius: 16px;
   margin-top: 25px;
-  width: 100%;
+  max-width: 100%;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
   z-index: 2;
+  transition: all var(--transition-medium);
+  width: 100%;
+}
+
+.badge-box:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px);
 }
 
 .badge-container {
@@ -215,55 +344,232 @@ header {
   justify-content: center;
   flex-wrap: wrap;
   gap: 15px;
+  transition: all var(--transition-medium);
 }
 
-.badge-wrapper { position: relative; display: inline-block; }
+.badge-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .badge-icon {
-  width: 40px; height: 40px; border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   border: 2px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s; background: rgba(0, 0, 0, 0.2);
+  position: relative;
+  transition: all var(--transition-fast);
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.2);
 }
 
-.badge-icon.glow { box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); animation: pulseGlow 2s infinite alternate; }
+.badge-icon:hover {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.badge-icon.glow {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  animation: pulseGlow 2s infinite alternate;
+}
 
 .badge-tooltip {
-  position: absolute; bottom: calc(100% + 10px); left: 50%;
-  transform: translateX(-50%); background: rgba(30, 30, 46, 0.95);
-  color: var(--text); padding: 10px; border-radius: 10px;
-  font-size: 12px; opacity: 0; pointer-events: none;
-  transition: 0.2s; width: max-content; z-index: 10;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 30, 46, 0.95);
+  color: var(--text);
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: all var(--transition-fast);
+  width: max-content;
+  max-width: 250px;
+  z-index: 10;
+  text-align: center;
+  line-height: 1.4;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.badge-wrapper:hover .badge-tooltip { opacity: 1; bottom: calc(100% + 15px); }
-
-@keyframes rainbowGlow {
-  0% { box-shadow: 0 0 8px #ff0000; border-color: #ff0000; }
-  50% { box-shadow: 0 0 8px #33ff00; border-color: #33ff00; }
-  100% { box-shadow: 0 0 8px #ff00aa; border-color: #ff00aa; }
+.badge-wrapper:hover .badge-tooltip {
+  opacity: 1;
+  bottom: calc(100% + 15px);
 }
 
-.badge-icon.rainbow { animation: rainbowGlow 3s infinite ease-in-out; }
+.badge-tooltip strong {
+  font-weight: 700;
+  color: var(--secondary);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.badge-tooltip span {
+  display: block;
+  font-weight: 400;
+  color: #aaa;
+}
+
+.badge-tooltip span:last-child {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  margin-top: 5px;
+}
+
+@keyframes rainbowGlow {
+  0% {
+    box-shadow: 0 0 8px #ff0000, 0 0 16px #ff9900;
+    border-color: #ff0000;
+  }
+  25% {
+    box-shadow: 0 0 8px #ff9900, 0 0 16px #ffff00;
+    border-color: #ff9900;
+  }
+  50% {
+    box-shadow: 0 0 8px #33ff00, 0 0 16px #00ffff;
+    border-color: #33ff00;
+  }
+  75% {
+    box-shadow: 0 0 8px #0066ff, 0 0 16px #9900ff;
+    border-color: #0066ff;
+  }
+  100% {
+    box-shadow: 0 0 8px #ff00aa, 0 0 16px #ff0000;
+    border-color: #ff00aa;
+  }
+}
+
+.badge-icon.rainbow {
+  animation: rainbowGlow 3s infinite ease-in-out;
+}
 
 @keyframes pulseGlow {
   from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
   to { box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); }
 }
 
+/* Logout Button */
 .logout-btn {
-  margin-top: 24px; width: 100%; padding: 12px;
-  border: none; border-radius: 10px;
+  margin-top: 24px;
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 10px;
   background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-  color: #fff; font-weight: 700; cursor: pointer;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(90,24,154,0.26);
+  transition: all var(--transition-medium);
+  position: relative;
+  z-index: 2;
+  font-size: 16px;
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, var(--secondary), var(--secondary-dark));
+  box-shadow: 0 8px 20px rgba(123, 44, 191, 0.4);
+}
+
+/* Loading state */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading-buffer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--text);
+  z-index: 9999;
+  background: rgba(5, 0, 6, 0.9);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  backdrop-filter: blur(5px);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--primary);
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  margin: 0 auto 20px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { 
+    opacity: 0; 
+    transform: translateY(30px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    margin: 20px 15px;
+    padding: 25px;
+  }
+  
+  .nav-links {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 0 20px;
+  }
+  
+  .logo {
+    font-size: 20px;
+  }
+  
+  .nav-links {
+    gap: 12px;
+  }
+  
+  .nav-links a {
+    font-size: 14px;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .stats-container {
+    gap: 20px;
+  }
 }
 </style>
 </head>
 <body>
+  <!-- Glowing BG -->
   <div class="bg-layer one"></div>
   <div class="bg-layer two"></div>
 
@@ -276,115 +582,313 @@ header {
     </nav>
   </header>
 
+  <div id="loading-buffer" class="loading-buffer">
+    <div class="spinner"></div>
+    <p>Loading Profile Data...</p>
+  </div>
+
   <div class="profile-container">
-    <!-- Click the fields below to edit them -->
-    <img id="avatar" class="profile-avatar" src="https://i.pravatar.cc/300?img=12" alt="User Avatar">
-    <div id="name" class="profile-name" contenteditable="true">John Doe</div>
-    <div id="user-id" class="profile-id" contenteditable="true">ID: 882194021</div>
+    <img id="avatar" class="profile-avatar" src="" alt="User Avatar">
+    <div id="name" class="profile-name">Loading...</div>
+    <div id="user-id" class="profile-id"></div>
     
+    <!-- Stats Section -->
     <div class="stats-container">
       <div class="stat-item">
-        <div class="stat-value" id="likes-count" contenteditable="true">1,284</div>
+        <div class="stat-value" id="likes-count">0</div>
         <div class="stat-label">Likes</div>
       </div>
       <div class="stat-item">
-        <div class="stat-value" id="followers-count" contenteditable="true">542</div>
+        <div class="stat-value" id="followers-count">0</div>
         <div class="stat-label">Followers</div>
       </div>
     </div>
     
+    <!-- Account Info Section -->
     <div class="info-section">
-      <div class="section-title">Account Information (Click to Edit)</div>
+      <div class="section-title">Account Information</div>
       <div class="info-item">
         <span class="info-label">Discord ID</span>
-        <span class="info-value" id="discord-id" contenteditable="true">johndoe#0001</span>
-      </div>
-      <div class="info-item">
-        <span class="info-label">Avatar URL</span>
-        <span class="info-value" id="avatar-url-edit" contenteditable="true" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://i.pravatar.cc/300?img=12</span>
+        <span class="info-value" id="discord-id">Not connected</span>
       </div>
       <div class="info-item">
         <span class="info-label">Account Created</span>
-        <span class="info-value" id="account-created" contenteditable="true">January 15, 2024</span>
+        <span class="info-value" id="account-created">Loading...</span>
       </div>
       <div class="info-item">
         <span class="info-label">Last Login</span>
-        <span class="info-value" id="last-login" contenteditable="true">2 minutes ago</span>
+        <span class="info-value" id="last-login">Loading...</span>
       </div>
     </div>
     
+    <!-- Badges Section -->
     <div class="badge-box">
-      <h4 style="margin-bottom:15px; color: #b8a6ff;">Badges</h4>
+      <h4>Badges</h4>
       <div id="badges-container" class="badge-container">
-        <!-- Badges show by default via script -->
+        <!-- Badges will be dynamically added here -->
       </div>
     </div>
     
-    <button class="logout-btn">Save Profile</button>
+    <button id="logout" class="logout-btn">Logout</button>
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Full Badge Definitions
+  const sb = supabase.createClient(
+    "https://tstsijdifhgmpaszqknr.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzdHNpamRpZmhnbXBhc3pxa25yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NzA1NTIsImV4cCI6MjA3ODU0NjU1Mn0.8AvcLNL-6PIlfw2FUeLcMC9atefZmZAyUQBOquGpVo4"
+  );
+
+  // Badge definitions from drags.html
   const badgeMap = {
-    owner: { name: "Founder & Owner", icon: "https://cdn3.emoji.gg/emojis/8259-owner.png", description: "The original founder of /six", rarity: "Legendary", glow: true },
-    dev: { name: "Developer", icon: "https://cdn3.emoji.gg/emojis/1166-partner.png", description: "/six Platform Developer", rarity: "Epic", glow: true },
-    staff: { name: "Staff", icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png", description: "Official /six Staff Member", rarity: "Epic", glow: true },
-    vs: { name: "VS", icon: "https://cdn3.emoji.gg/emojis/4185-staff-team.png", description: "VS Rank - Highest membership level", rarity: "Legendary", glow: true },
-    vsplusplus: { name: "VS++", icon: "https://cdn3.emoji.gg/emojis/5717-level-10.png", description: "VS++ Rank - VIP membership level", rarity: "Epic", glow: true },
-    vsplus: { name: "VS+", icon: "https://cdn3.emoji.gg/emojis/9034-member.png", description: "VS+ Rank - Premium membership level", rarity: "Epic", glow: true },
-    vsultra: { name: "VS Ultra", icon: "https://cdn3.emoji.gg/emojis/6336-level-30.png", description: "VS Ultra Rank - Elite membership level", rarity: "Epic", glow: true },
-    vsg: { name: "VSG", icon: "https://cdn3.emoji.gg/emojis/3731-level-40.png", description: "VSG Rank - Advanced membership level", rarity: "Rare", glow: true },
-    early: { name: "Early User", icon: "https://cdn3.emoji.gg/emojis/7549-member.png", description: "Joined in the first week of /six", rarity: "Rare", glow: false },
-    verified: { name: "Verified", icon: "https://cdn3.emoji.gg/emojis/74424-partner.png", description: "Verified /six User", rarity: "Uncommon", glow: false },
-    vsn: { name: "VSN", icon: "https://cdn3.emoji.gg/emojis/7463-level-20.png", description: "VSN Rank - Intermediate membership level", rarity: "Uncommon", glow: false },
-    vsi: { name: "VSI", icon: "https://cdn3.emoji.gg/emojis/2139-level-5.png", description: "VSI Rank - Basic membership level", rarity: "Uncommon", glow: false }
+    vsi: {
+      name: "VSI",
+      icon: "https://cdn3.emoji.gg/emojis/2139-level-5.png",
+      description: "VSI Rank - Basic membership level",
+      rarity: "Uncommon",
+      glow: false
+    },
+    vsn: {
+      name: "VSN",
+      icon: "https://cdn3.emoji.gg/emojis/7463-level-20.png",
+      description: "VSN Rank - Intermediate membership level",
+      rarity: "Uncommon",
+      glow: false
+    },
+    vsg: {
+      name: "VSG",
+      icon: "https://cdn3.emoji.gg/emojis/3731-level-40.png",
+      description: "VSG Rank - Advanced membership level", 
+      rarity: "Rare",
+      glow: true
+    },
+    vsultra: {
+      name: "VS Ultra",
+      icon: "https://cdn3.emoji.gg/emojis/6336-level-30.png",
+      description: "VS Ultra Rank - Elite membership level",
+      rarity: "Epic",
+      glow: true
+    },
+    vsplus: {
+      name: "VS+",
+      icon: "https://cdn3.emoji.gg/emojis/9034-member.png",
+      description: "VS+ Rank - Premium membership level",
+      rarity: "Epic",
+      glow: true
+    },
+    vsplusplus: {
+      name: "VS++",
+      icon: "https://cdn3.emoji.gg/emojis/5717-level-10.png",
+      description: "VS++ Rank - VIP membership level",
+      rarity: "Epic",
+      glow: true
+    },
+    vs: {
+      name: "VS",
+      icon: "https://cdn3.emoji.gg/emojis/4185-staff-team.png",
+      description: "VS Rank - Highest membership level",
+      rarity: "Legendary",
+      glow: true
+    },
+    early: {
+      name: "Early User",
+      icon: "https://cdn3.emoji.gg/emojis/7549-member.png",
+      description: "Joined in the first week of /six",
+      rarity: "Rare",
+      glow: false
+    },
+    staff: {
+      name: "Staff",
+      icon: "https://cdn3.emoji.gg/emojis/1415-moderator.png",
+      description: "Official /six Staff Member",
+      rarity: "Epic",
+      glow: true
+    },
+    verified: {
+      name: "Verified",
+      icon: "https://cdn3.emoji.gg/emojis/74424-partner.png",
+      description: "Verified /six User",
+      rarity: "Uncommon",
+      glow: false
+    },
+    dev: {
+      name: "Developer",
+      icon: "https://cdn3.emoji.gg/emojis/1166-partner.png",
+      description: "/six Platform Developer",
+      rarity: "Epic",
+      glow: true
+    },
+    owner: {
+      name: "Founder & Owner",
+      icon: "https://cdn3.emoji.gg/emojis/8259-owner.png",
+      description: "The original founder of /six",
+      rarity: "Legendary",
+      glow: true
+    }
   };
 
-  function getRarityColor(rarity) {
-    switch(rarity) {
-      case "Legendary": return "#ff8c00";
-      case "Epic": return "#a335ee";
-      case "Rare": return "#0070dd";
-      case "Uncommon": return "#1eff00";
-      default: return "#ffffff";
-    }
-  }
+  // Manual badge assignments (update this as needed)
+  const manualBadges = {
+    "1303491410472865793": [ // Example Owner
+      { key: "owner", order: 1 },
+      { key: "dev", order: 2 },
+      { key: "vs", order: 3 },
+      { key: "staff", order: 4 },
+      { key: "early", order: 5 },
+      { key: "verified", order: 6 }
+    ],
+    "1359405784915509292": [ // Example User 1
+      { key: "vsplusplus", order: 1 },
+      { key: "early", order: 2 },
+      { key: "verified", order: 3 }
+    ],
+    "1359405784915509232": [ // Example User 2
+      { key: "staff", order: 1 },
+      { key: "vsplus", order: 2 }
+    ],
+    "1359405784915509233": [ // Example User 3
+      { key: "vsultra", order: 1 },
+      { key: "vsg", order: 2 },
+      { key: "vsn", order: 3 },
+      { key: "vsi", order: 4 }
+    ],
+    "1359405784915509234": [ // Example User 4
+      { key: "vsi", order: 1 },
+      { key: "verified", order: 2 }
+    ]
+  };
 
-  // Display ALL badges by default
-  function displayAllBadges() {
-    const container = document.getElementById("badges-container");
-    container.innerHTML = "";
+  // Enhanced badge display function from drags.html
+  function displayUserBadges(userId) {
+    const badgeBox = document.getElementById("badgeBox");
+    const badgeContainer = document.getElementById("badges-container");
     
-    Object.keys(badgeMap).forEach(key => {
-      const badge = badgeMap[key];
+    if (!badgeBox || !badgeContainer) return;
+
+    // Clear existing badges
+    badgeContainer.innerHTML = "";
+    
+    // Get badges for this user
+    const userBadges = manualBadges[userId] || [];
+    
+    // Hide badge box if user has no badges
+    if (userBadges.length === 0) {
+      badgeBox.style.display = "none";
+      return;
+    }
+    
+    // Show badge box
+    badgeBox.style.display = "flex";
+    
+    // Sort badges by their order value
+    userBadges.sort((a, b) => a.order - b.order).forEach(badgeData => {
+      const badge = badgeMap[badgeData.key];
+      if (!badge) return; // Skip if badge definition not found
+      
+      // Create badge wrapper
       const wrapper = document.createElement("div");
       wrapper.className = "badge-wrapper";
       
+      // Create badge image
       const img = document.createElement("img");
       img.src = badge.icon;
-      img.className = `badge-icon ${badge.glow ? 'glow' : ''} ${badge.rarity === 'Legendary' ? 'rainbow' : ''}`;
+      img.alt = badge.name;
+      img.className = "badge-icon";
       
+      // Add special effects based on badge properties
+      if (badge.glow) {
+        img.classList.add("glow");
+      }
+      
+      // Special effects for legendary badges
+      if (badge.rarity === "Legendary") {
+        img.classList.add("rainbow");
+      }
+      
+      // Create tooltip
       const tooltip = document.createElement("div");
       tooltip.className = "badge-tooltip";
       tooltip.innerHTML = `
-        <strong style="color:${getRarityColor(badge.rarity)}">${badge.name}</strong><br>
+        <strong>${badge.name}</strong>
         <span>${badge.description}</span>
+        <span style="margin-top: 5px; color: ${getRarityColor(badge.rarity)}">
+          ${badge.rarity} Badge
+        </span>
       `;
       
+      // Add elements to DOM
       wrapper.appendChild(img);
       wrapper.appendChild(tooltip);
-      container.appendChild(wrapper);
+      badgeContainer.appendChild(wrapper);
     });
   }
 
-  // Dynamic Avatar Update
-  document.getElementById('avatar-url-edit').addEventListener('input', function() {
-    document.getElementById('avatar').src = this.innerText;
+  // Helper function to get color based on rarity
+  function getRarityColor(rarity) {
+    switch(rarity) {
+      case "Legendary": return "#ff8c00"; // Orange
+      case "Epic": return "#a335ee";     // Purple
+      case "Rare": return "#0070dd";     // Blue
+      case "Uncommon": return "#1eff00"; // Green
+      default: return "#ffffff";         // White
+    }
+  }
+
+  async function loadProfile() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      window.location.href = "/";
+      return;
+    }
+
+    const user = session.user;
+    document.getElementById("avatar").src = user.user_metadata.avatar_url || "";
+    document.getElementById("name").textContent = user.user_metadata.full_name || "Unknown User";
+    document.getElementById("user-id").textContent = user.id || "No ID found";
+    
+    // Set Discord ID if available
+    const discordId = user.user_metadata.provider_id || user.user_metadata.sub;
+    document.getElementById("discord-id").textContent = discordId ? discordId.slice(0, 10) + "..." : "Not connected";
+    
+    // Set account creation date
+    const createdAt = new Date(user.created_at);
+    document.getElementById("account-created").textContent = createdAt.toLocaleDateString();
+    
+    // Set last login date
+    const lastSignIn = new Date(user.last_sign_in_at);
+    document.getElementById("last-login").textContent = lastSignIn.toLocaleDateString();
+    
+    // Set random stats (in a real app, these would come from your database)
+    document.getElementById("likes-count").textContent = Math.floor(Math.random() * 500);
+    document.getElementById("followers-count").textContent = Math.floor(Math.random() * 1000);
+    
+    // Display badges based on user ID
+    displayUserBadges(user.id);
+    
+    // Hide loading buffer
+    document.getElementById("loading-buffer").style.display = "none";
+  }
+
+  async function logout() {
+    await sb.auth.signOut();
+    window.location.href = "/";
+  }
+
+  // Add scroll effect for header
+  window.addEventListener('scroll', () => {
+    const header = document.getElementById('header');
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
   });
 
-  // Initialize
+  document.getElementById("logout").addEventListener("click", logout);
+  
+  // Initialize profile when page loads
   document.addEventListener("DOMContentLoaded", () => {
-    displayAllBadges();
+    loadProfile();
   });
 </script>
 </body>
